@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Post Your TODO List</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div class="container">
+        <h1>TODO List</h1>
+        <div class="inputbox" id="addTaskForm">
+            <input type="text" id="taskInput" placeholder="TODO를 입력하세요.">
+            <button style="grid-column: 2 / 3;" onclick="addTask()">POST</button>
+        </div>
+    </div>
+
+    <div class="container" style="margin-top: 10px;" id="taskList">
+        <!-- 할 일 목록이 여기에 동적으로 추가됩니다. -->
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

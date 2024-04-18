@@ -1,0 +1,71 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: wheat;
+    background-image: url("https://t4.ftcdn.net/jpg/00/92/92/81/360_F_92928153_TxeeTu788VncNTLJ7I1tcrpnk0JCyNuI.jpg");
+    background-blend-mode: color-burn;
+}
+
+.container {
+    max-width: 600px;
+    margin: 50px auto 0px auto;
+    padding: 20px;
+    background-color: #fffff040;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.inputbox {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    grid-template-rows: auto;
+}
+
+.tile {
+    background-image: url("https://as1.ftcdn.net/v2/jpg/00/36/29/24/1000_F_36292445_BH3cABnWeDL3JyeX7mGoz3ftyCJL3kr5.jpg");
+    background-blend-mode: color-burn;
+    display: grid;
+    grid-template-columns: auto 100px;
+    margin: 10px;
+    padding: 1px;
+    border-radius: 8px;
+    background-color: papayawhip;
+    box-shadow: 0 0 10px rgba(64, 64, 0, 0.1);
+}
+
+h2{
+    color: gray;
+    font-size: 0.6em;
+}
+
+h1 {
+    text-align: center;
+    color: coral;
+}
+
+#addTaskForm {
+    margin-top: 20px;
+}
+
+input[type="text"] {
+    grid-column: 1 / 2;
+    padding: 10px;
+    border-radius: 4px;
+    border: none;
+}
+
+button {
+    margin-left: auto;
+    padding: 10px 20px;
+    margin-left: 10px;
+    background-color: #f08080;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #d07070;
+}
