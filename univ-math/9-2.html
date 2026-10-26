@@ -1,0 +1,607 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>9.2 매개변수곡선의 미적분</title>
+<script>try{var t=localStorage.getItem("theme");if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
+<link rel="stylesheet" href="assets/katex/katex.min.css">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body data-section="9.2">
+<div class="shell">
+  <nav class="side" aria-label="이 절의 목차">
+    <a class="home" href="index.html">전체 목차로</a>
+    <ol>
+      <li><a href="#tangent">접선의 기울기</a></li>
+      <li><a href="#second">이계도함수와 오목성</a></li>
+      <li><a href="#ex1">예제 1 · 두 접선을 갖는 점</a></li>
+      <li><a href="#ex2">예제 2 · 사이클로이드의 접선</a></li>
+      <li><a href="#area">넓이</a></li>
+      <li><a href="#ex3">예제 3 · 아치 아래 넓이</a></li>
+      <li><a href="#arc">호의 길이</a></li>
+      <li><a href="#ex5">예제 5 · 아치의 길이</a></li>
+      <li><a href="#ex6">예제 6 · 입자의 속력</a></li>
+      <li><a href="#surface">곡면 넓이</a></li>
+      <li><a href="#ex7">예제 7 · 구의 겉넓이</a></li>
+      <li><a href="#summary">한눈에 정리</a></li>
+      <li><a href="#check">자가 점검</a></li>
+    </ol>
+  </nav>
+
+  <main>
+    <header class="hero">
+      <p class="chapter">9장 매개변수방정식과 극좌표</p>
+      <h1><span class="num">9.2</span>매개변수곡선에 대한 미적분</h1>
+      <canvas id="hero" aria-hidden="true"></canvas>
+    </header>
+
+    <p class="lede">9.1에서 만든 매개변수곡선에 미분과 적분을 적용해요. 접선, 넓이, 호의 길이, 곡면 넓이 네 가지를 다루고, 모두 $t$를 소거하지 않고 $t$에 대한 식 그대로 계산하는 것이 핵심입니다.</p>
+
+    <!-- ===================================================== -->
+    <h2 id="tangent">접선의 기울기</h2>
+    <p>$x=f(t)$, $y=g(t)$이고 $y$가 $x$의 미분가능한 함수라고 하면, 연쇄법칙에 의해</p>
+    $$\frac{dy}{dt}=\frac{dy}{dx}\cdot\frac{dx}{dt}$$
+    <p>이에요. $\frac{dx}{dt}\neq0$이면 양변을 나눠서 기울기를 얻습니다.</p>
+    <div class="summary-box">
+      $$\frac{dy}{dx}=\frac{dy/dt}{dx/dt}\qquad\left(\frac{dx}{dt}\neq0\right)$$
+    </div>
+    <p>이 식을 쓰면 <b>$t$를 소거하지 않고도</b> 접선의 기울기를 구할 수 있어요. 분자와 분모 중 어느 쪽이 0인지에 따라 접선의 모양이 정해집니다.</p>
+    <table class="vals compare" aria-label="수평접선과 수직접선 조건">
+      <thead><tr><th>조건</th><th>접선</th></tr></thead>
+      <tbody>
+        <tr><th>$\dfrac{dy}{dt}=0,\ \dfrac{dx}{dt}\neq0$</th><td><b>수평</b>접선 (기울기 0)</td></tr>
+        <tr><th>$\dfrac{dx}{dt}=0,\ \dfrac{dy}{dt}\neq0$</th><td><b>수직</b>접선 (기울기 ±∞)</td></tr>
+        <tr><th>둘 다 $0$</th><td>바로 판단할 수 없음. 극한(로피탈)으로 따로 확인</td></tr>
+      </tbody>
+    </table>
+
+    <h3 id="second">이계도함수와 오목성</h3>
+    <p>$\frac{d^2y}{dx^2}$는 $\frac{dy}{dx}$를 다시 $x$로 미분한 것이에요. 위의 기울기 식에서 $y$ 자리에 $\frac{dy}{dx}$를 넣으면 됩니다.</p>
+    $$\frac{d^2y}{dx^2}=\frac{d}{dx}\left(\frac{dy}{dx}\right)=\frac{\dfrac{d}{dt}\left(\dfrac{dy}{dx}\right)}{\dfrac{dx}{dt}}$$
+    <p>$\frac{d^2y}{dx^2}>0$이면 위로 오목, $<0$이면 아래로 오목이에요.</p>
+
+    <div class="exam"><strong>시험 포인트.</strong> 분자와 분모를 각각 두 번 미분해서 나누는 건 <b>틀린 방법</b>이에요.
+      $$\frac{d^2y}{dx^2}\neq\frac{d^2y/dt^2}{d^2x/dt^2}$$
+      반드시 $\frac{dy}{dx}$를 $t$로 미분한 뒤 $\frac{dx}{dt}$로 나누는 순서로 계산하세요.</div>
+
+    <!-- ===================================================== -->
+    <h2 id="ex1">예제 1 · 두 접선을 갖는 점</h2>
+    <div class="problem"><span class="tag">예제 1</span>곡선 $C$는 매개변수방정식 $x=t^2,\ y=t^3-3t$로 정의된다.<br>
+      (a) $C$가 점 $(3,0)$에서 두 개의 접선을 가짐을 보이고, 그 접선의 방정식을 구하라.<br>
+      (b) 접선이 수평이거나 수직인 $C$의 점들을 구하라.<br>
+      (c) 곡선이 위 또는 아래로 오목인 곳을 결정하라.<br>
+      (d) 이 곡선을 그려라.</div>
+
+    <p>먼저 그림으로 (d)를 보고 시작해요. 파란 직선이 현재 점에서의 접선이에요. 아래 버튼으로 중요한 $t$ 값으로 바로 이동할 수 있습니다.</p>
+    <figure class="plot" id="fig-ex1">
+      <figcaption>곡선이 원점 근처에서 고리를 만들고 $(3,0)$에서 자기 자신과 교차해요. 그래서 그 점을 두 번 지나고, 지날 때마다 접선이 달라요.</figcaption>
+    </figure>
+
+    <p>미리 구해 둘 도함수는 다음과 같아요.</p>
+    $$\frac{dx}{dt}=2t,\qquad \frac{dy}{dt}=3t^2-3,\qquad \frac{dy}{dx}=\frac{3t^2-3}{2t}=\frac32\left(t-\frac1t\right)$$
+
+    <h3>(a) 점 $(3,0)$에서의 두 접선</h3>
+    <ol class="steps">
+      <li>$x=t^2=3$이면 $t=\pm\sqrt3$. 이때 $y=t(t^2-3)=0$이므로 <b>두 $t$ 값 모두</b> 점 $(3,0)$에 해당해요. 곡선이 이 점을 두 번 지납니다.</li>
+      <li>$t=\sqrt3$이면 기울기 $\frac{3\cdot3-3}{2\sqrt3}=\frac{6}{2\sqrt3}=\sqrt3$, $t=-\sqrt3$이면 $-\sqrt3$.</li>
+      <li>따라서 두 접선은
+        $$y=\sqrt3\,(x-3),\qquad y=-\sqrt3\,(x-3)$$</li>
+    </ol>
+
+    <h3>(b) 수평접선과 수직접선</h3>
+    <dl class="def">
+      <dt>수평접선</dt>
+      <dd>$\frac{dy}{dt}=3t^2-3=0$에서 $t=\pm1$ (이때 $\frac{dx}{dt}=\pm2\neq0$). 점은 $t=-1$일 때 $(1,2)$, $t=1$일 때 $(1,-2)$.</dd>
+      <dt>수직접선</dt>
+      <dd>$\frac{dx}{dt}=2t=0$에서 $t=0$ (이때 $\frac{dy}{dt}=-3\neq0$). 점은 $(0,0)$.</dd>
+    </dl>
+
+    <h3>(c) 오목성</h3>
+    <ol class="steps">
+      <li>$\frac{dy}{dx}=\frac32\left(t-\frac1t\right)$을 $t$로 미분하면 $\frac32\left(1+\frac1{t^2}\right)=\frac{3(t^2+1)}{2t^2}$.</li>
+      <li>이것을 $\frac{dx}{dt}=2t$로 나눕니다.
+        $$\frac{d^2y}{dx^2}=\frac{3(t^2+1)}{2t^2}\cdot\frac{1}{2t}=\frac{3(t^2+1)}{4t^3}$$</li>
+      <li>분자는 항상 양수이므로 부호는 $t^3$이 결정해요. <b>$t>0$이면 위로 오목, $t<0$이면 아래로 오목</b>입니다. 그림에서 $t$를 움직이며 확인해 보세요.</li>
+    </ol>
+
+    <!-- ===================================================== -->
+    <h2 id="ex2">예제 2 · 사이클로이드의 접선</h2>
+    <div class="problem"><span class="tag">예제 2</span>(a) $\theta=\pi/3$인 점에서 사이클로이드 $x=r(\theta-\sin\theta),\ y=r(1-\cos\theta)$에 대한 접선을 구하라. (9.1절 예제 7 참조)<br>(b) 어느 점에서 접선이 수평인가? 언제 수직인가?</div>
+
+    <figure class="plot" id="fig-ex2">
+      <figcaption>$r=1$로 그렸어요. 아치 꼭대기에서는 접선이 수평이 되고, 바닥의 뾰족한 점(첨점)에 다가갈수록 접선이 수직으로 서요.</figcaption>
+    </figure>
+
+    <h3>(a) $\theta=\pi/3$에서의 접선</h3>
+    <ol class="steps">
+      <li>기울기 공식부터 구해요.
+        $$\frac{dy}{dx}=\frac{dy/d\theta}{dx/d\theta}=\frac{r\sin\theta}{r(1-\cos\theta)}=\frac{\sin\theta}{1-\cos\theta}$$</li>
+      <li>$\theta=\pi/3$에서 점의 좌표는
+        $$x=r\left(\frac\pi3-\frac{\sqrt3}{2}\right),\qquad y=r\left(1-\frac12\right)=\frac r2$$</li>
+      <li>기울기는 $\frac{\sqrt3/2}{1-1/2}=\sqrt3$. 따라서 접선은
+        $$y-\frac r2=\sqrt3\left(x-\frac{r\pi}{3}+\frac{\sqrt3\,r}{2}\right)\quad\Longleftrightarrow\quad \sqrt3\,x-y=r\left(\frac{\pi}{\sqrt3}-2\right)$$</li>
+    </ol>
+
+    <h3>(b) 수평접선과 수직접선</h3>
+    <dl class="def">
+      <dt>수평접선</dt>
+      <dd>$\sin\theta=0$이고 $1-\cos\theta\neq0$이어야 하므로 $\theta=(2n-1)\pi$. 점은 아치 꼭대기 $\big((2n-1)\pi r,\ 2r\big)$.</dd>
+      <dt>수직접선</dt>
+      <dd>$\theta=2n\pi$에서는 $\frac{dx}{d\theta}$와 $\frac{dy}{d\theta}$가 <b>둘 다 0</b>이라 공식으로 바로 판단할 수 없어요. 로피탈 법칙으로 극한을 봅니다.
+        $$\lim_{\theta\to2n\pi^+}\frac{dy}{dx}=\lim_{\theta\to2n\pi^+}\frac{\sin\theta}{1-\cos\theta}=\lim_{\theta\to2n\pi^+}\frac{\cos\theta}{\sin\theta}=\infty$$
+        같은 방법으로 $\theta\to2n\pi^-$이면 $-\infty$. 따라서 $x=2n\pi r$인 첨점에서 수직접선을 가져요.</dd>
+    </dl>
+
+    <div class="exam"><strong>시험 포인트.</strong> 분자와 분모가 동시에 0인 점은 “수평도 수직도 아니다”가 아니라 <b>극한으로 따로 확인</b>해야 하는 점이에요. 사이클로이드의 첨점이 대표 예입니다.</div>
+
+    <!-- ===================================================== -->
+    <h2 id="area">넓이</h2>
+    <p>$y=F(x)$ 아래 넓이는 $A=\displaystyle\int_a^b y\,dx$ 였어요. 곡선이 $x=f(t)$, $y=g(t)$로 주어지면 치환 $x=f(t)$, $dx=f'(t)\,dt$를 해서 $t$에 대한 적분으로 바꿉니다.</p>
+    <div class="summary-box">
+      $$A=\int_a^b y\,dx=\int_\alpha^\beta g(t)\,f'(t)\,dt\qquad\left[\text{또는 } \int_\beta^\alpha g(t)\,f'(t)\,dt\right]$$
+      <p style="margin:0">조건: $t$가 $\alpha$에서 $\beta$까지 증가할 때 곡선이 <b>꼭 한 번만</b> 그려져야 해요. $x$가 줄어드는 방향으로 그려지면 적분 구간을 뒤집어서($\beta\to\alpha$) 넓이가 양수가 되게 합니다.</p>
+    </div>
+
+    <!-- ===================================================== -->
+    <h2 id="ex3">예제 3 · 아치 아래 넓이</h2>
+    <div class="problem"><span class="tag">예제 3</span>$x=r(\theta-\sin\theta),\ y=r(1-\cos\theta)$인 사이클로이드의 한 아치 아래의 넓이를 구하라.</div>
+
+    <figure class="plot" id="fig-ex3">
+      <figcaption>막대 하나가 높이 $y$, 폭 $\Delta x$인 직사각형이고, 진한 막대가 방금 더한 것이에요. 곡선은 $\theta$를 따라 매끄럽게 그려지고, 막대는 그 구간을 다 지나가면 하나씩 채워져요. 막대 50개의 합은 정확한 넓이 $3\pi r^2$와 거의 같아요. 막대를 무한히 잘게 나눈 극한이 $\int y\,dx$입니다. $\theta$를 같은 간격으로 나눴기 때문에 막대 폭 $\Delta x$는 양 끝에서 좁고 가운데서 넓어요. ($r=1$)</figcaption>
+    </figure>
+
+    <ol class="steps">
+      <li>한 아치는 $0\le\theta\le2\pi$이고, $dx=r(1-\cos\theta)\,d\theta$예요.
+        $$A=\int_0^{2\pi} r(1-\cos\theta)\cdot r(1-\cos\theta)\,d\theta=r^2\int_0^{2\pi}(1-2\cos\theta+\cos^2\theta)\,d\theta$$</li>
+      <li>$\cos^2\theta=\tfrac12(1+\cos2\theta)$로 바꿔서 적분합니다.
+        $$=r^2\int_0^{2\pi}\left(\tfrac32-2\cos\theta+\tfrac12\cos2\theta\right)d\theta=r^2\left[\tfrac32\theta-2\sin\theta+\tfrac14\sin2\theta\right]_0^{2\pi}$$</li>
+      <li>$\sin$ 항은 양 끝에서 모두 0이므로
+        $$A=r^2\cdot\tfrac32\cdot2\pi=3\pi r^2$$</li>
+    </ol>
+    <p>구르는 원 넓이 $\pi r^2$의 정확히 <b>3배</b>예요.</p>
+
+    <!-- ===================================================== -->
+    <h2 id="arc">호의 길이</h2>
+    <p>$y=F(x)$의 호의 길이 공식에서 출발해요.</p>
+    $$L=\int_a^b\sqrt{1+\left(\frac{dy}{dx}\right)^2}\,dx$$
+    <p>여기에 다음 두 식을 넣으면 루트 안의 $\left(\frac{dx}{dt}\right)^2$이 묶여 나오면서 깔끔한 꼴이 돼요.</p>
+    $$\frac{dy}{dx}=\frac{dy/dt}{dx/dt},\qquad dx=\frac{dx}{dt}\,dt$$
+    <div class="summary-box">
+      $$L=\int_\alpha^\beta\sqrt{\left(\frac{dx}{dt}\right)^2+\left(\frac{dy}{dt}\right)^2}\,dt$$
+      <p style="margin:0">조건: $f',g'$이 연속이고 $\alpha\le t\le\beta$에서 곡선이 <b>꼭 한 번만</b> 지나가야 해요. 같은 부분을 두 번 지나면 그 길이가 두 번 더해집니다.</p>
+    </div>
+    <p>루트 부분 $ds=\sqrt{(\frac{dx}{dt})^2+(\frac{dy}{dt})^2}\,dt$는 아주 짧은 시간 $dt$ 동안 움직인 거리예요. 피타고라스 정리로 가로 $dx$, 세로 $dy$인 작은 빗변을 구한 것과 같습니다.</p>
+
+    <!-- ===================================================== -->
+    <h2 id="ex5">예제 5 · 아치의 길이</h2>
+    <div class="problem"><span class="tag">예제 5</span>사이클로이드 $x=r(\theta-\sin\theta),\ y=r(1-\cos\theta)$의 한 아치의 호의 길이를 구하라.</div>
+
+    <figure class="plot" id="fig-ex5">
+      <figcaption>아래 막대는 지금까지 그린 곡선을 곧게 펴서 잰 길이예요. 아치 하나를 다 그리면 $8r$로, 밑변 $2\pi r\approx6.28r$보다 길어요. ($r=1$)</figcaption>
+    </figure>
+
+    <ol class="steps">
+      <li>도함수의 제곱합을 정리합니다.
+        $$\left(\frac{dx}{d\theta}\right)^2+\left(\frac{dy}{d\theta}\right)^2=r^2(1-\cos\theta)^2+r^2\sin^2\theta=r^2(2-2\cos\theta)$$</li>
+      <li>반각 공식 $1-\cos\theta=2\sin^2\frac\theta2$을 쓰면 루트가 벗겨져요. $0\le\theta\le2\pi$에서 $\sin\frac\theta2\ge0$이므로 절댓값도 필요 없습니다.
+        $$\sqrt{r^2\cdot4\sin^2\tfrac\theta2}=2r\sin\frac\theta2$$</li>
+      <li>적분합니다.
+        $$L=\int_0^{2\pi}2r\sin\frac\theta2\,d\theta=2r\left[-2\cos\frac\theta2\right]_0^{2\pi}=2r(2+2)=8r$$</li>
+    </ol>
+
+    <div class="exam"><strong>시험 포인트.</strong> 호의 길이 문제는 거의 항상 <b>루트 안을 완전제곱으로 만드는 것</b>이 관건이에요. $1-\cos\theta=2\sin^2\frac\theta2$, $1+\cos\theta=2\cos^2\frac\theta2$를 꼭 외워 두세요. 사이클로이드의 넓이 $3\pi r^2$, 길이 $8r$도 결과로 기억해 두면 검산에 좋아요.</div>
+
+    <!-- ===================================================== -->
+    <h2 id="ex6">예제 6 · 입자의 속력</h2>
+    <div class="problem"><span class="tag">예제 6</span>시각 $t$에서 입자의 위치가 매개변수방정식 $x=2t+3,\ y=4t^2\ (t\ge0)$으로 주어져 있다. 점 $(5,4)$에 있을 때 입자의 속력을 구하라.</div>
+    <p>호의 길이 $L(t)$를 시간으로 미분하면 <b>속력</b>이 돼요. 즉 적분 안의 루트가 그대로 속력입니다.</p>
+    $$v(t)=\frac{dL}{dt}=\sqrt{\left(\frac{dx}{dt}\right)^2+\left(\frac{dy}{dt}\right)^2}$$
+
+    <figure class="plot" id="fig-ex6">
+      <figcaption>파란 화살표가 속도 $\left(\frac{dx}{dt},\frac{dy}{dt}\right)=(2,\,8t)$, 점선이 그 가로·세로 성분이에요. 화살표 길이가 속력입니다. (가로, 세로 축척이 다름)</figcaption>
+    </figure>
+
+    <ol class="steps">
+      <li>속력: $v(t)=\sqrt{2^2+(8t)^2}=2\sqrt{1+16t^2}$.</li>
+      <li>$(5,4)$에서는 $2t+3=5$이므로 $t=1$ (확인: $4\cdot1^2=4$).</li>
+      <li>$v(1)=2\sqrt{17}\approx8.25$. 거리가 m, 시간이 초라면 약 $8.25\text{ m/s}$예요.</li>
+    </ol>
+
+    <!-- ===================================================== -->
+    <h2 id="surface">곡면 넓이</h2>
+    <p>$x=f(t)$, $y=g(t)$, $\alpha\le t\le\beta$에서 $f',g'$이 연속이고 $g(t)\ge0$일 때, 이 곡선을 <b>$x$축 둘레로 회전</b>시킨 곡면의 넓이는</p>
+    <div class="summary-box">
+      $$S=\int_\alpha^\beta 2\pi y\sqrt{\left(\frac{dx}{dt}\right)^2+\left(\frac{dy}{dt}\right)^2}\,dt=\int 2\pi y\,ds$$
+    </div>
+    <p>뜻을 풀면, 곡선의 작은 조각 $ds$가 회전하면서 반지름 $y$인 얇은 띠를 만들고, 그 띠의 넓이가 (둘레 $2\pi y$) × (폭 $ds$)라는 거예요.</p>
+
+    <!-- ===================================================== -->
+    <h2 id="ex7">예제 7 · 구의 겉넓이</h2>
+    <div class="problem"><span class="tag">예제 7</span>반지름이 $r$인 구의 곡면 넓이가 $4\pi r^2$임을 보여라.</div>
+    <p>구는 반원 $x=r\cos t,\ y=r\sin t,\ 0\le t\le\pi$를 $x$축 둘레로 회전시켜 얻어요.</p>
+
+    <figure class="plot" id="fig-ex7">
+      <figcaption>진한 테두리가 현재 점이 만드는 띠(둘레 $2\pi y$)이고, 칠해진 부분이 지금까지 만들어진 곡면이에요. 원래 반원은 오른쪽에서 왼쪽으로 그려집니다. ($r=1$)</figcaption>
+    </figure>
+
+    <ol class="steps">
+      <li>$\frac{dx}{dt}=-r\sin t$, $\frac{dy}{dt}=r\cos t$이므로 $ds=\sqrt{r^2\sin^2t+r^2\cos^2t}\,dt=r\,dt$.</li>
+      <li>공식에 넣습니다.
+        $$S=\int_0^\pi 2\pi\,(r\sin t)\cdot r\,dt=2\pi r^2\int_0^\pi\sin t\,dt=2\pi r^2\Big[-\cos t\Big]_0^\pi=4\pi r^2$$</li>
+    </ol>
+
+    <!-- ===================================================== -->
+    <h2 id="summary">한눈에 정리</h2>
+    <div class="summary-box">
+      <ul>
+        <li>기울기: $\dfrac{dy}{dx}=\dfrac{dy/dt}{dx/dt}$. 분자 $=0$이면 수평, 분모 $=0$이면 수직, 둘 다 $0$이면 극한으로 확인.</li>
+        <li>이계도함수: $\dfrac{dy}{dx}$를 $t$로 미분한 뒤 $\dfrac{dx}{dt}$로 나눈다. $\dfrac{d^2y/dt^2}{d^2x/dt^2}$가 <b>아니다</b>.</li>
+        <li>넓이: $A=\displaystyle\int_\alpha^\beta g(t)f'(t)\,dt$. 곡선이 한 번만 그려질 때.</li>
+        <li>호의 길이: $L=\displaystyle\int_\alpha^\beta\sqrt{\left(\dfrac{dx}{dt}\right)^2+\left(\dfrac{dy}{dt}\right)^2}\,dt$. 루트 안을 완전제곱으로.</li>
+        <li>속력: $v=\sqrt{\left(\dfrac{dx}{dt}\right)^2+\left(\dfrac{dy}{dt}\right)^2}$. 호의 길이의 피적분함수와 같다.</li>
+        <li>곡면 넓이($x$축 회전): $S=\displaystyle\int 2\pi y\,ds$.</li>
+        <li>사이클로이드: 아치 넓이 $3\pi r^2$, 아치 길이 $8r$, 꼭대기에서 수평접선, 첨점에서 수직접선.</li>
+      </ul>
+    </div>
+
+    <!-- ===================================================== -->
+    <h2 id="check">자가 점검</h2>
+    <p>보기를 고르면 바로 정답과 풀이가 나와요. 그래프가 있는 문제는 답을 고른 뒤 직접 확인해 보세요.</p>
+    <div id="quiz"></div>
+
+    <nav class="pager" aria-label="절 이동"></nav>
+  </main>
+</div>
+
+<script src="assets/katex/katex.min.js"></script>
+<script src="assets/katex/auto-render.min.js"></script>
+<script src="assets/plot.js"></script>
+<script src="assets/quiz.js"></script>
+<script src="assets/site.js"></script>
+<script>
+(function () {
+  "use strict";
+  const { fmt, fmtPi, label, dot, hollow, arrowHead, tangent, fillUnder } = Plot;
+  const PI = Math.PI;
+  const i = (s) => "<i>" + s + "</i>";
+  const slopeText = (num, den) => {
+    if (Math.abs(den) < 1e-6) return Math.abs(num) < 1e-6 ? "0/0 (극한으로 확인)" : "수직 (±∞)";
+    return fmt(num / den);
+  };
+  // 버튼으로 특정 t 값으로 이동
+  function jumps(api, list) {
+    api.bar.querySelectorAll(".seg button[data-v]").forEach((b, k) => {
+      b.addEventListener("click", () => { api.pause(); api.setT(list[k]); });
+    });
+  }
+  const segHtml = (labels, aria) =>
+    '<span class="seg" role="group" aria-label="' + aria + '">' +
+    labels.map((l, k) => '<button type="button" data-v="' + k + '" aria-pressed="false">' + l + "</button>").join("") + "</span>";
+
+  Plot.heroCycloid(document.getElementById("hero"), { tangent: true });
+
+  /* ---------- 예제 1 ---------- */
+  (function () {
+    const X = (t) => t * t, Y = (t) => t * t * t - 3 * t;
+    const api = Plot.mount(document.getElementById("fig-ex1"), {
+      t: { min: -2.1, max: 2.1, value: Math.sqrt(3) },
+      duration: 8,
+      panels: [{
+        x: X, y: Y, maxWidth: "30rem", arrows: 6,
+        view: { x: [-1.2, 5], y: [-3.4, 3.4] },
+        ticks: { x: [1, 2, 3, 4], y: [-3, -2, -1, 1, 2, 3] },
+        alt: "x = t², y = t³ − 3t 곡선과 접선",
+        over(ctx, T, t, C) {
+          tangent(ctx, T, X, Y, t, C.aux, { width: 1.8 });
+          // 수평접선, 수직접선 위치 표시
+          ctx.save(); ctx.strokeStyle = C.ink; ctx.lineWidth = 2.2;
+          [[1, 2], [1, -2]].forEach(([x, y]) => { ctx.beginPath(); ctx.moveTo(T.X(x) - 14, T.Y(y)); ctx.lineTo(T.X(x) + 14, T.Y(y)); ctx.stroke(); });
+          ctx.beginPath(); ctx.moveTo(T.X(0), T.Y(0) - 14); ctx.lineTo(T.X(0), T.Y(0) + 14); ctx.stroke();
+          ctx.restore();
+          label(ctx, "수평 (1, 2)", T.X(1) + 18, T.Y(2) - 2, { size: 11.5, color: C.muted, halo: C.surface });
+          label(ctx, "수평 (1, −2)", T.X(1) + 18, T.Y(-2) + 2, { size: 11.5, color: C.muted, halo: C.surface });
+          label(ctx, "수직 (0, 0)", T.X(0) - 8, T.Y(0) - 18, { size: 11.5, color: C.muted, align: "right", halo: C.surface });
+          dot(ctx, T.X(3), T.Y(0), 3.2, C.ink);
+          label(ctx, "(3, 0)", T.X(3) + 8, T.Y(0) + 14, { size: 11.5, color: C.muted, halo: C.surface });
+        },
+      }],
+      controls: segHtml(["t = −√3", "t = −1", "t = 0", "t = 1", "t = √3"], "중요한 t 값으로 이동"),
+      readout: (t) => {
+        const dxt = 2 * t, dyt = 3 * t * t - 3;
+        const conc = Math.abs(t) < 1e-6 ? "정의 안 됨" : t > 0 ? "위로 오목" : "아래로 오목";
+        return i("t") + " = <b>" + fmt(t) + "</b>, (" + i("x") + ", " + i("y") + ") = (" + fmt(X(t)) + ", " + fmt(Y(t)) + ")<br>" +
+          "d" + i("x") + "/d" + i("t") + " = " + fmt(dxt) + ", d" + i("y") + "/d" + i("t") + " = " + fmt(dyt) +
+          ", 기울기 d" + i("y") + "/d" + i("x") + " = <b>" + slopeText(dyt, dxt) + "</b>, <b>" + conc + "</b>";
+      },
+    });
+    jumps(api, [-Math.sqrt(3), -1, 0, 1, Math.sqrt(3)]);
+  })();
+
+  /* ---------- 예제 2 ---------- */
+  (function () {
+    const X = (th) => th - Math.sin(th), Y = (th) => 1 - Math.cos(th);
+    const api = Plot.mount(document.getElementById("fig-ex2"), {
+      t: { min: 0, max: 2 * PI, value: PI / 3, label: "θ" },
+      duration: 8,
+      panels: [{
+        x: X, y: Y, arrows: 3, grid: 0,
+        view: { x: [-1.2, 7.6], y: [-0.9, 2.9] },
+        ticks: { x: [{ v: PI, label: "πr" }, { v: 2 * PI, label: "2πr" }], y: [{ v: 1, label: "r" }, { v: 2, label: "2r" }] },
+        alt: "사이클로이드와 접선",
+        over(ctx, T, th, C) {
+          tangent(ctx, T, X, Y, th, C.aux, { width: 1.8 });
+          dot(ctx, T.X(PI), T.Y(2), 3, C.ink);
+          label(ctx, "수평", T.X(PI), T.Y(2) - 13, { size: 11.5, color: C.muted, align: "center", halo: C.surface });
+          ctx.save(); ctx.setLineDash([3, 4]); ctx.strokeStyle = C.muted; ctx.globalAlpha = .6;
+          [0, 2 * PI].forEach((x) => { ctx.beginPath(); ctx.moveTo(T.X(x), T.Y(-0.6)); ctx.lineTo(T.X(x), T.Y(2.7)); ctx.stroke(); });
+          ctx.restore();
+          label(ctx, "첨점: 수직", T.X(2 * PI) + 6, T.Y(2.5), { size: 11.5, color: C.muted, halo: C.surface });
+        },
+      }],
+      controls: segHtml(["θ = π/3", "θ = π", "θ = 1.9π", "θ = 2π"], "중요한 θ 값으로 이동"),
+      readout: (th) =>
+        "θ = <b>" + fmtPi(th) + "</b>, (" + i("x") + ", " + i("y") + ") = (" + fmt(X(th)) + ", " + fmt(Y(th)) + ")<br>" +
+        "기울기 sin θ / (1 − cos θ) = <b>" + slopeText(Math.sin(th), 1 - Math.cos(th)) + "</b>" +
+        (Math.abs(th - PI / 3) < 0.01 ? " (= √3 ≈ 1.73)" : ""),
+    });
+    jumps(api, [PI / 3, PI, 1.9 * PI, 2 * PI]);
+  })();
+
+  /* ---------- 예제 3 넓이 (막대를 하나씩 더하기) ---------- */
+  (function () {
+    const X = (th) => th - Math.sin(th), Y = (th) => 1 - Math.cos(th);
+    const st = { n: 50 }; // 막대 개수 고정
+    const d = () => 2 * PI / st.n;
+    // i번째 막대: θ ∈ [iΔ, (i+1)Δ], 높이는 가운데 θ에서의 y, 폭은 x가 늘어난 만큼
+    const bar = (k) => { const a = k * d(), b = (k + 1) * d(); return { x0: X(a), x1: X(b), y: Y((a + b) / 2) }; };
+    const sumBars = (k) => { let s = 0; for (let j = 0; j < k; j++) { const r = bar(j); s += r.y * (r.x1 - r.x0); } return s; };
+    // 곡선은 θ를 따라 연속으로 그리고, 막대는 다 지나간 것만 하나씩 채운다
+    const count = (th) => Math.min(st.n, Math.floor(th / d() + 1e-9));
+    Plot.mount(document.getElementById("fig-ex3"), {
+      t: { min: 0, max: 2 * PI, value: 2.2, label: "θ" },
+      duration: 9,
+      panels: [{
+        x: X, y: Y, arrows: 0, grid: 0,
+        view: { x: [-0.8, 7.2], y: [-0.7, 2.6] },
+        ticks: { x: [{ v: PI, label: "πr" }, { v: 2 * PI, label: "2πr" }], y: [{ v: 1, label: "r" }, { v: 2, label: "2r" }] },
+        alt: "사이클로이드 아치 아래를 막대로 채워 넓이를 근사하는 그림",
+        under(ctx, T, th, C) {
+          const k = count(th);
+          for (let j = 0; j < k; j++) {
+            const r = bar(j), last = j === k - 1;
+            ctx.save();
+            ctx.fillStyle = last ? C.aux : C.auxSoft; ctx.globalAlpha = last ? .6 : 1;
+            ctx.fillRect(T.X(r.x0), T.Y(r.y), T.X(r.x1) - T.X(r.x0), T.Y(0) - T.Y(r.y));
+            ctx.globalAlpha = .55; ctx.strokeStyle = C.aux; ctx.lineWidth = 1;
+            ctx.strokeRect(T.X(r.x0) + .5, T.Y(r.y) + .5, T.X(r.x1) - T.X(r.x0) - 1, T.Y(0) - T.Y(r.y) - 1);
+            ctx.restore();
+            if (last && T.X(r.x1) - T.X(r.x0) > 14) {
+              label(ctx, "y", T.X(r.x0) - 6, (T.Y(r.y) + T.Y(0)) / 2, { size: 14, italic: true, math: true, color: C.aux, align: "right", halo: C.surface });
+              label(ctx, "Δx", (T.X(r.x0) + T.X(r.x1)) / 2, T.Y(0) + 14, { size: 13, italic: true, math: true, color: C.aux, align: "center" });
+            }
+          }
+        },
+      }],
+      readout: (th) => {
+        const k = count(th), part = sumBars(k), all = sumBars(st.n);
+        return "막대 <b>" + k + "</b> / " + st.n + "개를 더한 넓이 = <b>" + fmt(part, 3) + "</b><br>" +
+          "막대 " + st.n + "개 전부의 합 = " + fmt(all, 3) + ", 정확한 넓이 3π ≈ 9.425 (오차 " + fmt(Math.abs(all - 3 * PI), 3) + ")";
+      },
+    });
+  })();
+
+  /* ---------- 예제 5 호의 길이 ---------- */
+  (function () {
+    const X = (th) => th - Math.sin(th), Y = (th) => 1 - Math.cos(th);
+    const L = (th) => 4 * (1 - Math.cos(th / 2));
+    const BAR = -1.25;
+    Plot.mount(document.getElementById("fig-ex5"), {
+      t: { min: 0, max: 2 * PI, label: "θ" },
+      duration: 8,
+      panels: [{
+        x: X, y: Y, arrows: 3, grid: 0, ghost: true,
+        view: { x: [-0.6, 8.8], y: [-2.0, 2.5] },
+        ticks: { x: [{ v: 2 * PI, label: "2πr" }], y: [{ v: 2, label: "2r" }] },
+        alt: "사이클로이드 길이를 곧게 편 막대와 비교",
+        over(ctx, T, th, C) {
+          const y = T.Y(BAR);
+          // 눈금
+          ctx.save();
+          ctx.strokeStyle = C.rule; ctx.lineWidth = 8; ctx.lineCap = "butt";
+          ctx.beginPath(); ctx.moveTo(T.X(0), y); ctx.lineTo(T.X(8), y); ctx.stroke();
+          ctx.strokeStyle = C.curve; ctx.lineWidth = 8;
+          ctx.beginPath(); ctx.moveTo(T.X(0), y); ctx.lineTo(T.X(L(th)), y); ctx.stroke();
+          ctx.restore();
+          [0, 2, 4, 6, 8].forEach((v) => label(ctx, v ? v + "r" : "0", T.X(v), y + 16, { size: 11, color: C.muted, align: "center" }));
+          ctx.save(); ctx.strokeStyle = C.aux; ctx.lineWidth = 1.5; ctx.setLineDash([3, 3]);
+          ctx.beginPath(); ctx.moveTo(T.X(2 * PI), T.Y(0)); ctx.lineTo(T.X(2 * PI), y + 6); ctx.stroke(); ctx.restore();
+          label(ctx, "펼친 길이", T.X(0), y - 14, { size: 11.5, color: C.muted });
+        },
+      }],
+      readout: (th) =>
+        "θ = <b>" + fmtPi(th) + "</b>, 지금까지의 길이 ∫ 2r sin(θ/2) dθ = 4r(1 − cos(θ/2)) = <b>" + fmt(L(th)) + "r</b>" +
+        "<br>밑변 2πr ≈ 6.28r, 한 아치 전체 길이 8r",
+    });
+  })();
+
+  /* ---------- 예제 6 속력 ---------- */
+  (function () {
+    const X = (t) => 2 * t + 3, Y = (t) => 4 * t * t;
+    const S = 0.22; // 화살표 축척
+    Plot.mount(document.getElementById("fig-ex6"), {
+      t: { min: 0, max: 1.3, value: 1 },
+      duration: 6,
+      panels: [{
+        x: X, y: Y, arrows: 0, markStart: true,
+        view: { x: [-0.5, 7], y: [-0.7, 8.2] }, height: 360,
+        ticks: { x: [1, 2, 3, 4, 5, 6], y: [2, 4, 6, 8] },
+        alt: "입자의 경로와 속도 벡터",
+        over(ctx, T, t, C) {
+          const px = X(t), py = Y(t), vx = 2 * S, vy = 8 * t * S;
+          ctx.save(); ctx.setLineDash([4, 4]); ctx.strokeStyle = C.aux; ctx.globalAlpha = .7; ctx.lineWidth = 1.3;
+          ctx.beginPath(); ctx.moveTo(T.X(px), T.Y(py)); ctx.lineTo(T.X(px + vx), T.Y(py)); ctx.lineTo(T.X(px + vx), T.Y(py + vy)); ctx.stroke();
+          ctx.restore();
+          ctx.save(); ctx.strokeStyle = C.aux; ctx.lineWidth = 2.4;
+          ctx.beginPath(); ctx.moveTo(T.X(px), T.Y(py)); ctx.lineTo(T.X(px + vx), T.Y(py + vy)); ctx.stroke(); ctx.restore();
+          const ang = Math.atan2(T.Y(py + vy) - T.Y(py), T.X(px + vx) - T.X(px));
+          arrowHead(ctx, T.X(px + vx), T.Y(py + vy), ang, 8, C.aux);
+          dot(ctx, T.X(5), T.Y(4), 3, C.ink);
+          label(ctx, "(5, 4), t = 1", T.X(5) + 10, T.Y(4) + 12, { size: 11.5, color: C.muted, halo: C.surface });
+        },
+      }],
+      readout: (t) =>
+        i("t") + " = <b>" + fmt(t) + "</b>, (" + i("x") + ", " + i("y") + ") = (" + fmt(X(t)) + ", " + fmt(Y(t)) + "), 속도 (2, " + fmt(8 * t) + ")<br>" +
+        "속력 " + i("v") + " = 2√(1 + 16" + i("t") + "²) = <b>" + fmt(2 * Math.sqrt(1 + 16 * t * t)) + "</b>",
+    });
+  })();
+
+  /* ---------- 예제 7 구의 겉넓이 ---------- */
+  (function () {
+    const X = Math.cos, Y = Math.sin;
+    const K = 0.16; // 띠를 비스듬히 볼 때의 납작함
+    function ring(ctx, T, s, color, width, alpha) {
+      const cx = T.X(X(s)), ry = Y(s) * T.sy, rx = Y(s) * T.sx * K;
+      if (ry < 0.5) return;
+      ctx.save(); ctx.strokeStyle = color; ctx.lineWidth = width; ctx.globalAlpha = alpha;
+      ctx.beginPath(); ctx.ellipse(cx, T.Y(0), rx, ry, 0, 0, 2 * PI); ctx.stroke(); ctx.restore();
+    }
+    Plot.mount(document.getElementById("fig-ex7"), {
+      t: { min: 0, max: PI, value: 2 * PI / 3 },
+      duration: 7,
+      panels: [{
+        x: X, y: Y, arrows: 2, markStart: true, maxWidth: "34rem",
+        view: { x: [-1.5, 1.5], y: [-1.3, 1.3] }, grid: 0.5,
+        ticks: { x: [{ v: -1, label: "−r" }, { v: 1, label: "r" }], y: [] },
+        alt: "반원을 x축 둘레로 회전시켜 만든 구",
+        under(ctx, T, t, C) {
+          // 아래쪽 반원(회전으로 생기는 부분) 윤곽
+          ctx.save(); ctx.setLineDash([4, 5]); ctx.strokeStyle = C.muted; ctx.globalAlpha = .5; ctx.lineWidth = 1.3;
+          ctx.beginPath(); ctx.arc(T.X(0), T.Y(0), T.sx, 0, PI); ctx.stroke(); ctx.restore();
+          // 지금까지 만들어진 곡면
+          ctx.save(); ctx.fillStyle = C.auxSoft; ctx.beginPath();
+          const n = 120;
+          for (let k = 0; k <= n; k++) { const s = t * k / n; const P = [T.X(X(s)), T.Y(Y(s))]; k ? ctx.lineTo(P[0], P[1]) : ctx.moveTo(P[0], P[1]); }
+          for (let k = n; k >= 0; k--) { const s = t * k / n; ctx.lineTo(T.X(X(s)), T.Y(-Y(s))); }
+          ctx.closePath(); ctx.fill(); ctx.restore();
+          for (let s = PI / 10; s < t - 1e-6; s += PI / 10) ring(ctx, T, s, C.aux, 1, 0.35);
+        },
+        over(ctx, T, t, C) {
+          ring(ctx, T, t, C.aux, 2.2, 1);
+          if (Y(t) > 0.15) {
+            ctx.save(); ctx.strokeStyle = C.ink; ctx.lineWidth = 1.2; ctx.setLineDash([3, 3]);
+            ctx.beginPath(); ctx.moveTo(T.X(X(t)), T.Y(0)); ctx.lineTo(T.X(X(t)), T.Y(Y(t))); ctx.stroke(); ctx.restore();
+            label(ctx, "y", T.X(X(t)) + 6, T.Y(Y(t) / 2), { size: 14, italic: true, math: true, color: C.ink, halo: C.surface });
+          }
+        },
+      }],
+      readout: (t) =>
+        i("t") + " = <b>" + fmtPi(t) + "</b>, 띠의 반지름 " + i("y") + " = r sin " + i("t") + " = " + fmt(Y(t)) + "r, 띠의 둘레 2π" + i("y") + " = " + fmt(2 * PI * Y(t)) + "r<br>" +
+        "지금까지의 곡면 넓이 2πr²(1 − cos " + i("t") + ") = <b>" + fmt(2 * PI * (1 - Math.cos(t))) + "r²</b> (전체 4πr² ≈ 12.57r²)",
+    });
+  })();
+
+  /* ---------- 자가 점검 ---------- */
+  (function () {
+    const R = String.raw;
+    const ro = (X, Y) => (t) => i("t") + " = <b>" + fmt(t) + "</b>, (" + i("x") + ", " + i("y") + ") = <b>(" + fmt(X(t)) + ", " + fmt(Y(t)) + ")</b>";
+
+    Quiz.mount(document.getElementById("quiz"), [
+      {
+        q: R`곡선 $x=t^2+1,\ y=t^3-t$ 위의 $t=1$인 점에서 접선의 기울기는?`,
+        choices: ["$2$", "$1$", R`$\dfrac12$`, "$0$"],
+        answer: 1,
+        explain: R`<p>$\frac{dx}{dt}=2t=2$, $\frac{dy}{dt}=3t^2-1=2$ 이므로 $\frac{dy}{dx}=\tfrac22=1$이에요. 점은 $(2,0)$이고 접선은 $y=x-2$입니다.</p>`,
+        plotWidth: "22rem",
+        plot: {
+          t: { min: -1.6, max: 1.6 }, duration: 3,
+          panels: [{
+            x: (t) => t * t + 1, y: (t) => t * t * t - t, arrows: 3,
+            view: { x: [-0.6, 4], y: [-2.7, 2.7] }, ticks: { x: [1, 2, 3], y: [-2, -1, 1, 2] },
+            over(ctx, T, t, C) { tangent(ctx, T, (s) => s * s + 1, (s) => s * s * s - s, 1, C.aux, { width: 1.8 }); dot(ctx, T.X(2), T.Y(0), 4, C.aux); },
+          }],
+          readout: ro((t) => t * t + 1, (t) => t * t * t - t),
+        },
+      },
+      {
+        q: R`곡선 $x=t^3-3t,\ y=t^2$ 이 <b>수직</b>접선을 갖는 점은?`,
+        choices: ["$(0,0)$", "$(0,1)$", "$(-2,1)$과 $(2,1)$", "$(2,1)$뿐"],
+        answer: 2,
+        explain: R`<p>수직접선은 $\frac{dx}{dt}=3t^2-3=0$, 즉 $t=\pm1$일 때예요(이때 $\frac{dy}{dt}=\pm2\neq0$). $t=1$이면 $(-2,1)$, $t=-1$이면 $(2,1)$입니다. 보기 A의 $(0,0)$은 $t=0$에서 $\frac{dy}{dt}=0$이라 <b>수평</b>접선이에요.</p>`,
+        plotWidth: "24rem",
+        plot: {
+          t: { min: -2.1, max: 2.1 }, duration: 4,
+          panels: [{
+            x: (t) => t * t * t - 3 * t, y: (t) => t * t, arrows: 4,
+            view: { x: [-3.4, 3.4], y: [-0.7, 4.8] }, ticks: { x: [-2, 2], y: [1, 2, 3, 4] },
+            over(ctx, T, t, C) {
+              ctx.save(); ctx.strokeStyle = C.aux; ctx.lineWidth = 1.8;
+              [-2, 2].forEach((x) => { ctx.beginPath(); ctx.moveTo(T.X(x), T.Y(-0.5)); ctx.lineTo(T.X(x), T.Y(2.6)); ctx.stroke(); });
+              ctx.restore();
+            },
+          }],
+          readout: ro((t) => t * t * t - 3 * t, (t) => t * t),
+        },
+      },
+      {
+        q: R`$x=t^2,\ y=t^3$ 일 때 $\dfrac{d^2y}{dx^2}$는?`,
+        choices: [R`$\dfrac{3}{4t}$`, "$3t$", R`$\dfrac32$`, R`$\dfrac{3}{2t}$`],
+        answer: 0,
+        explain: R`<p>먼저 $\frac{dy}{dx}$를 구해요.</p>$$\frac{dy}{dx}=\frac{3t^2}{2t}=\frac32t$$<p>이것을 $t$로 미분하면 $3/2$이고, 다시 $\frac{dx}{dt}=2t$로 나눕니다.</p>$$\frac{d^2y}{dx^2}=\frac{3/2}{2t}=\frac{3}{4t}$$<p>보기 B의 $3t$는 $\dfrac{d^2y/dt^2}{d^2x/dt^2}=\dfrac{6t}{2}$로 계산한 <b>함정</b>입니다.</p>`,
+      },
+      {
+        q: R`곡선 $x=t^2,\ y=t\ (0\le t\le1)$ 과 $x$축, 직선 $x=1$로 둘러싸인 넓이는?`,
+        choices: [R`$\dfrac12$`, R`$\dfrac13$`, "$1$", R`$\dfrac23$`],
+        answer: 3,
+        explain: R`<p>$A=\displaystyle\int_0^1 y\,\frac{dx}{dt}\,dt=\int_0^1 t\cdot2t\,dt=\Big[\tfrac23t^3\Big]_0^1=\tfrac23$. $t$를 소거하면 $y=\sqrt x$이고 $\int_0^1\sqrt x\,dx=\tfrac23$과 일치해요.</p>`,
+        plotWidth: "22rem",
+        plot: {
+          t: { min: 0, max: 1 }, duration: 3,
+          panels: [{
+            x: (t) => t * t, y: (t) => t, arrows: 2, markStart: true,
+            view: { x: [-0.25, 1.35], y: [-0.25, 1.2] }, grid: 0.25, ticks: { x: [1], y: [1] },
+            under(ctx, T, t, C) { fillUnder(ctx, T, (s) => s * s, (s) => s, 0, t, C.auxSoft); },
+          }],
+          readout: (t) => i("t") + " = <b>" + fmt(t) + "</b>, 지금까지의 넓이 ⅔" + i("t") + "³ = <b>" + fmt(2 / 3 * t * t * t, 3) + "</b>",
+        },
+      },
+      {
+        q: R`곡선 $x=t^2,\ y=\tfrac23t^3\ (0\le t\le1)$ 의 길이는?`,
+        choices: [R`$2\sqrt2-1$`, R`$\dfrac23\left(2\sqrt2-1\right)$`, R`$\dfrac23$`, R`$\dfrac13\left(2\sqrt2-1\right)$`],
+        answer: 1,
+        explain: R`<p>$\left(\frac{dx}{dt}\right)^2+\left(\frac{dy}{dt}\right)^2=4t^2+4t^4=4t^2(1+t^2)$ 이므로 루트를 씌우면 $2t\sqrt{1+t^2}$ ($t\ge0$)예요.</p><p>$L=\displaystyle\int_0^1 2t\sqrt{1+t^2}\,dt=\Big[\tfrac23(1+t^2)^{3/2}\Big]_0^1=\tfrac23\left(2\sqrt2-1\right)\approx1.22$.</p>`,
+      },
+      {
+        q: R`$x=\sin2t,\ y=\cos2t,\ 0\le t\le2\pi$ 에 호의 길이 공식을 쓰면 $4\pi$가 나온다. 단위원 둘레 $2\pi$와 다른 이유는?`,
+        choices: ["공식이 원에는 적용되지 않아서", R`$\dfrac{dx}{dt}<0$인 구간이 있어서`, "곡선이 원을 두 번 지나서", "반지름이 2라서"],
+        answer: 2,
+        explain: R`<p>속력이 $\sqrt{(2\cos2t)^2+(-2\sin2t)^2}=2$로 일정하니 $\int_0^{2\pi}2\,dt=4\pi$예요. 9.1 예제 3에서 본 것처럼 이 곡선은 단위원을 <b>두 바퀴</b> 돌아서 둘레가 두 번 더해졌어요. 호의 길이 공식은 곡선을 <b>한 번만</b> 지날 때 써야 합니다.</p>`,
+        plotWidth: "22rem",
+        plot: {
+          t: { min: 0, max: 2 * PI }, duration: 5,
+          panels: [{
+            x: (t) => Math.sin(2 * t), y: (t) => Math.cos(2 * t), arrows: 6, samples: 900, markStart: true,
+            map: (x, y, t) => { const s = 1 + 0.075 * t / PI; return [x * s, y * s]; },
+            view: { x: [-1.6, 1.6], y: [-1.6, 1.6] }, grid: 0.5, ticks: { x: [-1, 1], y: [-1, 1] },
+          }],
+          readout: (t) => i("t") + " = <b>" + fmtPi(t) + "</b>, 지금까지 움직인 거리 2" + i("t") + " = <b>" + fmt(2 * t) + "</b> (" + fmt(t / PI) + "바퀴)",
+        },
+      },
+      {
+        q: R`위치가 $x=t^2,\ y=2t$ 인 입자의 $t=2$일 때 속력은?`,
+        choices: [R`$2\sqrt5$`, "$6$", "$4$", R`$\sqrt8$`],
+        answer: 0,
+        explain: R`<p>$v=\sqrt{(2t)^2+2^2}$이고 $t=2$이면 $\sqrt{16+4}=\sqrt{20}=2\sqrt5\approx4.47$이에요. 보기 B의 $6$은 성분을 그냥 더한 값($4+2$)이라 틀립니다.</p>`,
+      },
+      {
+        q: R`선분 $x=t,\ y=t\ (0\le t\le1)$ 을 $x$축 둘레로 회전시킨 곡면의 넓이는?`,
+        choices: [R`$2\pi$`, R`$\sqrt2\,\pi$`, R`$\pi$`, R`$2\sqrt2\,\pi$`],
+        answer: 1,
+        explain: R`<p>$ds=\sqrt{1^2+1^2}\,dt=\sqrt2\,dt$ 이므로 $S=\displaystyle\int_0^1 2\pi t\cdot\sqrt2\,dt=\sqrt2\,\pi$예요. 밑면 반지름 1, 모선 $\sqrt2$인 원뿔의 옆넓이 $\pi r l=\sqrt2\,\pi$와 같습니다.</p>`,
+      },
+    ]);
+  })();
+})();
+</script>
+</body>
+</html>

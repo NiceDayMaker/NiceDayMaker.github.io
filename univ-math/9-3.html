@@ -1,0 +1,608 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>9.3 극좌표</title>
+<script>try{var t=localStorage.getItem("theme");if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
+<link rel="stylesheet" href="assets/katex/katex.min.css">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body data-section="9.3">
+<div class="shell">
+  <nav class="side" aria-label="이 절의 목차">
+    <a class="home" href="index.html">전체 목차로</a>
+    <ol>
+      <li><a href="#system">극좌표계</a></li>
+      <li><a href="#ex1">예제 1 · 점 찍기</a></li>
+      <li><a href="#convert">직교좌표와의 관계</a></li>
+      <li><a href="#ex23">예제 2, 3 · 좌표 변환</a></li>
+      <li><a href="#curve">극곡선</a></li>
+      <li><a href="#ex45">예제 4, 5 · 원과 직선</a></li>
+      <li><a href="#ex6">예제 6 · r = 2cos θ</a></li>
+      <li><a href="#ex7">예제 7 · 심장형</a></li>
+      <li><a href="#ex8">예제 8 · 4엽 장미</a></li>
+      <li><a href="#symmetry">대칭</a></li>
+      <li><a href="#gallery">극곡선 모음</a></li>
+      <li><a href="#summary">한눈에 정리</a></li>
+      <li><a href="#check">자가 점검</a></li>
+    </ol>
+  </nav>
+
+  <main>
+    <header class="hero">
+      <p class="chapter">9장 매개변수방정식과 극좌표</p>
+      <h1><span class="num">9.3</span>극좌표</h1>
+      <canvas id="hero" aria-hidden="true"></canvas>
+    </header>
+
+    <p class="lede">점의 위치를 가로·세로 거리 대신 “원점에서 얼마나 멀리, 어느 방향으로”로 나타내는 좌표계예요. 원, 심장형, 장미처럼 직교좌표로는 복잡한 곡선이 아주 짧은 식이 됩니다.</p>
+
+    <!-- ===================================================== -->
+    <h2 id="system">극좌표계</h2>
+    <dl class="def">
+      <dt>극<span class="en">pole</span></dt>
+      <dd>평면 위의 한 정점 $O$ (원점).</dd>
+      <dt>극축<span class="en">polar axis</span></dt>
+      <dd>$O$에서 출발해 오른쪽으로 그은 반직선. 직교좌표의 양의 $x$축과 같아요.</dd>
+      <dt>극좌표<span class="en">polar coordinate</span></dt>
+      <dd>점 $P$에 대해 $r=$ $O$에서 $P$까지의 거리, $\theta=$ 극축에서 $OP$까지 잰 각(라디안)일 때 순서쌍 $(r,\theta)$. 반시계 방향이 양의 각이에요.</dd>
+    </dl>
+
+    <h3>음수 $r$과 여러 가지 표현</h3>
+    <p>$r$이 음수일 수도 있어요. $(-r,\theta)$는 $\theta$ 방향을 바라본 뒤 <b>반대쪽으로</b> $|r|$만큼 간 점입니다. 그래서 $(r,\theta)$와 $(-r,\theta)$는 $O$를 지나는 같은 직선 위, $O$의 반대편에 있어요.</p>
+    <ul>
+      <li>$r>0$이면 점 $(r,\theta)$는 $\theta$와 같은 사분면에, $r<0$이면 반대편 사분면에 있어요.</li>
+      <li>각을 한 바퀴 더 돌아도 같은 점: $(r,\theta)=(r,\theta+2n\pi)$.</li>
+      <li>반대편으로 돌리고 $r$의 부호를 바꿔도 같은 점: $(r,\theta)=(-r,\theta+\pi)$.</li>
+    </ul>
+    <p>즉 직교좌표와 달리 <b>한 점의 극좌표 표현은 무수히 많아요.</b> 아래 그림에서 $r$과 $\theta$를 직접 바꿔 보세요.</p>
+
+    <figure class="plot" id="fig-pt">
+      <figcaption>빨간 화살표가 각 $\theta$, 검은 선이 $O$에서 점까지예요. $r<0$이면 회색 점선이 $\theta$ 방향, 실제 점은 그 반대편에 찍혀요. 파란 점선은 점의 직교좌표 $x$, $y$입니다.</figcaption>
+    </figure>
+
+    <!-- ===================================================== -->
+    <h2 id="ex1">예제 1 · 점 찍기</h2>
+    <div class="problem"><span class="tag">예제 1</span>다음 극좌표의 점을 평면 위에 나타내라.<br>
+      (a) $\left(1,\tfrac{5\pi}{4}\right)$ &nbsp; (b) $(2,3\pi)$ &nbsp; (c) $\left(2,-\tfrac{2\pi}{3}\right)$ &nbsp; (d) $\left(-3,\tfrac{3\pi}{4}\right)$</div>
+    <p>위 그림의 버튼 (a)~(d)를 눌러 하나씩 확인해 보세요.</p>
+    <dl class="def">
+      <dt>(a) $\left(1,\tfrac{5\pi}{4}\right)$</dt><dd>$\pi$보다 $\tfrac\pi4$ 더 돌아서 제3사분면, 거리 1.</dd>
+      <dt>(b) $(2,3\pi)$</dt><dd>$3\pi=2\pi+\pi$이므로 한 바퀴 반. 음의 $x$축 위, 즉 직교좌표 $(-2,0)$.</dd>
+      <dt>(c) $\left(2,-\tfrac{2\pi}{3}\right)$</dt><dd>시계 방향으로 $120^\circ$. 제3사분면, 거리 2.</dd>
+      <dt>(d) $\left(-3,\tfrac{3\pi}{4}\right)$</dt><dd>$\tfrac{3\pi}{4}$(제2사분면)을 바라본 뒤 반대쪽으로 3. 점은 <b>제4사분면</b>에 있어요.</dd>
+    </dl>
+    <p>(a)의 점은 이렇게도 쓸 수 있어요.</p>
+    $$\left(1,\tfrac{5\pi}{4}\right)=\left(1,-\tfrac{3\pi}{4}\right)=\left(1,\tfrac{13\pi}{4}\right)=\left(-1,\tfrac{\pi}{4}\right)$$
+
+    <!-- ===================================================== -->
+    <h2 id="convert">직교좌표와의 관계</h2>
+    <p>$O$에서 $P$까지의 선분을 빗변으로 하는 직각삼각형을 생각하면 $\cos\theta=\frac xr$, $\sin\theta=\frac yr$ 이에요. 그래서</p>
+    <div class="summary-box">
+      $$x=r\cos\theta,\qquad y=r\sin\theta \tag{1}$$
+      $$r^2=x^2+y^2,\qquad \tan\theta=\frac yx \tag{2}$$
+    </div>
+    <p>(1)은 극좌표에서 직교좌표로, (2)는 직교좌표에서 극좌표로 바꿀 때 써요.</p>
+
+    <div class="exam"><strong>시험 포인트.</strong> $\tan\theta=\frac yx$를 풀면 각이 <b>두 개</b> 나와요(서로 $\pi$ 차이). 반드시 <b>점 $(x,y)$가 있는 사분면</b>을 보고 맞는 쪽을 골라야 합니다. 예제 3이 바로 이 유형이에요.</div>
+
+    <!-- ===================================================== -->
+    <h2 id="ex23">예제 2, 3 · 좌표 변환</h2>
+    <div class="problem"><span class="tag">예제 2</span>극좌표가 $\left(2,\tfrac\pi3\right)$인 점을 직교좌표로 바꿔라.</div>
+    <p>(1)에 넣으면 $x=2\cos\tfrac\pi3=2\cdot\tfrac12=1$, $y=2\sin\tfrac\pi3=2\cdot\tfrac{\sqrt3}{2}=\sqrt3$. 따라서 $(1,\sqrt3)$이에요.</p>
+
+    <div class="problem"><span class="tag">예제 3</span>직교좌표가 $(1,-1)$인 점을 극좌표로 나타내라.</div>
+    <ol class="steps">
+      <li>$r=\sqrt{1^2+(-1)^2}=\sqrt2$ ($r>0$으로 잡아요).</li>
+      <li>$\tan\theta=\frac{-1}{1}=-1$이므로 후보는 $\theta=\tfrac{3\pi}{4}$ 또는 $-\tfrac{\pi}{4}$ ($\tfrac{7\pi}4$).</li>
+      <li>점 $(1,-1)$은 <b>제4사분면</b>이므로 $\theta=-\tfrac\pi4$ 또는 $\tfrac{7\pi}{4}$. 답은 $\left(\sqrt2,-\tfrac\pi4\right)$ 또는 $\left(\sqrt2,\tfrac{7\pi}4\right)$.</li>
+    </ol>
+    <p>위 점 그림에서 “예제 2”, “예제 3” 버튼으로도 확인할 수 있어요.</p>
+
+    <!-- ===================================================== -->
+    <h2 id="curve">극곡선</h2>
+    <p>$r=f(\theta)$ 또는 $F(r,\theta)=0$ 꼴의 <b>극방정식의 그래프</b>는 그 방정식을 만족하는 극좌표 표현을 <b>적어도 하나</b> 갖는 점 전체예요. “적어도 하나”라는 말이 중요해요. 한 점의 표현이 여러 개라서, 그중 하나만 식을 만족해도 곡선 위의 점입니다.</p>
+    <p>극곡선을 그리는 가장 확실한 방법은 <b>$\theta$에 따른 $r$의 그래프</b>(직교좌표 그래프)를 먼저 그리고, 그걸 보며 $\theta$ 방향으로 $r$만큼 점을 찍어 나가는 거예요. 아래 그림들은 모두 왼쪽에 실제 곡선, 오른쪽에 $r$-$\theta$ 그래프를 나란히 보여 줘요. 파란색 부분은 $r<0$인 구간입니다.</p>
+
+    <!-- ===================================================== -->
+    <h2 id="ex45">예제 4, 5 · 원과 직선</h2>
+    <div class="problem"><span class="tag">예제 4</span>극방정식 $r=2$가 나타내는 곡선은 무엇인가?</div>
+    <p>$\theta$와 상관없이 원점에서 거리가 2인 점들, 즉 <b>중심이 $O$이고 반지름이 2인 원</b>이에요. 직교방정식으로는 $r^2=x^2+y^2=4$입니다.</p>
+    <figure class="plot" id="fig-ex4"></figure>
+
+    <div class="problem"><span class="tag">예제 5</span>극곡선 $\theta=1$을 그려라.</div>
+    <p>$r$은 아무 값이나 되고 각만 1(라디안, 약 $57^\circ$)로 고정이에요. $r>0$인 점은 제1사분면 쪽, $r<0$인 점은 반대편(제3사분면)에 찍히므로 결과는 <b>$O$를 지나고 극축과 각 1을 이루는 직선</b> 전체예요.</p>
+    <figure class="plot" id="fig-ex5">
+      <figcaption>이 그림의 슬라이더는 $r$이에요. $r$이 음수일 때 점이 반대편으로 넘어가는 걸 확인하세요.</figcaption>
+    </figure>
+
+    <!-- ===================================================== -->
+    <h2 id="ex6">예제 6 · $r=2\cos\theta$</h2>
+    <div class="problem"><span class="tag">예제 6</span>(a) 극방정식이 $r=2\cos\theta$인 곡선을 그려라. (b) 이 곡선에 대한 직교방정식을 구하라.</div>
+
+    <table class="vals" aria-label="θ에 따른 r = 2cos θ">
+      <thead><tr><th>$\theta$</th><th>$0$</th><th>$\tfrac\pi6$</th><th>$\tfrac\pi4$</th><th>$\tfrac\pi3$</th><th>$\tfrac\pi2$</th><th>$\tfrac{2\pi}3$</th><th>$\tfrac{3\pi}4$</th><th>$\tfrac{5\pi}6$</th><th>$\pi$</th></tr></thead>
+      <tbody><tr><th>$r$</th><td>$2$</td><td>$\sqrt3$</td><td>$\sqrt2$</td><td>$1$</td><td>$0$</td><td class="hit">$-1$</td><td class="hit">$-\sqrt2$</td><td class="hit">$-\sqrt3$</td><td class="hit">$-2$</td></tr></tbody>
+    </table>
+
+    <figure class="plot" id="fig-ex6">
+      <figcaption>$\theta$가 $\pi/2$를 넘으면 $r<0$이 되어(파란색) 위쪽 대신 아래쪽 반원을 그려요. $0\le\theta\le\pi$에서 원이 한 바퀴 완성되고, $\pi$부터 $2\pi$까지는 같은 원을 한 번 더 지납니다.</figcaption>
+    </figure>
+
+    <h3>(b) 직교방정식</h3>
+    <ol class="steps">
+      <li>양변에 $r$을 곱해서 $r^2$, $r\cos\theta$ 꼴을 만들어요: $r^2=2r\cos\theta$.</li>
+      <li>(1), (2)로 바꾸면 $x^2+y^2=2x$.</li>
+      <li>완전제곱식으로 정리하면
+        $$(x-1)^2+y^2=1$$
+        중심 $(1,0)$, 반지름 1인 원이에요.</li>
+    </ol>
+    <p>기하학적으로 보면, $Q=(2,0)$일 때 지름 $OQ$에 대한 원주각 $\angle OPQ$가 직각이라 $\frac r2=\cos\theta$가 돼요.</p>
+
+    <div class="exam"><strong>시험 포인트.</strong> $r=a\cos\theta$, $r=a\sin\theta$ 꼴은 <b>양변에 $r$을 곱하는 것</b>이 정석이에요. $r=a\cos\theta$는 중심 $\left(\tfrac a2,0\right)$, $r=a\sin\theta$는 중심 $\left(0,\tfrac a2\right)$이고 반지름은 둘 다 $\tfrac{|a|}2$인 원입니다.</div>
+
+    <!-- ===================================================== -->
+    <h2 id="ex7">예제 7 · 심장형</h2>
+    <div class="problem"><span class="tag">예제 7</span>곡선 $r=1+\sin\theta$를 그려라.</div>
+    <p>오른쪽 $r$-$\theta$ 그래프를 네 구간으로 나눠 읽으면 모양이 나와요.</p>
+    <table class="vals compare" aria-label="구간별 r 변화">
+      <thead><tr><th>$\theta$ 구간</th><th>$r$의 변화</th><th>곡선</th></tr></thead>
+      <tbody>
+        <tr><th>$0\to\tfrac\pi2$</th><td>$1\to2$ 증가</td><td>오른쪽에서 위로 부풀며 꼭대기 $(0,2)$</td></tr>
+        <tr><th>$\tfrac\pi2\to\pi$</th><td>$2\to1$ 감소</td><td>왼쪽으로 내려와 $(-1,0)$</td></tr>
+        <tr><th>$\pi\to\tfrac{3\pi}2$</th><td>$1\to0$ 감소</td><td>원점으로 빨려 들어감</td></tr>
+        <tr><th>$\tfrac{3\pi}2\to2\pi$</th><td>$0\to1$ 증가</td><td>원점에서 나와 $(1,0)$으로 복귀</td></tr>
+      </tbody>
+    </table>
+    <figure class="plot" id="fig-ex7">
+      <figcaption>원점에서 뾰족하게 들어간 하트 모양이라 <b>심장형</b>(cardioid)이라고 불러요.</figcaption>
+    </figure>
+
+    <!-- ===================================================== -->
+    <h2 id="ex8">예제 8 · 4엽 장미</h2>
+    <div class="problem"><span class="tag">예제 8</span>곡선 $r=\cos2\theta$를 그려라.</div>
+    <p>$\cos2\theta$는 $\theta$가 $\tfrac\pi4$ 늘 때마다 $1\to0\to-1\to0\to1$ 순서로 변해요. 그래서 $0\le\theta\le2\pi$를 $\tfrac\pi4$씩 여덟 조각 ①~⑧로 나누면, 조각 두 개가 꽃잎 하나를 만듭니다.</p>
+    <figure class="plot" id="fig-ex8">
+      <figcaption>파란 조각(②③, ⑥⑦)은 $r<0$이라 $\theta$ 방향의 <b>반대편</b>에 꽃잎을 그려요. 예를 들어 ②는 $\theta$가 제1사분면인데 꽃잎은 제3사분면 아래쪽에 생깁니다. 점선은 $r=0$이 되는 방향 $\theta=\tfrac\pi4,\tfrac{3\pi}4$예요.</figcaption>
+    </figure>
+
+    <!-- ===================================================== -->
+    <h2 id="symmetry">대칭</h2>
+    <p>극방정식이 다음 바꿈에도 변하지 않으면 곡선은 대칭이에요. 대칭을 알면 곡선의 절반이나 4분의 1만 그리고 나머지는 접어서 완성할 수 있어요.</p>
+    <table class="vals compare" aria-label="대칭 판정">
+      <thead><tr><th>바꿈</th><th>대칭</th><th>예</th></tr></thead>
+      <tbody>
+        <tr><th>(a) $\theta\to-\theta$</th><td><b>극축</b>($x$축)에 대해 대칭</td><td>$\cos(-\theta)=\cos\theta$: 예제 6, 8</td></tr>
+        <tr><th>(b) $r\to-r$ 또는 $\theta\to\theta+\pi$</th><td><b>극</b>(원점)에 대해 대칭, $180^\circ$ 회전해도 같음</td><td>$r^2=\sin2\theta$</td></tr>
+        <tr><th>(c) $\theta\to\pi-\theta$</th><td>직선 <b>$\theta=\tfrac\pi2$</b>($y$축)에 대해 대칭</td><td>$\sin(\pi-\theta)=\sin\theta$: 예제 7, 8</td></tr>
+      </tbody>
+    </table>
+    <p>아래 그림은 곡선 위의 점 $P$를 세 가지 방법으로 옮긴 점을 보여 줘요. 옮긴 점이 곡선 위에 떨어지면 초록, 벗어나면 빨강이에요. 곡선을 바꿔 가며 $\theta$를 움직여 보세요.</p>
+    <figure class="plot" id="fig-sym">
+      <figcaption>(a)는 $(r,-\theta)$, (b)는 $(-r,\theta)$, (c)는 $(r,\pi-\theta)$로 옮긴 점이에요. 어느 $\theta$에서도 초록으로 남는 것이 그 곡선이 가진 대칭입니다.</figcaption>
+    </figure>
+
+    <!-- ===================================================== -->
+    <h2 id="gallery">극곡선 모음</h2>
+    <p>교재 표에 있는 대표적인 극곡선을 직접 만들어 보세요. 종류를 고르고 $a$, $b$, $n$을 바꾸면 모양이 어떻게 달라지는지 보입니다.</p>
+    <figure class="plot" id="fig-gallery"></figure>
+    <table class="vals compare" aria-label="극곡선 분류">
+      <thead><tr><th>이름</th><th>식</th><th>기억할 점</th></tr></thead>
+      <tbody>
+        <tr><th>원</th><td>$r=a$, $r=a\sin\theta$, $r=a\cos\theta$</td><td>뒤의 둘은 원점을 지나는 원</td></tr>
+        <tr><th>나선</th><td>$r=a\theta$</td><td>돌수록 바깥으로</td></tr>
+        <tr><th>리마송</th><td>$r=a\pm b\sin\theta$, $r=a\pm b\cos\theta$</td><td>$a&lt;b$ 내부 고리, $a=b$ 심장형, $b&lt;a&lt;2b$ 보조개, $a\ge2b$ 볼록</td></tr>
+        <tr><th>장미</th><td>$r=a\sin n\theta$, $r=a\cos n\theta$</td><td>$n$ 홀수면 $n$엽, $n$ 짝수면 $2n$엽</td></tr>
+        <tr><th>렘니스케이트</th><td>$r^2=a^2\cos2\theta$, $r^2=a^2\sin2\theta$</td><td>8자 모양</td></tr>
+      </tbody>
+    </table>
+
+    <div class="exam"><strong>시험 포인트.</strong> 장미 꽃잎 개수(<b>홀수 $n$이면 $n$장, 짝수 $n$이면 $2n$장</b>)와 리마송 모양 구분($a$와 $b$의 크기 비교)은 그래프를 그리지 않고 바로 답하는 문제로 자주 나와요.</div>
+
+    <!-- ===================================================== -->
+    <h2 id="summary">한눈에 정리</h2>
+    <div class="summary-box">
+      <ul>
+        <li>$(r,\theta)$: 거리 $r$, 각 $\theta$. $r<0$이면 반대편. $(r,\theta)=(r,\theta+2n\pi)=(-r,\theta+\pi)$.</li>
+        <li>극 → 직교: $x=r\cos\theta,\ y=r\sin\theta$.</li>
+        <li>직교 → 극: $r^2=x^2+y^2,\ \tan\theta=\frac yx$. <b>사분면 확인 필수</b>.</li>
+        <li>극방정식 → 직교방정식: 양변에 $r$을 곱하거나 제곱해서 $r^2$, $r\cos\theta$, $r\sin\theta$ 꼴을 만든다.</li>
+        <li>그리기: $r$-$\theta$ 그래프를 먼저 그리고 구간별로 옮긴다. $r<0$ 구간은 반대편.</li>
+        <li>대칭: $\theta\to-\theta$ 극축, $r\to-r$ 극, $\theta\to\pi-\theta$ 직선 $\theta=\tfrac\pi2$.</li>
+        <li>장미 $n$ 홀수 $n$엽, 짝수 $2n$엽. 리마송은 $a$와 $b$ 비교.</li>
+      </ul>
+    </div>
+
+    <!-- ===================================================== -->
+    <h2 id="check">자가 점검</h2>
+    <p>보기를 고르면 바로 정답과 풀이가 나와요. 그래프가 있는 문제는 답을 고른 뒤 직접 확인해 보세요.</p>
+    <div id="quiz"></div>
+
+    <nav class="pager" aria-label="절 이동"></nav>
+  </main>
+</div>
+
+<script src="assets/katex/katex.min.js"></script>
+<script src="assets/katex/auto-render.min.js"></script>
+<script src="assets/plot.js"></script>
+<script src="assets/quiz.js"></script>
+<script src="assets/site.js"></script>
+<script>
+(function () {
+  "use strict";
+  const { fmt, fmtPi, label, dot, hollow, polarGrid, polarRay } = Plot;
+  const PI = Math.PI, SQ2 = Math.SQRT2, SQ3 = Math.sqrt(3);
+  const i = (s) => "<i>" + s + "</i>";
+  const segHtml = (labels, aria, cls) =>
+    '<span class="seg ' + (cls || "") + '" role="group" aria-label="' + aria + '">' +
+    labels.map((l, k) => '<button type="button" data-k="' + k + '" aria-pressed="false">' + l + "</button>").join("") + "</span>";
+  function pressOne(group, btn) { group.querySelectorAll("button").forEach((b) => b.setAttribute("aria-pressed", b === btn ? "true" : "false")); }
+
+  Plot.heroPolar(document.getElementById("hero"), [
+    { f: () => 1, range: [0, 2 * PI], R: 1.15 },
+    { f: (t) => 1 + Math.sin(t), range: [0, 2 * PI], R: 2.05 },
+    { f: (t) => Math.cos(2 * t), range: [0, 2 * PI], R: 1.05 },
+    { f: (t) => 1 + 2 * Math.cos(t), range: [0, 2 * PI], R: 3.05 },
+    { f: (t) => Math.cos(3 * t), range: [0, PI], R: 1.05 },
+    { f: (t) => t / (4 * PI), range: [0, 4 * PI], R: 1.05 },
+  ]);
+
+  /* ---------- 점 탐색기 ---------- */
+  (function () {
+    const st = { r: 1 };
+    const presets = [
+      ["(a)", 1, 5 * PI / 4], ["(b)", 2, 3 * PI], ["(c)", 2, -2 * PI / 3], ["(d)", -3, 3 * PI / 4],
+      ["예제 2", 2, PI / 3], ["예제 3", SQ2, 7 * PI / 4],
+    ];
+    const api = Plot.mount(document.getElementById("fig-pt"), {
+      t: { min: -PI, max: 4 * PI, value: 5 * PI / 4, label: "θ" },
+      duration: 10,
+      panels: [{
+        curve: false, x: () => 0, y: () => 0, grid: 0, origin: false, maxWidth: "26rem",
+        view: { x: [-3.5, 3.5], y: [-3.5, 3.5] },
+        alt: "극좌표 (r, θ)로 찍은 점",
+        under(ctx, T, th, C) { polarGrid(ctx, T, C, { rings: [1, 2, 3], maxR: 5 }); },
+        over(ctx, T, th, C) {
+          const x = st.r * Math.cos(th), y = st.r * Math.sin(th);
+          ctx.save(); ctx.setLineDash([3, 4]); ctx.strokeStyle = C.aux; ctx.globalAlpha = .8; ctx.lineWidth = 1.2;
+          ctx.beginPath(); ctx.moveTo(T.X(x), T.Y(y)); ctx.lineTo(T.X(x), T.Y(0)); ctx.moveTo(T.X(x), T.Y(y)); ctx.lineTo(T.X(0), T.Y(y)); ctx.stroke();
+          ctx.restore();
+          polarRay(ctx, T, C, st.r, th, { angleR: 18 });
+          dot(ctx, T.X(x), T.Y(y), 5.5, C.curve, C.surface);
+          label(ctx, "O", T.X(0) - 6, T.Y(0) + 12, { size: 13, italic: true, math: true, color: C.ink, align: "right" });
+        },
+      }],
+      controls:
+        '<label>r <input type="range" data-p="r" min="-3" max="3" step="0.05" value="1"></label>' +
+        segHtml(presets.map((p) => p[0]), "예제의 점으로 이동", "pt-presets"),
+      readout: (th) => {
+        const x = st.r * Math.cos(th), y = st.r * Math.sin(th);
+        return "(" + i("r") + ", θ) = <b>(" + fmt(st.r) + ", " + fmtPi(th) + ")</b>, 직교좌표 (" + i("x") + ", " + i("y") + ") = <b>(" + fmt(x) + ", " + fmt(y) + ")</b><br>" +
+          "같은 점: (" + fmt(st.r) + ", " + fmtPi(th + 2 * PI) + "), (" + fmt(-st.r) + ", " + fmtPi(th + PI) + ")" +
+          (st.r < 0 ? ", 지금은 " + i("r") + " < 0이라 θ의 반대편" : "");
+      },
+    });
+    const rIn = api.bar.querySelector('input[data-p="r"]');
+    rIn.addEventListener("input", () => { st.r = parseFloat(rIn.value); api.redraw(); });
+    const grp = api.bar.querySelector(".pt-presets");
+    grp.querySelectorAll("button").forEach((b) => b.addEventListener("click", () => {
+      const p = presets[+b.dataset.k];
+      st.r = p[1]; rIn.value = p[1];
+      pressOne(grp, b); api.pause(); api.setT(p[2]);
+    }));
+  })();
+
+  /* ---------- 예제 4 ---------- */
+  Plot.polar(document.getElementById("fig-ex4"), {
+    f: () => 2, range: [0, 2 * PI], R: 2.6, rings: [1, 2], rview: [-0.6, 2.7], rticks: [1, 2], duration: 6,
+    alt: "원 r = 2",
+  });
+
+  /* ---------- 예제 5: θ = 1 ---------- */
+  Plot.mount(document.getElementById("fig-ex5"), {
+    t: { min: -3, max: 3, value: 2.2, label: "r" },
+    duration: 6,
+    panels: [{
+      x: (r) => r * Math.cos(1), y: (r) => r * Math.sin(1), arrows: 3, markStart: true, grid: 0, origin: false, maxWidth: "24rem",
+      view: { x: [-3.2, 3.2], y: [-3.2, 3.2] },
+      alt: "직선 θ = 1",
+      under(ctx, T, r, C) { polarGrid(ctx, T, C, { rings: [1, 2, 3], maxR: 5 }); },
+      over(ctx, T, r, C) {
+        polarRay(ctx, T, C, r, 1, { angleR: 22 });
+        [-2, -1, 1, 2].forEach((k) => {
+          dot(ctx, T.X(k * Math.cos(1)), T.Y(k * Math.sin(1)), 3, C.ink);
+          label(ctx, "(" + (k < 0 ? "−" + -k : k) + ", 1)", T.X(k * Math.cos(1)) + 8, T.Y(k * Math.sin(1)) + 2, { size: 11, color: C.muted, halo: C.surface });
+        });
+      },
+    }],
+    readout: (r) => "(" + i("r") + ", θ) = <b>(" + fmt(r) + ", 1)</b>, (" + i("x") + ", " + i("y") + ") = (" + fmt(r * Math.cos(1)) + ", " + fmt(r * Math.sin(1)) + ")" +
+      (r < 0 ? ", " + i("r") + " < 0이라 반대편(제3사분면)" : ""),
+  });
+
+  /* ---------- 예제 6 ---------- */
+  Plot.polar(document.getElementById("fig-ex6"), {
+    f: (t) => 2 * Math.cos(t), range: [0, 2 * PI], value: 2 * PI / 3,
+    view: { x: [-0.9, 2.6], y: [-1.75, 1.75] }, rings: [1, 2], R: 2.4, rview: [-2.3, 2.3], rticks: [-2, 2], duration: 9,
+    alt: "원 r = 2cos θ",
+    over(ctx, T, t, C) {
+      // 지름 OQ와 직각삼각형 OPQ
+      const rr = 2 * Math.cos(t), px = rr * Math.cos(t), py = rr * Math.sin(t);
+      if (Math.abs(rr) > 0.15 && Math.abs(rr) < 1.95) {
+        ctx.save(); ctx.strokeStyle = C.aux; ctx.lineWidth = 1.3; ctx.globalAlpha = .9;
+        ctx.beginPath(); ctx.moveTo(T.X(px), T.Y(py)); ctx.lineTo(T.X(2), T.Y(0)); ctx.stroke(); ctx.restore();
+      }
+      dot(ctx, T.X(2), T.Y(0), 3, C.ink);
+      label(ctx, "Q", T.X(2) + 6, T.Y(0) + 12, { size: 13, italic: true, math: true, color: C.ink });
+    },
+    note: (t) => (t > PI + 1e-6 ? "θ > π: 같은 원을 <b>두 번째</b> 지나는 중" : t > PI / 2 ? "π/2 < θ ≤ π: " + i("r") + " < 0이라 아래쪽 반원" : "0 ≤ θ ≤ π/2: 위쪽 반원"),
+  });
+
+  /* ---------- 예제 7 ---------- */
+  Plot.polar(document.getElementById("fig-ex7"), {
+    f: (t) => 1 + Math.sin(t), range: [0, 2 * PI],
+    view: { x: [-1.7, 1.7], y: [-0.7, 2.35] }, rings: [1, 2], R: 2.3, rview: [-0.4, 2.3], rticks: [1, 2], duration: 8,
+    alt: "심장형 r = 1 + sin θ",
+    note: (t) => {
+      const q = Math.min(3, Math.floor(t / (PI / 2)));
+      return ["r: 1 → 2, 꼭대기로", "r: 2 → 1, 왼쪽으로", "r: 1 → 0, 원점으로", "r: 0 → 1, 출발점으로"][q];
+    },
+  });
+
+  /* ---------- 예제 8 ---------- */
+  (function () {
+    const NUM = "①②③④⑤⑥⑦⑧";
+    Plot.polar(document.getElementById("fig-ex8"), {
+      f: (t) => Math.cos(2 * t), range: [0, 2 * PI], value: 0.42 * PI,
+      R: 1.2, rings: [0.5, 1], rview: [-1.2, 1.2], rticks: [-1, 1], duration: 12, arrows: 8,
+      alt: "4엽 장미 r = cos 2θ",
+      under(ctx, T, t, C) {
+        ctx.save(); ctx.setLineDash([5, 5]); ctx.strokeStyle = C.muted; ctx.globalAlpha = .6;
+        [PI / 4, 3 * PI / 4].forEach((a) => { ctx.beginPath(); ctx.moveTo(T.X(-1.6 * Math.cos(a)), T.Y(-1.6 * Math.sin(a))); ctx.lineTo(T.X(1.6 * Math.cos(a)), T.Y(1.6 * Math.sin(a))); ctx.stroke(); });
+        ctx.restore();
+      },
+      note: (t) => {
+        const k = Math.min(7, Math.floor(t / (PI / 4)));
+        const rr = Math.cos(2 * t);
+        return "지금 <b>" + NUM[k] + "</b>번 조각 (" + fmtPi(k * PI / 4) + " ≤ θ ≤ " + fmtPi((k + 1) * PI / 4) + ")" + (rr < 0 ? ", " + i("r") + " < 0이라 반대편 꽃잎" : "");
+      },
+    });
+  })();
+
+  /* ---------- 대칭 탐색기 ---------- */
+  (function () {
+    const curves = [
+      { name: "1 + cos θ", f: (t) => 1 + Math.cos(t), R: 2.2 },
+      { name: "1 + sin θ", f: (t) => 1 + Math.sin(t), R: 2.2 },
+      { name: "r² = sin 2θ", f: (t) => Math.sqrt(Math.max(0, Math.sin(2 * t))), R: 1.2 },
+      { name: "cos 2θ", f: (t) => Math.cos(2 * t), R: 1.2 },
+    ];
+    let cur = curves[0], pts = [];
+    function sample() {
+      pts = [];
+      for (let k = 0; k <= 3000; k++) { const t = 2 * PI * k / 3000, rr = cur.f(t); pts.push([rr * Math.cos(t), rr * Math.sin(t)]); }
+    }
+    function onCurve(x, y) {
+      let m = Infinity;
+      for (const p of pts) { const d = (p[0] - x) ** 2 + (p[1] - y) ** 2; if (d < m) m = d; }
+      return Math.sqrt(m) < 0.02 * cur.R;
+    }
+    const mirrors = (t) => {
+      const rr = cur.f(t);
+      return [
+        ["a", rr * Math.cos(-t), rr * Math.sin(-t)],
+        ["b", -rr * Math.cos(t), -rr * Math.sin(t)],
+        ["c", rr * Math.cos(PI - t), rr * Math.sin(PI - t)],
+      ];
+    };
+    sample();
+    const panel = {
+      x: (t) => cur.f(t) * Math.cos(t), y: (t) => cur.f(t) * Math.sin(t), grid: 0, origin: false, arrows: 0, ghost: true,
+      samples: 900, maxWidth: "26rem", view: { x: [-2.3, 2.3], y: [-2.3, 2.3] },
+      alt: "곡선 위 점과 대칭으로 옮긴 점",
+      under(ctx, T, t, C) {
+        polarGrid(ctx, T, C, { rings: cur.R > 1.5 ? [1, 2] : [0.5, 1], maxR: 3.3, labels: false });
+        ctx.save(); ctx.strokeStyle = C.curve; ctx.lineWidth = 2.4; ctx.beginPath();
+        pts.forEach((p, k) => (k ? ctx.lineTo(T.X(p[0]), T.Y(p[1])) : ctx.moveTo(T.X(p[0]), T.Y(p[1]))));
+        ctx.stroke(); ctx.restore();
+      },
+      over(ctx, T, t, C) {
+        const rr = cur.f(t), P = [rr * Math.cos(t), rr * Math.sin(t)];
+        mirrors(t).forEach(([n, x, y]) => {
+          const ok = onCurve(x, y), col = ok ? C.ok : C.curve;
+          ctx.save(); ctx.setLineDash([3, 4]); ctx.strokeStyle = C.muted; ctx.globalAlpha = .7;
+          ctx.beginPath(); ctx.moveTo(T.X(P[0]), T.Y(P[1])); ctx.lineTo(T.X(x), T.Y(y)); ctx.stroke(); ctx.restore();
+          if (ok) dot(ctx, T.X(x), T.Y(y), 5, col, C.surface); else hollow(ctx, T.X(x), T.Y(y), 5, col, C.surface);
+          label(ctx, "(" + n + ")", T.X(x) + 8, T.Y(y) - 10, { size: 12, bold: true, color: col, halo: C.surface });
+        });
+        dot(ctx, T.X(P[0]), T.Y(P[1]), 6, C.ink, C.surface);
+        label(ctx, "P", T.X(P[0]) + 8, T.Y(P[1]) + 12, { size: 14, italic: true, math: true, color: C.ink, halo: C.surface });
+      },
+      curve: false, // 곡선은 under에서 미리 다 그려 두고 점 P만 움직인다
+    };
+    const api = Plot.mount(document.getElementById("fig-sym"), {
+      t: { min: 0, max: 2 * PI, value: PI / 5, label: "θ" },
+      duration: 10,
+      panels: [panel],
+      controls: segHtml(curves.map((c) => (c.name.startsWith("r²") ? c.name : "r = " + c.name)), "곡선 고르기", "sym-curves"),
+      readout: (t) => {
+        const names = { a: "(a) θ → −θ, 극축", b: "(b) r → −r, 극", c: "(c) θ → π − θ, 직선 θ = π/2" };
+        return mirrors(t).map(([n, x, y]) => names[n] + ": " + (onCurve(x, y) ? '<b style="color:var(--ok)">곡선 위</b>' : '<b style="color:var(--curve)">벗어남</b>')).join("<br>");
+      },
+    });
+    const grp = api.bar.querySelector(".sym-curves");
+    grp.querySelectorAll("button").forEach((b, k) => b.addEventListener("click", () => {
+      cur = curves[k]; sample();
+      const R = cur.R > 1.5 ? 2.3 : 1.3;
+      panel.view = { x: [-R, R], y: [-R, R] };
+      pressOne(grp, b); api.panels[0].resize(); api.redraw();
+    }));
+    pressOne(grp, grp.querySelector("button"));
+  })();
+
+  /* ---------- 극곡선 모음 ---------- */
+  (function () {
+    const st = { fam: 2, a: 1, b: 2, n: 3 };
+    const fams = [
+      { name: "원", range: () => [0, PI] },
+      { name: "나선", range: () => [0, 4 * PI] },
+      { name: "리마송", range: () => [0, 2 * PI] },
+      { name: "장미", range: () => [0, 2 * PI] },
+      { name: "렘니스케이트", range: () => [0, 2 * PI] },
+    ];
+    function r(t) {
+      switch (st.fam) {
+        case 0: return st.a * Math.cos(t) * 2;
+        case 1: return st.a * t / (2 * PI);
+        case 2: return st.a + st.b * Math.sin(t);
+        case 3: return st.a * Math.cos(st.n * t) * 1.5;
+        default: return 0;
+      }
+    }
+    // 렘니스케이트 r² = a² cos 2θ: 양쪽 고리를 한 번에 그리는 매개변수식
+    const X = (t) => st.fam === 4 ? 1.8 * st.a * Math.cos(t) / (1 + Math.sin(t) ** 2) : r(t) * Math.cos(t);
+    const Y = (t) => st.fam === 4 ? 1.8 * st.a * Math.sin(t) * Math.cos(t) / (1 + Math.sin(t) ** 2) : r(t) * Math.sin(t);
+    function describe() {
+      const a = st.a, b = st.b, n = st.n;
+      switch (st.fam) {
+        case 0: return i("r") + " = " + fmt(2 * a, 1) + " cos θ: 원점을 지나는 원, 중심 (" + fmt(a, 1) + ", 0), 반지름 " + fmt(a, 1);
+        case 1: return i("r") + " = " + fmt(a / (2 * PI), 2) + "θ: 나선, 한 바퀴 돌 때마다 " + fmt(a, 1) + "씩 멀어짐";
+        case 2: {
+          let kind;
+          if (b === 0) kind = "원";
+          else if (a < b - 1e-9) kind = "내부 고리가 있는 리마송 (a < b)";
+          else if (Math.abs(a - b) < 1e-9) kind = "심장형 (a = b)";
+          else if (a < 2 * b - 1e-9) kind = "보조개를 가진 리마송 (b < a < 2b)";
+          else kind = "볼록 리마송 (a ≥ 2b)";
+          return i("r") + " = " + fmt(a, 1) + " + " + fmt(b, 1) + " sin θ: <b>" + kind + "</b>";
+        }
+        case 3: return i("r") + " = cos " + n + "θ: " + (n % 2 ? "n이 홀수라 <b>" + n + "엽</b> 장미 (0 ≤ θ ≤ π에서 이미 완성)" : "n이 짝수라 <b>" + 2 * n + "엽</b> 장미");
+        default: return i("r") + "² = a² cos 2θ: <b>렘니스케이트</b> (8자 모양)";
+      }
+    }
+    const fig = document.getElementById("fig-gallery");
+    const api = Plot.mount(fig, {
+      t: { min: 0, max: 2 * PI, label: "θ" },
+      duration: 8,
+      panels: [{
+        x: X, y: Y, grid: 0, origin: false, arrows: 0, markStart: false, samples: 1600, maxWidth: "26rem",
+        view: { x: [-4.2, 4.2], y: [-4.2, 4.2] }, alt: "고른 극곡선",
+        under(ctx, T, t, C) { polarGrid(ctx, T, C, { rings: [1, 2, 3, 4], maxR: 6 }); },
+      }],
+      controls:
+        segHtml(fams.map((f) => f.name), "곡선 종류", "gal-fam") +
+        '<label data-for="a">a <input type="range" data-p="a" min="0" max="2" step="0.1" value="1"></label>' +
+        '<label data-for="b">b <input type="range" data-p="b" min="0" max="2" step="0.1" value="2"></label>' +
+        '<label data-for="n">n <input type="range" data-p="n" min="1" max="8" step="1" value="3"></label>',
+      readout: () => describe(),
+    });
+    const grp = api.bar.querySelector(".gal-fam");
+    const show = { a: [0, 1, 2, 3, 4], b: [2], n: [3] };
+    function sync() {
+      Object.keys(show).forEach((k) => { api.bar.querySelector('label[data-for="' + k + '"]').hidden = !show[k].includes(st.fam); });
+      const rg = fams[st.fam].range();
+      if (st.fam === 3 && st.n % 2) rg[1] = PI;
+      api.setRange(rg[0], rg[1]);
+    }
+    grp.querySelectorAll("button").forEach((b, k) => b.addEventListener("click", () => { st.fam = k; pressOne(grp, b); sync(); api.play(); }));
+    api.bar.querySelectorAll("input[data-p]").forEach((inp) => inp.addEventListener("input", () => {
+      st[inp.dataset.p] = parseFloat(inp.value);
+      if (inp.dataset.p === "n") sync(); else api.redraw();
+    }));
+    pressOne(grp, grp.querySelectorAll("button")[2]);
+    sync();
+  })();
+
+  /* ---------- 자가 점검 ---------- */
+  (function () {
+    const R = String.raw;
+    const qpolar = (f, range, o) => {
+      o = o || {};
+      return {
+        t: { min: range[0], max: range[1], label: "θ" }, duration: o.duration || 4,
+        panels: [{
+          x: (t) => f(t) * Math.cos(t), y: (t) => f(t) * Math.sin(t), grid: 0, origin: false, arrows: 0, markStart: true, samples: 900,
+          view: o.view || { x: [-2.4, 2.4], y: [-2.4, 2.4] },
+          under(ctx, T, t, C) { polarGrid(ctx, T, C, { rings: o.rings || [1, 2], maxR: 6 }); },
+          over: Plot.negParts(f),
+        }],
+        readout: (t) => "θ = <b>" + fmtPi(t) + "</b>, " + i("r") + " = <b>" + fmt(f(t)) + "</b>" + (f(t) < -1e-9 ? " (음수: 파란 부분)" : ""),
+      };
+    };
+
+    Quiz.mount(document.getElementById("quiz"), [
+      {
+        q: R`극좌표 $\left(2,\tfrac{3\pi}{4}\right)$인 점의 직교좌표는?`,
+        choices: [R`$(\sqrt2,-\sqrt2)$`, R`$(-\sqrt2,\sqrt2)$`, R`$(-1,\sqrt3)$`, R`$(\sqrt2,\sqrt2)$`],
+        answer: 1,
+        explain: R`<p>$x=2\cos\tfrac{3\pi}4=2\cdot\left(-\tfrac{\sqrt2}2\right)=-\sqrt2$, $y=2\sin\tfrac{3\pi}4=\sqrt2$. 제2사분면의 점이에요.</p>`,
+      },
+      {
+        q: R`직교좌표 $(-\sqrt3,\,1)$인 점을 극좌표 $(r,\theta)$, $r>0$, $0\le\theta<2\pi$로 나타내면?`,
+        choices: [R`$\left(2,\tfrac{5\pi}6\right)$`, R`$\left(2,-\tfrac{\pi}6\right)$`, R`$\left(2,\tfrac{2\pi}3\right)$`, R`$\left(4,\tfrac{5\pi}6\right)$`],
+        answer: 0,
+        explain: R`<p>$r=\sqrt{3+1}=2$. $\tan\theta=\tfrac{1}{-\sqrt3}$에서 후보는 $-\tfrac\pi6$과 $\tfrac{5\pi}6$인데, 점이 <b>제2사분면</b>이므로 $\theta=\tfrac{5\pi}6$이에요. B는 사분면을 확인하지 않은 함정입니다.</p>`,
+        plotWidth: "20rem",
+        plot: {
+          t: { min: 0, max: 5 * PI / 6, label: "θ" }, duration: 2.5,
+          panels: [{
+            x: (t) => 2 * Math.cos(t), y: (t) => 2 * Math.sin(t), grid: 0, origin: false, arrows: 0, ghost: false,
+            view: { x: [-2.5, 2.5], y: [-2.5, 2.5] },
+            under(ctx, T, t, C) { polarGrid(ctx, T, C, { rings: [1, 2], maxR: 3.5 }); },
+            over(ctx, T, t, C) { polarRay(ctx, T, C, 2, t, { angleR: 18 }); },
+          }],
+          readout: (t) => "θ = <b>" + fmtPi(t) + "</b>",
+        },
+      },
+      {
+        q: R`다음 중 극좌표 $\left(3,\tfrac\pi4\right)$와 <b>같은 점</b>은?`,
+        choices: [R`$\left(-3,\tfrac\pi4\right)$`, R`$\left(3,-\tfrac\pi4\right)$`, R`$\left(-3,\tfrac{5\pi}4\right)$`, R`$\left(3,\tfrac{5\pi}4\right)$`],
+        answer: 2,
+        explain: R`<p>$(r,\theta)=(-r,\theta+\pi)$이므로 $\left(3,\tfrac\pi4\right)=\left(-3,\tfrac\pi4+\pi\right)=\left(-3,\tfrac{5\pi}4\right)$예요. A와 D는 원점에 대해 반대편 점, B는 $x$축에 대해 대칭인 점입니다.</p>`,
+      },
+      {
+        q: R`극방정식 $r=4\sin\theta$를 직교방정식으로 바꾸면 어떤 곡선인가?`,
+        choices: ["중심 $(2,0)$, 반지름 $2$인 원", "중심 $(0,4)$, 반지름 $4$인 원", "중심 $(0,2)$, 반지름 $4$인 원", "중심 $(0,2)$, 반지름 $2$인 원"],
+        answer: 3,
+        explain: R`<p>양변에 $r$을 곱하면 $r^2=4r\sin\theta$, 즉 $x^2+y^2=4y$. 정리하면 $x^2+(y-2)^2=4$이므로 중심 $(0,2)$, 반지름 2인 원이에요.</p>`,
+        plotWidth: "20rem",
+        plot: qpolar((t) => 4 * Math.sin(t), [0, PI], { view: { x: [-2.6, 2.6], y: [-0.5, 4.5] }, rings: [1, 2, 3, 4] }),
+      },
+      {
+        q: R`장미 $r=\cos3\theta$의 꽃잎은 몇 장인가?`,
+        choices: ["3장", "6장", "9장", "1장"],
+        answer: 0,
+        explain: R`<p>$n=3$은 홀수라서 꽃잎이 $n=3$장이에요. 홀수일 때는 $r<0$인 부분이 이미 있는 꽃잎과 겹쳐서 새 꽃잎이 생기지 않아요.</p>`,
+        plotWidth: "20rem",
+        plot: qpolar((t) => 2 * Math.cos(3 * t), [0, PI]),
+      },
+      {
+        q: R`장미 $r=\sin4\theta$의 꽃잎은 몇 장인가?`,
+        choices: ["4장", "8장", "16장", "2장"],
+        answer: 1,
+        explain: R`<p>$n=4$는 짝수라서 꽃잎이 $2n=8$장이에요. 짝수일 때는 $r<0$인 부분이 비어 있는 방향에 새 꽃잎을 만들어요.</p>`,
+        plotWidth: "20rem",
+        plot: qpolar((t) => 2 * Math.sin(4 * t), [0, 2 * PI], { duration: 6 }),
+      },
+      {
+        q: R`곡선 $r=1+2\cos\theta$의 모양은?`,
+        choices: ["심장형", "보조개를 가진 리마송", "내부 고리가 있는 리마송", "볼록 리마송"],
+        answer: 2,
+        explain: R`<p>$r=a+b\cos\theta$에서 $a=1\lt b=2$이므로 <b>내부 고리</b>가 생겨요. $\cos\theta<-\tfrac12$인 구간에서 $r<0$이 되어 안쪽에 작은 고리를 그립니다.</p>`,
+        plotWidth: "20rem",
+        plot: qpolar((t) => 1 + 2 * Math.cos(t), [0, 2 * PI], { view: { x: [-0.9, 3.3], y: [-2.1, 2.1] }, rings: [1, 2, 3] }),
+      },
+      {
+        q: R`곡선 $r=1-\cos\theta$는 무엇에 대해 대칭인가?`,
+        choices: [R`직선 $\theta=\tfrac\pi2$`, "극(원점)", "대칭 없음", "극축"],
+        answer: 3,
+        explain: R`<p>$\cos(-\theta)=\cos\theta$이므로 $\theta$를 $-\theta$로 바꿔도 식이 그대로예요. 따라서 <b>극축</b>에 대해 대칭인 심장형입니다.</p>`,
+        plotWidth: "20rem",
+        plot: qpolar((t) => 1 - Math.cos(t), [0, 2 * PI], { view: { x: [-2.4, 0.9], y: [-1.65, 1.65] } }),
+      },
+    ]);
+  })();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,509 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>12.3 호의 길이와 곡률</title>
+<script>try{var t=localStorage.getItem("theme");if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
+<link rel="stylesheet" href="assets/katex/katex.min.css">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body data-section="12.3">
+<div class="shell">
+  <nav class="side" aria-label="이 절의 목차">
+    <a class="home" href="index.html">전체 목차로</a>
+    <ol>
+      <li><a href="#len">호의 길이 · 예제 1</a></li>
+      <li><a href="#param">매개변수화와 무관</a></li>
+      <li><a href="#sfunc">호의 길이함수 · 예제 2</a></li>
+      <li><a href="#curv">곡률의 정의</a></li>
+      <li><a href="#ex3">예제 3 · 원의 곡률</a></li>
+      <li><a href="#thm10">정리 10 · 예제 4</a></li>
+      <li><a href="#plane">평면곡선의 곡률 · 예제 5</a></li>
+      <li><a href="#tnb">법선벡터와 종법선벡터 · 예제 6, 7</a></li>
+      <li><a href="#summary">한눈에 정리</a></li>
+      <li><a href="#check">자가 점검</a></li>
+    </ol>
+  </nav>
+
+  <main>
+    <header class="hero">
+      <p class="chapter">12장 벡터함수</p>
+      <h1><span class="num">12.3</span>호의 길이와 곡률</h1>
+      <canvas id="hero" aria-hidden="true"></canvas>
+    </header>
+
+    <p class="lede">곡선의 길이는 9.2에서 평면곡선으로 이미 구했어요. 이번엔 공간곡선으로 넓히고, 그 길이를 기준으로 <b>곡선이 얼마나 휘었는지(곡률)</b>를 재요. 시험 범위는 예제 7(단위법선벡터, 종법선벡터)까지라, 그 뒤의 법평면, 접촉평면, 비틀림율은 다루지 않아요.</p>
+
+    <!-- ===================================================== -->
+    <h2 id="len">호의 길이</h2>
+    <p>9.2에서 $f'$, $g'$이 연속일 때 매개변수방정식 $x=f(t)$, $y=g(t)$ ($a\le t\le b$)인 평면곡선의 길이는</p>
+    $$L=\int_a^b\sqrt{\left(\frac{dx}{dt}\right)^2+\left(\frac{dy}{dt}\right)^2}\,dt=\int_a^b\sqrt{[f'(t)]^2+[g'(t)]^2}\,dt \tag{1}$$
+    <p>였어요. 공간곡선도 같은 방법(곡선을 잘게 쪼갠 꺾은선 길이의 극한)으로 정의해요. 벡터방정식이 $\mathbf r(t)=\langle f(t),g(t),h(t)\rangle$ ($a\le t\le b$)이고 $f'$, $g'$, $h'$이 연속이며, $t$가 $a$에서 $b$까지 증가할 때 곡선을 꼭 한 번만 지나간다면</p>
+    <div class="summary-box">
+      $$L=\int_a^b\sqrt{[f'(t)]^2+[g'(t)]^2+[h'(t)]^2}\,dt=\int_a^b\sqrt{\left(\frac{dx}{dt}\right)^2+\left(\frac{dy}{dt}\right)^2+\left(\frac{dz}{dt}\right)^2}\,dt \tag{2}$$
+      <p style="margin:0 0 .3rem">(1)과 (2)를 벡터로 간단히 쓰면</p>
+      $$L=\int_a^b|\mathbf r'(t)|\,dt \tag{3}$$
+    </div>
+    <p>읽는 법: $|\mathbf r'(t)|$는 순간 속력이에요. 속력을 시간에 대해 적분하면 이동 거리가 되는 것과 같아요.</p>
+
+    <div class="problem"><span class="tag">예제 1</span>점 $(1,0,0)$에서 점 $(1,0,2\pi)$까지 벡터방정식이 $\mathbf r(t)=\cos t\,\mathbf i+\sin t\,\mathbf j+t\,\mathbf k$인 원형나선의 호의 길이를 구하라.</div>
+    <ol class="steps">
+      <li>두 점은 $t=0$과 $t=2\pi$에 해당해요($z=t$이니까요).</li>
+      <li>$\mathbf r'(t)=\langle-\sin t,\ \cos t,\ 1\rangle$이므로
+        $$|\mathbf r'(t)|=\sqrt{\sin^2t+\cos^2t+1}=\sqrt2$$</li>
+      <li>식 (3)에 의해
+        $$L=\int_0^{2\pi}|\mathbf r'(t)|\,dt=\int_0^{2\pi}\sqrt2\,dt=2\sqrt2\,\pi\approx8.886$$</li>
+    </ol>
+    <p>속력이 일정($\sqrt2$)해서 적분이 아주 쉬웠어요. 나선을 펼치면 밑변 $2\pi$(원 둘레), 높이 $2\pi$인 직각삼각형의 빗변이라 $\sqrt{(2\pi)^2+(2\pi)^2}=2\sqrt2\pi$로도 확인돼요.</p>
+    <figure class="plot" id="fig-len">
+      <figcaption>재생하면 $t=0$부터 지나온 길이(진한 부분)가 늘어나요. 아래 버튼은 곡선 전체를 꺾은선 $n$개로 근사한 길이예요. $n$을 늘리면 $2\sqrt2\pi\approx8.886$에 가까워져요. 호의 길이의 정의가 바로 이 극한이에요.</figcaption>
+    </figure>
+
+    <!-- ===================================================== -->
+    <h2 id="param">매개변수화와 무관</h2>
+    <p>하나의 곡선 $C$는 여러 가지 벡터함수로 나타낼 수 있어요. 예를 들어 비틀린 삼차곡선</p>
+    $$\mathbf r_1(t)=\langle t,\ t^2,\ t^3\rangle,\qquad1\le t\le2 \tag{4}$$
+    <p>은 $t=e^u$로 놓으면</p>
+    $$\mathbf r_2(u)=\langle e^u,\ e^{2u},\ e^{3u}\rangle,\qquad0\le u\le\ln2 \tag{5}$$
+    <p>로도 나타낼 수 있어요. (4)와 (5)를 곡선 $C$의 <b>매개변수화</b>(parametrization)라 해요. 곡선 위를 지나가는 “속도”는 다르지만 지나가는 자취는 같아서, 식 (3)으로 구한 <b>길이는 어느 매개변수화로 구해도 같아요.</b></p>
+    <figure class="plot" id="fig-repar">
+      <figcaption>같은 비틀린 삼차곡선 위에 $t$를 일정 간격으로 찍은 점(파랑)과 $u$를 일정 간격으로 찍은 점(초록)이에요. 점이 놓이는 위치는 다르지만 곡선은 하나이고, 두 적분으로 구한 길이도 같아요.</figcaption>
+    </figure>
+
+    <!-- ===================================================== -->
+    <h2 id="sfunc">호의 길이함수</h2>
+    <p>$C$가 $\mathbf r(t)=f(t)\,\mathbf i+g(t)\,\mathbf j+h(t)\,\mathbf k$ ($a\le t\le b$)로 주어지고, $\mathbf r'$이 연속이며 $t$가 증가할 때 $C$를 꼭 한 번만 지나간다고 해요. 이때 <b>호의 길이함수</b>(arc length function) $s$를</p>
+    <div class="summary-box">
+      $$s(t)=\int_a^t|\mathbf r'(u)|\,du=\int_a^t\sqrt{\left(\frac{dx}{du}\right)^2+\left(\frac{dy}{du}\right)^2+\left(\frac{dz}{du}\right)^2}\,du \tag{6}$$
+    </div>
+    <p>로 정의해요. $s(t)$는 $C$ 위에서 $\mathbf r(a)$부터 $\mathbf r(t)$까지의 길이예요(적분 변수는 위끝 $t$와 구별하려고 $u$로 썼어요). 미적분학의 기본정리 1로 양변을 미분하면</p>
+    <div class="summary-box">
+      $$\frac{ds}{dt}=|\mathbf r'(t)| \tag{7}$$
+    </div>
+    <p>호의 길이는 좌표계나 매개변수 선택에 좌우되지 않고 곡선 모양에서 자연스럽게 나오는 양이에요. 그래서 곡선을 <b>호의 길이 $s$에 관해 매개변수화</b>하면 편할 때가 있어요. 방법은 $s=s(t)$를 $t$에 대해 풀어서 $\mathbf r(t)$에 넣는 거예요.</p>
+
+    <div class="problem"><span class="tag">예제 2</span>나선 $\mathbf r(t)=\cos t\,\mathbf i+\sin t\,\mathbf j+t\,\mathbf k$를 시점 $(1,0,0)$에서 $t$가 증가하는 방향으로 측정한 호의 길이에 관해 다시 매개변수화하라.</div>
+    <ol class="steps">
+      <li>시점 $(1,0,0)$은 $t=0$이에요. 예제 1에서 $|\mathbf r'(t)|=\sqrt2$였으므로
+        $$s=s(t)=\int_0^t|\mathbf r'(u)|\,du=\int_0^t\sqrt2\,du=\sqrt2\,t$$</li>
+      <li>$t$에 대해 풀면 $t=\dfrac{s}{\sqrt2}$.</li>
+      <li>$\mathbf r(t)$에 넣으면
+        $$\mathbf r(t(s))=\cos\left(\frac{s}{\sqrt2}\right)\mathbf i+\sin\left(\frac{s}{\sqrt2}\right)\mathbf j+\frac{s}{\sqrt2}\,\mathbf k$$</li>
+    </ol>
+    <p>검산: $s$로 미분하면 $\frac{1}{\sqrt2}\left\langle-\sin\frac{s}{\sqrt2},\cos\frac{s}{\sqrt2},1\right\rangle$이고 길이가 1이에요. 호의 길이로 매개변수화하면 <b>속력이 항상 1</b>이 돼요. 슬라이드에 풀이가 비어 있어서 채웠어요.</p>
+
+    <!-- ===================================================== -->
+    <h2 id="curv">곡률의 정의</h2>
+    <p>구간 $I$에서 $\mathbf r'$이 연속이고 $\mathbf r'(t)\ne\mathbf 0$이면 매개변수화 $\mathbf r(t)$는 $I$에서 <b>매끄럽다</b>(smooth)고 해요. 매끄러운 곡선은 뾰족한 모퉁이나 첨점이 없고, 접선벡터가 방향을 연속적으로 바꿔요.</p>
+    <p>매끄러운 곡선의 단위접선벡터 $\mathbf T(t)=\dfrac{\mathbf r'(t)}{|\mathbf r'(t)|}$는 곡선의 방향을 나타내요. 곡선이 거의 직선이면 $\mathbf T$는 아주 천천히 방향을 바꾸고, 급하게 구부러지면 빠르게 바꿔요. 그래서 곡률을 <b>방향이 바뀌는 빠르기</b>로 정의해요. 다만 “빠르기”를 $t$ 기준으로 재면 매개변수화에 따라 값이 달라지니, 곡선 자체의 양인 <b>호의 길이 $s$ 기준</b>으로 재요.</p>
+    <div class="summary-box">
+      <p style="margin:0 0 .3rem"><b>8 정의</b> 단위접선벡터 $\mathbf T$에 대해 곡선의 <b>곡률</b>(curvature)은</p>
+      $$\kappa=\left|\frac{d\mathbf T}{ds}\right|$$
+    </div>
+    <p>실제 계산은 $s$보다 $t$가 편해요. 연쇄법칙(12.2 정리 3의 6)으로 $\dfrac{d\mathbf T}{dt}=\dfrac{d\mathbf T}{ds}\cdot\dfrac{ds}{dt}$이고, 식 (7)에서 $\dfrac{ds}{dt}=|\mathbf r'(t)|$이므로</p>
+    <div class="summary-box">
+      $$\kappa(t)=\frac{|\mathbf T'(t)|}{|\mathbf r'(t)|} \tag{9}$$
+    </div>
+    <figure class="plot" id="fig-T">
+      <figcaption>곡선 $y=\sin x$ 위를 점이 움직여요. 두 번째 그림은 단위접선벡터 $\mathbf T$들을 한 점에 모은 것이라, 화살표 끝이 단위원 위를 오가요. 곡선이 많이 휜 곳(꼭대기, 바닥)에서는 끝이 빨리 움직이고, 거의 곧은 곳(변곡점)에서는 거의 멈춰요. 이 빠르기($s$ 기준)가 곡률이에요.</figcaption>
+    </figure>
+
+    <!-- ===================================================== -->
+    <h2 id="ex3">예제 3 · 원의 곡률</h2>
+    <div class="problem"><span class="tag">예제 3</span>반지름 $a$인 원의 곡률이 $\frac1a$임을 보여라.</div>
+    <ol class="steps">
+      <li>중심이 원점에 있는 원을 택할 수 있으며, 이때 매개변수화는
+        $$\mathbf r(t)=a\cos t\,\mathbf i+a\sin t\,\mathbf j$$</li>
+      <li>$\mathbf r'(t)=-a\sin t\,\mathbf i+a\cos t\,\mathbf j$, $|\mathbf r'(t)|=a$. 그래서
+        $$\mathbf T(t)=\frac{\mathbf r'(t)}{|\mathbf r'(t)|}=-\sin t\,\mathbf i+\cos t\,\mathbf j,\qquad\mathbf T'(t)=-\cos t\,\mathbf i-\sin t\,\mathbf j$$</li>
+      <li>$|\mathbf T'(t)|=1$이므로 식 (9)에 의해
+        $$\kappa(t)=\frac{|\mathbf T'(t)|}{|\mathbf r'(t)|}=\frac1a$$</li>
+    </ol>
+    <p>원은 모든 점에서 곡률이 같고, <b>작은 원일수록 곡률이 커요.</b> 직선은 $\mathbf T$가 변하지 않아 곡률이 0이에요. 그래서 곡률 $\kappa$인 곳은 “반지름 $\frac1\kappa$인 원만큼 휘었다”고 이해하면 돼요.</p>
+
+    <!-- ===================================================== -->
+    <h2 id="thm10">정리 10 · 외적으로 계산하기</h2>
+    <p>식 (9)는 $\mathbf T'$을 구해야 해서 계산이 길어지기 쉬워요. $\mathbf r'$과 $\mathbf r''$만으로 계산하는 공식이 있어요.</p>
+    <div class="summary-box">
+      <p style="margin:0 0 .3rem"><b>10 정리</b> 벡터함수 $\mathbf r$로 주어진 곡선의 곡률은</p>
+      $$\kappa(t)=\frac{|\mathbf r'(t)\times\mathbf r''(t)|}{|\mathbf r'(t)|^3}$$
+    </div>
+    <h3>증명</h3>
+    <ol class="steps">
+      <li>$\mathbf T=\dfrac{\mathbf r'}{|\mathbf r'|}$이고 $|\mathbf r'|=\dfrac{ds}{dt}=s'$이므로 $\mathbf r'=s'\,\mathbf T$.</li>
+      <li>곱의 미분(12.2 정리 3의 3)으로 $\mathbf r''=s''\,\mathbf T+s'\,\mathbf T'$.</li>
+      <li>$\mathbf T\times\mathbf T=\mathbf 0$이므로
+        $$\mathbf r'\times\mathbf r''=s'\,\mathbf T\times(s''\,\mathbf T+s'\,\mathbf T')=(s')^2\,(\mathbf T\times\mathbf T')$$</li>
+      <li>$|\mathbf T|=1$이라 12.2 정리 4에 의해 $\mathbf T\perp\mathbf T'$, 그래서 $|\mathbf T\times\mathbf T'|=|\mathbf T|\,|\mathbf T'|\sin\frac\pi2=|\mathbf T'|$. 따라서
+        $$|\mathbf r'\times\mathbf r''|=(s')^2|\mathbf T'|\quad\Longrightarrow\quad|\mathbf T'|=\frac{|\mathbf r'\times\mathbf r''|}{(s')^2}=\frac{|\mathbf r'\times\mathbf r''|}{|\mathbf r'|^2}$$</li>
+      <li>식 (9)에 넣으면 $\kappa=\dfrac{|\mathbf T'|}{|\mathbf r'|}=\dfrac{|\mathbf r'\times\mathbf r''|}{|\mathbf r'|^3}$이에요.</li>
+    </ol>
+
+    <div class="problem"><span class="tag">예제 4</span>임의의 점과 $(0,0,0)$에서 비틀린 삼차곡선 $\mathbf r(t)=\langle t,t^2,t^3\rangle$의 곡률을 구하라.</div>
+    <ol class="steps">
+      <li>도함수를 구해요.
+        $$\mathbf r'(t)=\langle1,\ 2t,\ 3t^2\rangle,\qquad\mathbf r''(t)=\langle0,\ 2,\ 6t\rangle,\qquad|\mathbf r'(t)|=\sqrt{1+4t^2+9t^4}$$</li>
+      <li>외적:
+        $$\mathbf r'\times\mathbf r''=\begin{vmatrix}\mathbf i&\mathbf j&\mathbf k\\1&2t&3t^2\\0&2&6t\end{vmatrix}=(12t^2-6t^2)\,\mathbf i-(6t-0)\,\mathbf j+(2-0)\,\mathbf k=6t^2\,\mathbf i-6t\,\mathbf j+2\,\mathbf k$$
+        $$|\mathbf r'\times\mathbf r''|=\sqrt{36t^4+36t^2+4}=2\sqrt{9t^4+9t^2+1}$$</li>
+      <li>정리 10에 의해
+        $$\kappa(t)=\frac{2\sqrt{1+9t^2+9t^4}}{(1+4t^2+9t^4)^{3/2}}$$</li>
+      <li>원점은 $t=0$이므로 $\kappa(0)=\dfrac{2\cdot1}{1}=2$.</li>
+    </ol>
+
+    <!-- ===================================================== -->
+    <h2 id="plane">평면곡선의 곡률</h2>
+    <p>평면곡선 $y=f(x)$는 $x$를 매개변수로 써서 $\mathbf r(x)=x\,\mathbf i+f(x)\,\mathbf j$로 볼 수 있어요. 그러면 $\mathbf r'(x)=\mathbf i+f'(x)\,\mathbf j$, $\mathbf r''(x)=f''(x)\,\mathbf j$이고 $\mathbf i\times\mathbf j=\mathbf k$, $\mathbf j\times\mathbf j=\mathbf 0$이라 $\mathbf r'\times\mathbf r''=f''(x)\,\mathbf k$예요. 정리 10에 넣으면</p>
+    <div class="summary-box">
+      $$\kappa(x)=\frac{|f''(x)|}{\big[1+(f'(x))^2\big]^{3/2}} \tag{11}$$
+    </div>
+
+    <div class="problem"><span class="tag">예제 5</span>점 $(0,0)$, $(1,1)$, $(2,4)$에서 포물선 $y=x^2$의 곡률을 구하라.</div>
+    <ol class="steps">
+      <li>$y'=2x$, $y''=2$이므로 식 (11)에 의해
+        $$\kappa(x)=\frac{2}{(1+4x^2)^{3/2}}$$</li>
+      <li>각 점에서
+        $$\kappa(0)=2,\qquad\kappa(1)=\frac{2}{5^{3/2}}\approx0.179,\qquad\kappa(2)=\frac{2}{17^{3/2}}\approx0.0285$$</li>
+    </ol>
+    <p>꼭짓점(원점)에서 가장 많이 휘고, 멀어질수록 거의 직선처럼 펴져요. $x\to\pm\infty$이면 $\kappa(x)\to0$이에요.</p>
+    <figure class="plot" id="fig-ex5">
+      <figcaption>파란 곡선이 $y=x^2$, 빨간 곡선이 곡률 $y=\kappa(x)$예요. 점을 움직이면 그 점에서 포물선에 가장 잘 맞는 원(초록, 반지름 $\frac1\kappa$)이 따라 그려져요. 이 원은 시험 범위 밖의 “접촉원”인데, 곡률을 눈으로 보기 좋아서 참고로 넣었어요.</figcaption>
+    </figure>
+
+    <!-- ===================================================== -->
+    <h2 id="tnb">법선벡터와 종법선벡터</h2>
+    <p>매끄러운 공간곡선 위의 한 점에는 $\mathbf T(t)$와 직교하는 벡터가 무수히 많아요. 그중 하나를 고르는 자연스러운 방법이 있어요. 모든 $t$에 대해 $|\mathbf T(t)|=1$이므로 12.2 정리 4에 의해 $\mathbf T(t)\cdot\mathbf T'(t)=0$, 즉 <b>$\mathbf T'(t)$는 $\mathbf T(t)$와 직교</b>해요. 단, $\mathbf T'(t)$ 자신은 단위벡터가 아니에요.</p>
+    <div class="summary-box">
+      <p style="margin:0 0 .3rem">$\kappa\ne0$인 점에서 <b>주단위법선벡터</b>(principal unit normal vector, 줄여서 단위법선벡터)</p>
+      $$\mathbf N(t)=\frac{\mathbf T'(t)}{|\mathbf T'(t)|}$$
+      <p style="margin:0 0 .3rem"><b>종법선벡터</b>(binormal vector)</p>
+      $$\mathbf B(t)=\mathbf T(t)\times\mathbf N(t)$$
+    </div>
+    <p>$\mathbf N$은 곡선이 휘어 들어가는 쪽을 가리켜요. $\mathbf B$는 $\mathbf T$, $\mathbf N$ 모두에 수직이고, $\mathbf T\perp\mathbf N$인 두 단위벡터의 외적이라 길이도 $1\cdot1\cdot\sin\frac\pi2=1$이에요. 그래서 $\mathbf T$, $\mathbf N$, $\mathbf B$는 서로 수직인 단위벡터 세 개, 곡선을 따라 움직이는 작은 좌표축이 돼요.</p>
+
+    <div class="problem"><span class="tag">예제 6</span>원형나선 $\mathbf r(t)=\cos t\,\mathbf i+\sin t\,\mathbf j+t\,\mathbf k$에 대한 단위법선벡터와 종법선벡터를 구하라.</div>
+    <ol class="steps">
+      <li>예제 1에서 $\mathbf r'(t)=\langle-\sin t,\cos t,1\rangle$, $|\mathbf r'(t)|=\sqrt2$이므로
+        $$\mathbf T(t)=\frac{1}{\sqrt2}\langle-\sin t,\ \cos t,\ 1\rangle,\qquad\mathbf T'(t)=\frac{1}{\sqrt2}\langle-\cos t,\ -\sin t,\ 0\rangle,\qquad|\mathbf T'(t)|=\frac{1}{\sqrt2}$$</li>
+      <li>단위법선벡터:
+        $$\mathbf N(t)=\frac{\mathbf T'(t)}{|\mathbf T'(t)|}=\langle-\cos t,\ -\sin t,\ 0\rangle$$
+        나선 위의 점에서 $z$축을 향해 수평으로 안쪽을 가리켜요.</li>
+      <li>종법선벡터:
+        $$\mathbf B(t)=\mathbf T(t)\times\mathbf N(t)=\frac{1}{\sqrt2}\begin{vmatrix}\mathbf i&\mathbf j&\mathbf k\\-\sin t&\cos t&1\\-\cos t&-\sin t&0\end{vmatrix}=\frac{1}{\sqrt2}\langle\sin t,\ -\cos t,\ 1\rangle$$</li>
+    </ol>
+    <p>덤으로 곡률은 $\kappa=\dfrac{|\mathbf T'|}{|\mathbf r'|}=\dfrac{1/\sqrt2}{\sqrt2}=\dfrac12$로 일정해요.</p>
+
+    <div class="problem"><span class="tag">예제 7</span>점 $(1,0,1)$에서 곡선 $\mathbf r(t)=\left\langle t,\ \sqrt2\ln t,\ \frac1t\right\rangle$에 대한 단위접선벡터, 단위법선벡터, 종법선벡터와 곡률을 구하라.</div>
+    <ol class="steps">
+      <li>점 $(1,0,1)$은 $t=1$이에요. 도함수와 길이는
+        $$\mathbf r'(t)=\left\langle1,\ \frac{\sqrt2}{t},\ -\frac1{t^2}\right\rangle,\qquad|\mathbf r'(t)|=\sqrt{1+\frac2{t^2}+\frac1{t^4}}=\sqrt{\left(1+\frac1{t^2}\right)^2}=\frac{t^2+1}{t^2}$$
+        루트 안이 완전제곱이 되는 게 이 문제의 요령이에요.</li>
+      <li>단위접선벡터(분자, 분모에 $t^2$을 곱해 정리):
+        $$\mathbf T(t)=\frac{\mathbf r'(t)}{|\mathbf r'(t)|}=\frac{1}{t^2+1}\langle t^2,\ \sqrt2\,t,\ -1\rangle,\qquad\mathbf T(1)=\frac12\langle1,\ \sqrt2,\ -1\rangle$$</li>
+      <li>$\mathbf T$를 성분별로 미분(몫의 미분)하면
+        $$\mathbf T'(t)=\frac{1}{(t^2+1)^2}\left\langle2t,\ \sqrt2(1-t^2),\ 2t\right\rangle,\qquad\mathbf T'(1)=\frac14\langle2,0,2\rangle=\left\langle\frac12,\ 0,\ \frac12\right\rangle$$
+        $|\mathbf T'(1)|=\sqrt{\frac14+\frac14}=\frac{1}{\sqrt2}$이므로
+        $$\mathbf N(1)=\frac{\mathbf T'(1)}{|\mathbf T'(1)|}=\left\langle\frac{1}{\sqrt2},\ 0,\ \frac{1}{\sqrt2}\right\rangle$$</li>
+      <li>종법선벡터:
+        $$\mathbf B(1)=\mathbf T(1)\times\mathbf N(1)=\frac{1}{2\sqrt2}\begin{vmatrix}\mathbf i&\mathbf j&\mathbf k\\1&\sqrt2&-1\\1&0&1\end{vmatrix}=\frac{1}{2\sqrt2}\langle\sqrt2,\ -2,\ -\sqrt2\rangle=\left\langle\frac12,\ -\frac{1}{\sqrt2},\ -\frac12\right\rangle$$</li>
+      <li>곡률: $|\mathbf r'(1)|=2$이므로
+        $$\kappa(1)=\frac{|\mathbf T'(1)|}{|\mathbf r'(1)|}=\frac{1/\sqrt2}{2}=\frac{1}{2\sqrt2}=\frac{\sqrt2}{4}\approx0.354$$</li>
+    </ol>
+    <p>검산: 정리 10으로도 $\mathbf r'(1)=\langle1,\sqrt2,-1\rangle$, $\mathbf r''(1)=\langle0,-\sqrt2,2\rangle$, $\mathbf r'\times\mathbf r''=\langle\sqrt2,-2,-\sqrt2\rangle$, 크기 $2\sqrt2$, $|\mathbf r'|^3=8$이라 $\kappa=\frac{2\sqrt2}{8}=\frac{\sqrt2}{4}$로 같아요. $\mathbf T\cdot\mathbf N=\frac12\cdot\frac{1}{\sqrt2}(1+0-1)=0$, $\mathbf T\cdot\mathbf B=\frac12\left(\frac12-1+\frac12\right)=0$도 확인돼요. (슬라이드에 풀이가 없어서 채웠어요.)</p>
+    <figure class="plot" id="fig-tnb">
+      <figcaption>곡선을 따라 움직이는 $\mathbf T$(빨강), $\mathbf N$(초록), $\mathbf B$(파랑)예요. 셋은 항상 서로 직각인 단위벡터이고, $\mathbf N$은 곡선이 휘어 들어가는 쪽을 가리켜요. 나선에서는 $\mathbf N$이 늘 $z$축을 향해요. 꼬인 3차곡선은 원점($t=0$)에서 곡률이 2로 가장 크고(예제 4), 예제 7의 곡선은 $t=1$이 예제의 점이에요.</figcaption>
+    </figure>
+
+    <!-- ===================================================== -->
+    <h2 id="summary">한눈에 정리</h2>
+    <div class="summary-box">
+      <ul>
+        <li>호의 길이 $L=\displaystyle\int_a^b|\mathbf r'(t)|\,dt$. 매개변수화를 바꿔도 같은 값.</li>
+        <li>호의 길이함수 $s(t)=\displaystyle\int_a^t|\mathbf r'(u)|\,du$, $\dfrac{ds}{dt}=|\mathbf r'(t)|$. 호의 길이로 재매개변수화: $s(t)$를 $t$에 대해 풀어 대입.</li>
+        <li>곡률 $\kappa=\left|\dfrac{d\mathbf T}{ds}\right|=\dfrac{|\mathbf T'(t)|}{|\mathbf r'(t)|}=\dfrac{|\mathbf r'\times\mathbf r''|}{|\mathbf r'|^3}$.</li>
+        <li>원(반지름 $a$)은 $\kappa=\frac1a$, 직선은 $\kappa=0$. 평면곡선 $y=f(x)$: $\kappa=\dfrac{|f''|}{(1+f'^2)^{3/2}}$.</li>
+        <li>$\mathbf T=\dfrac{\mathbf r'}{|\mathbf r'|}$, $\mathbf N=\dfrac{\mathbf T'}{|\mathbf T'|}$, $\mathbf B=\mathbf T\times\mathbf N$: 서로 수직인 단위벡터 세 개.</li>
+        <li>계산 요령: $|\mathbf r'|$의 루트 안이 완전제곱인지 먼저 보기. 곡률만 필요하면 정리 10이 대개 더 빠름.</li>
+      </ul>
+    </div>
+
+    <!-- ===================================================== -->
+    <h2 id="check">자가 점검</h2>
+    <p>보기를 고르면 바로 정답과 풀이가 나와요.</p>
+    <div id="quiz"></div>
+
+    <nav class="pager" aria-label="절 이동"></nav>
+  </main>
+</div>
+
+<script src="assets/katex/katex.min.js"></script>
+<script src="assets/katex/auto-render.min.js"></script>
+<script src="assets/plot.js"></script>
+<script src="assets/space.js"></script>
+<script src="assets/quiz.js"></script>
+<script src="assets/site.js"></script>
+<script>
+(function () {
+  "use strict";
+  const { fmt, label, arrowHead } = Plot;
+  const V = Space.V;
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const num = (v, d) => fmt(v, d == null ? 2 : d);
+  const vec = (a, d) => "⟨" + a.map((x) => num(x, d == null ? 3 : d)).join(", ") + "⟩";
+  const TAU = 2 * Math.PI;
+  const samples = (f, a, b, n) => { const out = []; for (let i = 0; i <= n; i++) out.push(f(a + (b - a) * i / n)); return out; };
+  const segHtml = (labels, aria, cls) =>
+    '<span class="seg ' + (cls || "") + '" role="group" aria-label="' + aria + '">' +
+    labels.map((l, k) => '<button type="button" data-k="' + k + '" aria-pressed="false">' + l + "</button>").join("") + "</span>";
+  function pressOne(group, btn) { group.querySelectorAll("button").forEach((b) => b.setAttribute("aria-pressed", b === btn ? "true" : "false")); }
+  function wireSeg(api, cls, fn, first) {
+    const g = api.bar.querySelector("." + cls), bs = [...g.querySelectorAll("button")];
+    bs.forEach((b, k) => b.addEventListener("click", () => { pressOne(g, b); fn(k); }));
+    pressOne(g, bs[first || 0]);
+  }
+  function arrow2(ctx, A, B, color, w, head, alpha) {
+    const ang = Math.atan2(B[1] - A[1], B[0] - A[0]), L = Math.hypot(B[0] - A[0], B[1] - A[1]);
+    if (L < 1) return;
+    const h = Math.min(head || 11, L * 0.5);
+    ctx.save(); ctx.globalAlpha = alpha == null ? 1 : alpha; ctx.strokeStyle = color; ctx.lineWidth = w || 2.6; ctx.lineCap = "round";
+    ctx.beginPath(); ctx.moveTo(A[0], A[1]); ctx.lineTo(B[0] - Math.cos(ang) * h * 0.7, B[1] - Math.sin(ang) * h * 0.7); ctx.stroke();
+    arrowHead(ctx, B[0], B[1], ang, h, color); ctx.restore();
+  }
+  function path2(ctx, T, f, a, b, n, color, w, alpha) {
+    ctx.save(); ctx.strokeStyle = color; ctx.lineWidth = w || 2.2; ctx.globalAlpha = alpha == null ? 1 : alpha; ctx.beginPath();
+    for (let i = 0; i <= n; i++) { const p = f(a + (b - a) * i / n); i ? ctx.lineTo(T.X(p[0]), T.Y(p[1])) : ctx.moveTo(T.X(p[0]), T.Y(p[1])); }
+    ctx.stroke(); ctx.restore();
+  }
+  // 수치 미분과 TNB 틀
+  const d1 = (r, t) => { const h = 1e-4; return V.mul(V.sub(r(t + h), r(t - h)), 1 / (2 * h)); };
+  const d2 = (r, t) => { const h = 1e-3; return V.mul(V.add(V.sub(r(t + h), V.mul(r(t), 2)), r(t - h)), 1 / (h * h)); };
+  function frame(r, t) {
+    const a = d1(r, t), b = d2(r, t), c = V.cross(a, b), T = V.unit(a), B = V.unit(c), N = V.cross(B, T);
+    return { T: T, N: N, B: B, kappa: V.len(c) / Math.pow(V.len(a), 3), speed: V.len(a) };
+  }
+
+  /* ---------- 절 머리: 꺾은선이 곡선에 가까워진다 ---------- */
+  (function () {
+    const cv = document.getElementById("hero"), ctx = cv.getContext("2d");
+    let W, H, k = reduce ? 1 : 0, start = 0;
+    function size() { const d = window.devicePixelRatio || 1; W = cv.clientWidth; H = cv.clientHeight; cv.width = W * d; cv.height = H * d; ctx.setTransform(d, 0, 0, d, 0, 0); }
+    function draw() {
+      const C = Plot.palette(); ctx.clearRect(0, 0, W, H);
+      const f = (u) => [W * (0.02 + 0.96 * u), H * 0.52 - H * 0.3 * Math.sin(u * 2.6 * Math.PI + 0.4) * (0.7 + 0.3 * Math.cos(u * 5))];
+      ctx.save(); ctx.strokeStyle = C.aux; ctx.lineWidth = 6; ctx.globalAlpha = .22; ctx.beginPath();
+      for (let i = 0; i <= 300; i++) { const p = f(i / 300); i ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1]); }
+      ctx.stroke(); ctx.restore();
+      const n = Math.max(2, Math.round(2 + 38 * k));
+      ctx.save(); ctx.strokeStyle = C.curve; ctx.lineWidth = 2; ctx.beginPath();
+      for (let i = 0; i <= n; i++) { const p = f(i / n); i ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1]); }
+      ctx.stroke();
+      ctx.fillStyle = C.curve;
+      for (let i = 0; i <= n; i++) { const p = f(i / n); ctx.beginPath(); ctx.arc(p[0], p[1], 2.4, 0, TAU); ctx.fill(); }
+      ctx.restore();
+    }
+    function tick(now) { if (!start) start = now; k = Math.min(1, (now - start) / 3500); draw(); if (k < 1) requestAnimationFrame(tick); }
+    size(); reduce ? draw() : requestAnimationFrame(tick);
+    if ("ResizeObserver" in window) new ResizeObserver(() => { size(); draw(); }).observe(cv);
+  })();
+
+  /* ---------- 예제 1: 나선의 길이 ---------- */
+  (function () {
+    const r = (t) => [Math.cos(t), Math.sin(t), t], T1 = TAU, NS = [0, 4, 8, 16, 64];
+    const st = { n: 0 };
+    const chordLen = (n) => { let s = 0; for (let i = 0; i < n; i++) s += V.len(V.sub(r(T1 * (i + 1) / n), r(T1 * i / n))); return s; };
+    const api = Space.mount(document.getElementById("fig-len"), {
+      range: 4.1, center: [0, 0, 3.1], height: 430, axes: [2, 2, 6.9], view: { az: 32, el: 24 }, negAxes: .4,
+      t: { min: 0, max: T1, value: Math.PI, label: "t", duration: 8 },
+      alt: "나선의 호의 길이",
+      controls: segHtml(["꺾은선 없음", "n = 4", "n = 8", "n = 16", "n = 64"], "꺾은선 개수", "len-n"),
+      draw(S, C, api) {
+        S.path(samples((u) => [Math.cos(u), Math.sin(u), 0], 0, TAU, 72), { color: "--axis", width: 1, alpha: .5 });
+        S.path(samples(r, 0, T1, 240), { color: "--curve", width: 2, alpha: .25 });
+        if (api.t > 0) S.path(samples(r, 0, api.t, Math.max(2, Math.round(240 * api.t / T1))), { color: "--curve", width: 3.2 });
+        if (st.n) {
+          const pts = samples(r, 0, T1, st.n);
+          S.path(pts, { color: "--aux", width: 1.8 });
+          pts.forEach((p) => S.point(p, { color: "--aux", r: 2.6, ring: false }));
+        }
+        S.point(r(0), { color: "--ink", r: 3.5, label: "(1, 0, 0)", dx: 8, dy: 12, size: 11.5 });
+        S.point(r(T1), { color: "--ink", r: 3.5, label: "(1, 0, 2π)", dx: 8, dy: -6, size: 11.5 });
+        S.point(r(api.t), { color: "--curve", r: 5.5 });
+      },
+      readout: (api) => "t = <b>" + num(api.t) + "</b> · 지나온 길이 s(t) = √2 t = <b>" + num(Math.SQRT2 * api.t, 3) + "</b> (전체 2√2π ≈ 8.886)" +
+        (st.n ? "<br>꺾은선 " + st.n + "개의 길이 = <b>" + num(chordLen(st.n), 4) + "</b>" : ""),
+    });
+    wireSeg(api, "len-n", (k) => { st.n = NS[k]; api.redraw(); });
+  })();
+
+  /* ---------- 같은 곡선, 다른 매개변수화 ---------- */
+  (function () {
+    const r1 = (t) => [t, t * t, t * t * t];
+    Space.mount(document.getElementById("fig-repar"), {
+      range: 4.8, center: [1.3, 2.4, 4.2], height: 400, axes: [2.6, 4.6, 8.6], view: { az: -50, el: 14 }, negAxes: .25,
+      alt: "같은 곡선의 두 가지 매개변수화",
+      draw(S, C) {
+        S.path(samples(r1, 1, 2, 200), { color: "--curve", width: 2.4 });
+        for (let k = 0; k <= 8; k++) {
+          S.point(r1(1 + k / 8), { color: "--aux", r: 4.2 });
+          const p = r1(Math.pow(2, k / 8));
+          S.point(p, { color: "--ok", r: 3, ring: false });
+        }
+        S.point(r1(1), { color: "--ink", r: 3.5, label: "(1, 1, 1)", dx: 10, dy: 10, size: 11.5 });
+        S.point(r1(2), { color: "--ink", r: 3.5, label: "(2, 4, 8)", dx: 10, dy: 0, size: 11.5 });
+      },
+      readout: () => "파랑: r₁(t), t = 1, 1.125, …, 2 (Δt 일정) · 초록: r₂(u), u = 0, ln2/8, …, ln2 (Δu 일정)<br>" +
+        "∫₁² |r₁′(t)| dt ≈ <b>7.7075</b> · ∫₀^ln2 |r₂′(u)| du ≈ <b>7.7075</b> (같은 길이)",
+    });
+  })();
+
+  /* ---------- 곡률 = T가 도는 빠르기 ---------- */
+  (function () {
+    const f = (x) => [x, Math.sin(x)], Tv = (x) => { const L = Math.hypot(1, Math.cos(x)); return [1 / L, Math.cos(x) / L]; };
+    const kap = (x) => Math.abs(Math.sin(x)) / Math.pow(1 + Math.cos(x) ** 2, 1.5);
+    const curve = {
+      curve: false, x: () => 0, y: () => 0, grid: 0, origin: true, height: 250, title: "곡선 y = sin x",
+      view: { x: [-0.3, 6.6], y: [-1.6, 1.8] }, ticks: { x: [{ v: Math.PI / 2, label: "π/2" }, { v: Math.PI, label: "π" }, { v: 1.5 * Math.PI, label: "3π/2" }], y: [-1, 1] },
+      over(ctx, T, x, C) {
+        path2(ctx, T, f, 0, TAU, 200, C.ink, 2, .85);
+        for (let k = 0; k <= 16; k++) {
+          const u = TAU * k / 16, p = f(u), d = Tv(u);
+          arrow2(ctx, [T.X(p[0]), T.Y(p[1])], [T.X(p[0] + 0.55 * d[0]), T.Y(p[1] + 0.55 * d[1])], C.curve, 1.4, 7, .3);
+        }
+        const p = f(x), d = Tv(x);
+        arrow2(ctx, [T.X(p[0]), T.Y(p[1])], [T.X(p[0] + 0.9 * d[0]), T.Y(p[1] + 0.9 * d[1])], C.curve, 3, 12);
+        Plot.dot(ctx, T.X(p[0]), T.Y(p[1]), 5, C.ink, C.surface);
+      },
+    };
+    const circ = {
+      curve: false, x: () => 0, y: () => 0, grid: 0, origin: false, title: "T를 한 점에 모으면", maxWidth: "250px",
+      view: { x: [-1.35, 1.35], y: [-1.35, 1.35] }, ticks: { x: [], y: [] },
+      over(ctx, T, x, C) {
+        ctx.save(); ctx.strokeStyle = C.rule; ctx.lineWidth = 1.2; ctx.beginPath(); ctx.arc(T.X(0), T.Y(0), T.sx, 0, TAU); ctx.stroke(); ctx.restore();
+        path2(ctx, T, Tv, 0, x, Math.max(2, Math.round(x * 30)), C.curve, 3, .35);
+        const d = Tv(x);
+        arrow2(ctx, [T.X(0), T.Y(0)], [T.X(d[0]), T.Y(d[1])], C.curve, 3, 12);
+        label(ctx, "T", T.X(d[0] * 1.18), T.Y(d[1] * 1.18), { bold: true, size: 15, color: C.curve, align: "center", halo: C.surface });
+      },
+    };
+    Plot.mount(document.getElementById("fig-T"), {
+      t: { min: 0, max: TAU, value: 1.2, label: "x" }, duration: 9, panels: [curve, circ],
+      readout: (x) => "x = <b>" + num(x) + "</b> · T = " + vec(Tv(x)) + " · 곡률 κ = |sin x| / (1 + cos²x)<sup>3/2</sup> = <b>" + num(kap(x), 3) + "</b>" +
+        (kap(x) < 0.05 ? " (거의 곧음)" : kap(x) > 0.9 ? " (가장 많이 휨)" : ""),
+    });
+  })();
+
+  /* ---------- 예제 5: 포물선의 곡률 ---------- */
+  (function () {
+    const f = (x) => x * x, kap = (x) => 2 / Math.pow(1 + 4 * x * x, 1.5);
+    const p = {
+      curve: false, x: () => 0, y: () => 0, grid: 0, origin: true, maxWidth: "500px",
+      view: { x: [-2.6, 2.6], y: [-0.4, 4.4] }, ticks: { x: [-2, -1, 1, 2], y: [1, 2, 3, 4] }, alt: "포물선과 곡률",
+      over(ctx, T, x, C) {
+        ctx.save(); ctx.beginPath(); ctx.rect(0, 0, T.w, T.h); ctx.clip();
+        path2(ctx, T, (u) => [u, f(u)], -2.4, 2.4, 200, C.aux, 2.4);
+        path2(ctx, T, (u) => [u, kap(u)], -2.6, 2.6, 300, C.curve, 2.2);
+        const k = kap(x), R = 1 / k, fp = 2 * x, cx = x - fp * (1 + fp * fp) / 2, cy = f(x) + (1 + fp * fp) / 2;
+        ctx.strokeStyle = C.ok; ctx.lineWidth = 2; ctx.globalAlpha = .85; ctx.beginPath(); ctx.arc(T.X(cx), T.Y(cy), R * T.sx, 0, TAU); ctx.stroke(); ctx.globalAlpha = 1;
+        ctx.setLineDash([4, 4]); ctx.strokeStyle = C.ok; ctx.beginPath(); ctx.moveTo(T.X(x), T.Y(f(x))); ctx.lineTo(T.X(cx), T.Y(cy)); ctx.stroke(); ctx.setLineDash([]);
+        ctx.restore();
+        Plot.dot(ctx, T.X(x), T.Y(f(x)), 5, C.aux, C.surface);
+        Plot.dot(ctx, T.X(x), T.Y(k), 4, C.curve, C.surface);
+        label(ctx, "y = x²", T.X(2.05), T.Y(4.1), { size: 13, color: C.aux, halo: C.surface, align: "right" });
+        label(ctx, "y = κ(x)", T.X(-1.3), T.Y(0.35), { size: 13, color: C.curve, halo: C.surface, align: "right" });
+      },
+    };
+    Plot.mount(document.getElementById("fig-ex5"), {
+      t: { min: -2, max: 2, value: 0, step: 0.05, label: "x" }, duration: 8, panels: [p],
+      readout: (x) => { const k = kap(x); return "점 (" + num(x) + ", " + num(x * x) + ") · κ = 2 / (1 + 4x²)<sup>3/2</sup> = <b>" + num(k, 4) + "</b> · 원의 반지름 1/κ = " + num(1 / k, 3); },
+    });
+  })();
+
+  /* ---------- 예제 6, 7: T, N, B ---------- */
+  (function () {
+    const CS = [
+      { name: "예제 6 나선", r: (t) => [Math.cos(t), Math.sin(t), t], a: 0, b: 1.6 * Math.PI, t0: Math.PI / 2, fr: { range: 2.9, center: [0, 0, 2.3], axes: [2, 2, 5.4] } },
+      { name: "예제 4 꼬인 3차곡선", r: (t) => [t, t * t, t * t * t], a: -1.2, b: 1.2, t0: 0, fr: { range: 2.4, center: [0, 0.6, 0], axes: [1.8, 1.8, 2] } },
+      { name: "예제 7 곡선", r: (t) => [t, Math.SQRT2 * Math.log(t), 1 / t], a: 0.4, b: 3, t0: 1, fr: { range: 2.6, center: [1.5, 0, 1.2], axes: [3.2, 2.2, 2.8] } },
+    ];
+    let cur = CS[0];
+    const api = Space.mount(document.getElementById("fig-tnb"), Object.assign({}, CS[0].fr, {
+      height: 430, view: { az: 32, el: 22 }, negAxes: .4,
+      t: { min: 0, max: 1, value: (CS[0].t0 - CS[0].a) / (CS[0].b - CS[0].a), label: "위치", duration: 9 },
+      alt: "곡선을 따라 움직이는 T, N, B",
+      controls: segHtml(CS.map((c) => c.name), "곡선 고르기", "tnb-c"),
+      draw(S, C, api) {
+        const t = cur.a + (cur.b - cur.a) * api.t, P = cur.r(t), F = frame(cur.r, t);
+        S.path(samples(cur.r, cur.a, cur.b, 300), { color: "--ink", width: 2, alpha: .55 });
+        S.rightAngle(P, F.T, F.N, 0.18, { color: "--muted" });
+        S.arrow(P, V.add(P, V.mul(F.T, 1.3)), { color: "--curve", width: 3, label: "T", labelT: 1, dx: 6, dy: -6 });
+        S.arrow(P, V.add(P, V.mul(F.N, 1.3)), { color: "--ok", width: 3, label: "N", labelT: 1, dx: 6, dy: -6 });
+        S.arrow(P, V.add(P, V.mul(F.B, 1.3)), { color: "--aux", width: 3, label: "B", labelT: 1, dx: 6, dy: -6 });
+        S.point(P, { color: "--ink", r: 4.5 });
+      },
+      readout: (api) => {
+        const t = cur.a + (cur.b - cur.a) * api.t, F = frame(cur.r, t), P = cur.r(t);
+        return "t = <b>" + num(t, 3) + "</b> · 점 (" + P.map((v) => num(v)).join(", ") + ") · κ = <b>" + num(F.kappa, 4) + "</b><br>T = " + vec(F.T) + ", N = " + vec(F.N) + ", B = " + vec(F.B);
+      },
+    }));
+    wireSeg(api, "tnb-c", (k) => { cur = CS[k]; api.setFrame(cur.fr); api.setT((cur.t0 - cur.a) / (cur.b - cur.a)); });
+  })();
+
+  /* ---------- 자가 점검 ---------- */
+  (function () {
+    const R = String.raw;
+    Quiz.mount(document.getElementById("quiz"), [
+      {
+        q: R`$\mathbf r(t)=\langle2\cos t,\ 2\sin t,\ \sqrt5\,t\rangle$의 $0\le t\le\pi$ 부분의 길이는?`,
+        choices: [R`$\sqrt5\,\pi$`, R`$3\pi$`, R`$9\pi$`, R`$2\pi$`],
+        answer: 1,
+        explain: R`<p>$|\mathbf r'(t)|=\sqrt{4\sin^2t+4\cos^2t+5}=\sqrt9=3$이라 $L=\int_0^\pi3\,dt=3\pi$예요.</p>`,
+      },
+      {
+        q: R`$\mathbf r(t)=\langle3t,\ 4t,\ 0\rangle$을 $t=0$부터 잰 호의 길이 $s$로 매개변수화하면?`,
+        choices: [R`$\langle3s,\ 4s,\ 0\rangle$`, R`$\left\langle\frac{3s}{5},\ \frac{4s}{5},\ 0\right\rangle$`, R`$\left\langle\frac{s}{3},\ \frac{s}{4},\ 0\right\rangle$`, R`$\langle5s,\ 5s,\ 0\rangle$`],
+        answer: 1,
+        explain: R`<p>$|\mathbf r'|=5$라 $s=5t$, $t=\frac s5$를 대입해요. 결과의 속력이 1인지 확인하면 $\sqrt{\frac9{25}+\frac{16}{25}}=1$이에요.</p>`,
+      },
+      {
+        q: R`반지름 4인 원의 곡률은?`,
+        choices: [R`$4$`, R`$\frac14$`, R`$\frac1{16}$`, R`$0$`],
+        answer: 1,
+        explain: R`<p>예제 3: 반지름 $a$인 원의 곡률은 $\frac1a$. 클수록 덜 휘어요.</p>`,
+      },
+      {
+        q: R`직선 $\mathbf r(t)=\langle1+t,\ 2-3t,\ 5t\rangle$의 곡률은?`,
+        choices: [R`$0$`, R`$1$`, R`$\frac{1}{\sqrt{35}}$`, R`정의되지 않는다`],
+        answer: 0,
+        explain: R`<p>$\mathbf r''=\mathbf 0$이라 $\mathbf r'\times\mathbf r''=\mathbf 0$, 곡률 0이에요. $\mathbf T$가 상수라 방향이 전혀 바뀌지 않아요.</p>`,
+      },
+      {
+        q: R`곡선 $y=x^3$의 $x=1$에서의 곡률은?`,
+        choices: [R`$6$`, R`$\frac{6}{10^{3/2}}$`, R`$\frac{3}{10^{3/2}}$`, R`$\frac{6}{10}$`],
+        answer: 1,
+        explain: R`<p>$f'=3x^2=3$, $f''=6x=6$이라 $\kappa=\frac{6}{(1+9)^{3/2}}=\frac{6}{10\sqrt{10}}\approx0.19$예요.</p>`,
+      },
+      {
+        q: R`어떤 점에서 $\mathbf r'=\langle1,0,0\rangle$, $\mathbf r''=\langle0,2,0\rangle$이면 그 점의 곡률은?`,
+        choices: [R`$1$`, R`$2$`, R`$\frac12$`, R`$0$`],
+        answer: 1,
+        explain: R`<p>$\mathbf r'\times\mathbf r''=\langle0,0,2\rangle$, 크기 2. $|\mathbf r'|^3=1$이라 $\kappa=2$예요.</p>`,
+      },
+      {
+        q: R`$\mathbf T$, $\mathbf N$, $\mathbf B$에 대해 옳은 것은?`,
+        choices: [R`$\mathbf N=\mathbf T'$`, R`$\mathbf B=\mathbf N\times\mathbf T$`, R`셋은 서로 수직인 단위벡터이다`, R`$\mathbf N$은 항상 $z$축을 향한다`],
+        answer: 2,
+        explain: R`<p>$\mathbf N=\frac{\mathbf T'}{|\mathbf T'|}$로 길이를 1로 맞춰야 하고(A 틀림), $\mathbf B=\mathbf T\times\mathbf N$ 순서예요(B는 부호 반대). D는 나선에서만 그래요.</p>`,
+      },
+      {
+        q: R`$\dfrac{ds}{dt}$와 같은 것은?`,
+        choices: [R`$|\mathbf r(t)|$`, R`$|\mathbf r'(t)|$`, R`$|\mathbf T'(t)|$`, R`$\kappa(t)$`],
+        answer: 1,
+        explain: R`<p>식 (7): 호의 길이함수를 미분하면 속력 $|\mathbf r'(t)|$예요. 곡률 공식 (9)의 분모가 여기서 나와요.</p>`,
+      },
+    ]);
+  })();
+})();
+</script>
+</body>
+</html>

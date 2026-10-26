@@ -1,0 +1,497 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>11.5 직선과 평면의 방정식</title>
+<script>try{var t=localStorage.getItem("theme");if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
+<link rel="stylesheet" href="assets/katex/katex.min.css">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body data-section="11.5">
+<div class="shell">
+  <nav class="side" aria-label="이 절의 목차">
+    <a class="home" href="index.html">전체 목차로</a>
+    <ol>
+      <li><a href="#line">직선의 방정식</a></li>
+      <li><a href="#ex2">예제 2 · 두 점을 지나는 직선</a></li>
+      <li><a href="#ex3">예제 3 · 꼬인 위치</a></li>
+      <li><a href="#plane">평면의 방정식</a></li>
+      <li><a href="#ex45">예제 4, 5 · 평면 구하기</a></li>
+      <li><a href="#ex6">예제 6 · 직선과 평면의 교점</a></li>
+      <li><a href="#ex7">예제 7 · 두 평면의 각과 교선</a></li>
+      <li><a href="#dist">거리 · 예제 8, 9</a></li>
+      <li><a href="#summary">한눈에 정리</a></li>
+      <li><a href="#check">자가 점검</a></li>
+    </ol>
+  </nav>
+
+  <main>
+    <header class="hero">
+      <p class="chapter">11장 벡터와 공간기하학</p>
+      <h1><span class="num">11.5</span>직선과 평면의 방정식</h1>
+      <canvas id="hero" aria-hidden="true"></canvas>
+    </header>
+
+    <p class="lede">평면에서는 직선을 $y=mx+b$ 하나로 썼지만, 공간에서는 기울기 하나로 방향을 나타낼 수 없어요. 그래서 <b>방향은 벡터로</b> 나타내요. 직선은 “한 점 + 방향벡터”, 평면은 “한 점 + 법선벡터”로 정해지고, 나머지는 11.3의 내적과 11.4의 외적으로 계산해요.</p>
+
+    <!-- ===================================================== -->
+    <h2 id="line">직선의 방정식</h2>
+    <p>공간의 직선 $L$은 $L$ 위의 한 점 $P_0(x_0,y_0,z_0)$과 $L$의 방향을 알면 결정돼요. $\mathbf v$를 $L$과 평행한 벡터, $P(x,y,z)$를 $L$ 위의 임의의 점, $\mathbf r_0$과 $\mathbf r$을 각각 $P_0$과 $P$의 위치벡터($\overrightarrow{OP_0}$, $\overrightarrow{OP}$)라 하면, $\overrightarrow{P_0P}$는 $\mathbf v$와 평행이라 어떤 실수 $t$에 대해 $\overrightarrow{P_0P}=t\mathbf v$예요. 따라서</p>
+    <div class="summary-box">
+      $$\mathbf r=\mathbf r_0+t\mathbf v \tag{1}$$
+      <p style="margin:0">직선 $L$의 <b>벡터방정식</b>. $t$(매개변수)가 실수 전체를 움직이면 $\mathbf r$의 끝점이 $L$ 전체를 그려요.</p>
+    </div>
+    <p>$\mathbf v=\langle a,b,c\rangle$, $\mathbf r=\langle x,y,z\rangle$, $\mathbf r_0=\langle x_0,y_0,z_0\rangle$을 넣고 성분끼리 같다고 놓으면</p>
+    <div class="summary-box">
+      $$x=x_0+at,\qquad y=y_0+bt,\qquad z=z_0+ct \tag{2}$$
+      <p style="margin:0">직선 $L$의 <b>매개변수방정식</b>. 9.1의 매개변수곡선이 3차원으로 온 거예요.</p>
+    </div>
+    <p>$a,b,c$가 모두 0이 아니면 세 식을 $t$에 대해 풀어 같다고 놓아 $t$를 없앨 수 있어요.</p>
+    <div class="summary-box">
+      $$\frac{x-x_0}{a}=\frac{y-y_0}{b}=\frac{z-z_0}{c} \tag{3}$$
+      <p style="margin:0">직선 $L$의 <b>대칭방정식</b>. 분모 $a,b,c$가 방향벡터의 성분(방향수)이에요.</p>
+    </div>
+    <p>$a,b,c$ 중 하나가 0이어도 $t$를 없앨 수 있어요. 예를 들어 $a=0$이면 $x$는 항상 $x_0$이니</p>
+    $$x=x_0,\qquad\frac{y-y_0}{b}=\frac{z-z_0}{c}$$
+    <p>이것은 $L$이 평면 $x=x_0$ 안에 놓여 있다는 뜻이에요.</p>
+    <div class="exam"><strong>시험 포인트.</strong> 대칭방정식에서는 분모가 방향벡터, 분자의 빼는 수가 지나는 점이에요. $\frac{x+3}{2}$처럼 더하기로 쓰여 있으면 $x_0=-3$이에요. 방향벡터는 상수배를 해도 같은 직선이라 답의 모양이 여러 가지일 수 있어요.</div>
+
+    <!-- ===================================================== -->
+    <h2 id="ex2">예제 2 · 두 점을 지나는 직선</h2>
+    <div class="problem"><span class="tag">예제 2</span>(a) 점 $A(2,4,-3)$과 $B(3,-1,1)$을 지나는 직선의 매개변수방정식과 대칭방정식을 구하라.<br>(b) 이 직선은 어느 점에서 $xy$평면과 만나는가?</div>
+    <h3>(a)</h3>
+    <ol class="steps">
+      <li>방향벡터는 두 점을 잇는 벡터예요.
+        $$\mathbf v=\overrightarrow{AB}=\langle3-2,\,-1-4,\,1-(-3)\rangle=\langle1,-5,4\rangle$$</li>
+      <li>지나는 점으로 $A$를 쓰면 매개변수방정식은
+        $$x=2+t,\qquad y=4-5t,\qquad z=-3+4t$$</li>
+      <li>$t$를 없애면 대칭방정식
+        $$\frac{x-2}{1}=\frac{y-4}{-5}=\frac{z+3}{4}$$</li>
+    </ol>
+    <h3>(b)</h3>
+    <p>$xy$평면은 $z=0$인 곳이에요. $-3+4t=0$에서 $t=\frac34$이고, 이때 $x=2+\frac34=\frac{11}{4}$, $y=4-\frac{15}{4}=\frac14$예요. 따라서 교점은 $\left(\frac{11}{4},\,\frac14,\,0\right)$이에요.</p>
+    <p>참고로 $t=0$이면 $A$, $t=1$이면 $B$가 나와요. 그래서 $0\le t\le1$로 제한하면 선분 $AB$가 돼요.</p>
+    <figure class="plot" id="fig-line">
+      <figcaption>빨간 화살표가 $\mathbf r_0=\overrightarrow{OA}$, 초록 화살표가 방향벡터 $\mathbf v$, 파란 화살표가 $\mathbf r=\mathbf r_0+t\mathbf v$예요. $t$를 움직이면 점이 직선을 따라가요. $t=0$에서 $A$, $t=1$에서 $B$, $t=\frac34$에서 $xy$평면(회색 모눈)을 뚫고 지나가요.</figcaption>
+    </figure>
+
+    <!-- ===================================================== -->
+    <h2 id="ex3">예제 3 · 꼬인 위치</h2>
+    <div class="problem"><span class="tag">예제 3</span>매개변수방정식이 다음과 같은 직선 $L_1$과 $L_2$가 있다.
+      $$L_1:\ x=1+t,\ y=-2+3t,\ z=4-t\qquad L_2:\ x=2s,\ y=3+s,\ z=-3+4s$$
+      $L_1$과 $L_2$는 서로 꼬인 위치의 직선(skew lines), 즉 만나지도 않고 평행하지도 않은 직선이고, 따라서 같은 평면에 있지 않은 직선들임을 보여라.</div>
+    <ol class="steps">
+      <li><b>평행하지 않음.</b> 방향벡터는 $\langle1,3,-1\rangle$과 $\langle2,1,4\rangle$이에요. 성분이 비례하지 않으니(한쪽이 다른 쪽의 상수배가 아님) 두 직선은 평행이 아니에요.</li>
+      <li><b>만나지 않음.</b> 교점이 있다면 같은 점이 되는 $t$, $s$가 있어야 해요. 매개변수를 다른 문자로 둔 게 중요해요(같은 점에 도착하는 “시각”은 달라도 되니까요).
+        $$1+t=2s,\qquad-2+3t=3+s,\qquad4-t=-3+4s$$
+        첫째 식에서 $s=\frac{1+t}{2}$를 둘째 식에 넣으면 $-4+6t=7+t$, $t=\frac{11}{5}$, $s=\frac85$예요. 셋째 식에 넣으면 왼쪽 $4-\frac{11}{5}=\frac95$, 오른쪽 $-3+\frac{32}{5}=\frac{17}{5}$로 달라요.</li>
+      <li>세 식을 동시에 만족하는 $t$, $s$가 없으니 두 직선은 만나지 않아요. 평행하지도 않고 만나지도 않으니 꼬인 위치예요.</li>
+    </ol>
+    <figure class="plot" id="fig-skew">
+      <figcaption>두 슬라이더로 $L_1$ 위의 점(파랑)과 $L_2$ 위의 점(빨강)을 움직여 보세요. 아무리 해도 거리가 0이 되지 않아요. “최단 거리” 버튼은 가장 가까운 두 점으로 옮겨 줘요. 이 최솟값은 예제 9에서 구해요. 돌려 보면 두 직선이 서로 다른 높이로 엇갈려 지나가는 게 보여요.</figcaption>
+    </figure>
+
+    <!-- ===================================================== -->
+    <h2 id="plane">평면의 방정식</h2>
+    <p>공간의 평면은 평면 안의 한 점 $P_0(x_0,y_0,z_0)$과 <b>평면에 수직인 벡터</b> $\mathbf n$으로 결정돼요. 이 $\mathbf n$을 평면의 <b>법선벡터</b>(normal vector)라 해요.</p>
+    <p>$P(x,y,z)$를 평면 안의 임의의 점이라 하면 $\mathbf r-\mathbf r_0=\overrightarrow{P_0P}$는 평면 안의 벡터예요. 법선벡터는 평면 안의 모든 벡터에 수직이니 내적이 0이에요.</p>
+    <div class="summary-box">
+      $$\mathbf n\cdot(\mathbf r-\mathbf r_0)=0 \tag{5}$$
+      <p style="margin:0 0 .3rem">평면의 <b>벡터방정식</b>. 같은 말로</p>
+      $$\mathbf n\cdot\mathbf r=\mathbf n\cdot\mathbf r_0 \tag{6}$$
+    </div>
+    <p>$\mathbf n=\langle a,b,c\rangle$를 넣고 내적을 계산하면 $\langle a,b,c\rangle\cdot\langle x-x_0,\,y-y_0,\,z-z_0\rangle=0$, 즉</p>
+    <div class="summary-box">
+      $$a(x-x_0)+b(y-y_0)+c(z-z_0)=0 \tag{7}$$
+      <p style="margin:0 0 .3rem">점 $P_0$을 지나고 법선벡터가 $\langle a,b,c\rangle$인 평면의 <b>스칼라방정식</b>. 전개해서 상수를 모으면 일차방정식</p>
+      $$ax+by+cz+d=0\qquad\big(d=-(ax_0+by_0+cz_0)\big) \tag{8}$$
+    </div>
+    <div class="exam"><strong>핵심.</strong> 평면 $ax+by+cz+d=0$에서 <b>$x,y,z$의 계수 $\langle a,b,c\rangle$가 곧 법선벡터</b>예요. 식만 보고 바로 읽어낼 수 있어야 해요. 직선은 방향벡터가 직선과 <b>평행</b>, 평면은 법선벡터가 평면과 <b>수직</b>이라는 차이를 헷갈리지 마세요.</div>
+
+    <!-- ===================================================== -->
+    <h2 id="ex45">예제 4, 5 · 평면 구하기</h2>
+    <div class="problem"><span class="tag">예제 4</span>점 $(2,4,-1)$을 지나고 법선벡터가 $\mathbf n=\langle2,3,4\rangle$인 평면의 방정식을 구하라. 절편을 구하고 그래프를 그려라.</div>
+    <ol class="steps">
+      <li>식 (7)에 넣으면
+        $$2(x-2)+3(y-4)+4(z+1)=0\quad\Longrightarrow\quad2x+3y+4z=12$$</li>
+      <li>$x$절편은 $y=z=0$으로 놓아 $x=6$, 마찬가지로 $y$절편 4, $z$절편 3이에요.</li>
+      <li>그래프는 세 절편 $(6,0,0)$, $(0,4,0)$, $(0,0,3)$을 이은 삼각형을 그리면 제1팔분공간 부분이 돼요.</li>
+    </ol>
+    <figure class="plot" id="fig-plane">
+      <figcaption>진한 삼각형이 절편으로 그린 부분이고, 연한 면은 같은 평면을 넓게 그린 거예요. 재생하면 평면 위의 점 $P$가 $P_0(2,4,-1)$ 둘레를 돌아요. $\overrightarrow{P_0P}$는 어디로 가든 법선벡터 $\mathbf n$과 직각이에요. 이게 식 (5)의 뜻이에요.</figcaption>
+    </figure>
+
+    <div class="problem"><span class="tag">예제 5</span>점 $P(1,3,2)$, $Q(3,-1,6)$, $R(5,2,0)$을 지나는 평면의 방정식을 구하라.</div>
+    <ol class="steps">
+      <li>평면 안의 두 벡터를 만들어요.
+        $$\mathbf a=\overrightarrow{PQ}=\langle2,-4,4\rangle,\qquad\mathbf b=\overrightarrow{PR}=\langle4,-1,-2\rangle$$</li>
+      <li>둘 다에 수직인 벡터가 법선이에요(11.4 예제 3과 같은 방법).
+        $$\mathbf n=\mathbf a\times\mathbf b=\begin{vmatrix}\mathbf i&\mathbf j&\mathbf k\\2&-4&4\\4&-1&-2\end{vmatrix}=(8+4)\mathbf i-(-4-16)\mathbf j+(-2+16)\mathbf k=12\mathbf i+20\mathbf j+14\mathbf k$$</li>
+      <li>점 $P(1,3,2)$와 법선벡터 $\mathbf n$으로 식 (7)을 쓰면
+        $$12(x-1)+20(y-3)+14(z-2)=0$$
+        2로 나눠 정리하면
+        $$6x+10y+7z=50$$</li>
+    </ol>
+    <p>검산: $Q$를 넣으면 $18-10+42=50$, $R$을 넣으면 $30+20+0=50$이라 세 점 모두 평면 위에 있어요. (슬라이드는 여기서 끝나 있어서 마지막 식을 채웠어요.)</p>
+
+    <!-- ===================================================== -->
+    <h2 id="ex6">예제 6 · 직선과 평면의 교점</h2>
+    <div class="problem"><span class="tag">예제 6</span>매개변수방정식 $x=2+3t$, $y=-4t$, $z=5+t$로 주어진 직선이 평면 $4x+5y-2z=18$과 만나는 점을 구하라.</div>
+    <ol class="steps">
+      <li>직선 위의 점을 평면의 식에 그대로 넣어요.
+        $$4(2+3t)+5(-4t)-2(5+t)=18$$</li>
+      <li>정리하면 $8+12t-20t-10-2t=18$, 즉 $-10t=20$, $t=-2$예요.</li>
+      <li>$t=-2$를 직선의 식에 넣으면 $x=2-6=-4$, $y=8$, $z=5-2=3$. 교점은 $(-4,8,3)$이에요.</li>
+    </ol>
+    <figure class="plot" id="fig-ex6">
+      <figcaption>$t$를 움직이면 직선 위의 점이 평면을 통과해요. 아래 값 $4x+5y-2z$가 18이 되는 순간($t=-2$)이 교점이에요. $t$에 대한 일차방정식 하나만 풀면 되는 이유가 보여요.</figcaption>
+    </figure>
+
+    <div class="def"><b>NOTE.</b> 두 평면은 법선벡터가 평행할 때 평행해요. 예를 들어 $x+2y-3z=4$와 $2x+4y-6z=3$은 법선벡터가 $\mathbf n_1=\langle1,2,-3\rangle$, $\mathbf n_2=\langle2,4,-6\rangle=2\mathbf n_1$이라 평행이에요. 평행이 아닌 두 평면은 한 직선에서 만나고, <b>두 평면 사이의 각은 법선벡터 사이의 예각</b>으로 정의해요.</div>
+
+    <!-- ===================================================== -->
+    <h2 id="ex7">예제 7 · 두 평면의 각과 교선</h2>
+    <div class="problem"><span class="tag">예제 7</span>(a) 평면 $x+y+z=1$과 $x-2y+3z=1$ 사이의 각을 구하라.<br>(b) 이 두 평면의 교선 $L$의 대칭방정식을 구하라.</div>
+    <h3>(a)</h3>
+    <p>두 평면의 법선벡터는 $\mathbf n_1=\langle1,1,1\rangle$, $\mathbf n_2=\langle1,-2,3\rangle$이에요. 사이각을 $\theta$라 하면 11.3 따름정리 6으로</p>
+    $$\cos\theta=\frac{\mathbf n_1\cdot\mathbf n_2}{|\mathbf n_1|\,|\mathbf n_2|}=\frac{1-2+3}{\sqrt3\,\sqrt{14}}=\frac{2}{\sqrt{42}},\qquad\theta=\cos^{-1}\left(\frac{2}{\sqrt{42}}\right)\approx72^\circ$$
+    <p>(내적이 음수로 나오면 둔각이니 $180^\circ$에서 빼서 예각으로 답해요.)</p>
+    <h3>(b)</h3>
+    <ol class="steps">
+      <li>먼저 $L$ 위의 한 점을 구해요. 아무 변수나 하나 정해 넣으면 돼요. $z=0$이라 하면 $x+y=1$, $x-2y=1$이고 그 해는 $x=1$, $y=0$이라 점 $(1,0,0)$이 $L$ 위에 있어요.</li>
+      <li>$L$은 두 평면 안에 모두 있으므로 두 법선벡터에 모두 수직이에요. 그러니 방향벡터는 외적이에요.
+        $$\mathbf v=\mathbf n_1\times\mathbf n_2=\begin{vmatrix}\mathbf i&\mathbf j&\mathbf k\\1&1&1\\1&-2&3\end{vmatrix}=5\mathbf i-2\mathbf j-3\mathbf k$$</li>
+      <li>점 $(1,0,0)$과 방향 $\langle5,-2,-3\rangle$으로 대칭방정식을 쓰면
+        $$\frac{x-1}{5}=\frac{y}{-2}=\frac{z}{-3}$$</li>
+    </ol>
+    <figure class="plot" id="fig-two">
+      <figcaption>파란 면이 $x+y+z=1$, 초록 면이 $x-2y+3z=1$, 빨간 선이 교선 $L$이에요. 두 법선벡터 사이의 각이 두 평면 사이의 각이고, 교선은 두 법선에 모두 수직이에요. 교선 방향으로 돌려 보면 두 평면이 72°로 벌어진 게 보여요.</figcaption>
+    </figure>
+
+    <!-- ===================================================== -->
+    <h2 id="dist">거리</h2>
+    <div class="problem"><span class="tag">문제</span>점 $P_1(x_1,y_1,z_1)$에서 평면 $ax+by+cz+d=0$까지의 거리 $D$에 관한 식을 구하라.</div>
+    <ol class="steps">
+      <li>평면 위의 아무 점 $P_0(x_0,y_0,z_0)$을 잡고 $\mathbf b=\overrightarrow{P_0P_1}=\langle x_1-x_0,\,y_1-y_0,\,z_1-z_0\rangle$이라 해요.</li>
+      <li>거리 $D$는 $\mathbf b$를 법선 $\mathbf n=\langle a,b,c\rangle$ 방향으로 사영한 길이, 즉 스칼라 사영의 절댓값이에요(11.3).
+        $$D=\left|\operatorname{comp}_{\mathbf n}\mathbf b\right|=\frac{|\mathbf n\cdot\mathbf b|}{|\mathbf n|}=\frac{|a(x_1-x_0)+b(y_1-y_0)+c(z_1-z_0)|}{\sqrt{a^2+b^2+c^2}}$$</li>
+      <li>$P_0$이 평면 위에 있으니 $ax_0+by_0+cz_0+d=0$, 즉 $-(ax_0+by_0+cz_0)=d$예요. 분자에 넣으면 정리돼요.</li>
+    </ol>
+    <div class="summary-box">
+      $$D=\frac{|ax_1+by_1+cz_1+d|}{\sqrt{a^2+b^2+c^2}} \tag{9}$$
+    </div>
+    <p class="note">슬라이드의 식 9는 분자가 $|(ax_1+by_1+cz_1)-d|$로 적혀 있는데, 평면을 $ax+by+cz+d=0$으로 썼다면 $+d$가 맞아요. ($-d$는 평면을 $ax+by+cz=d$ 꼴로 썼을 때의 모양이에요.) 제일 안전한 방법은 <b>평면을 “$=0$” 꼴로 만든 뒤 왼쪽에 점을 그대로 대입</b>하는 거예요.</p>
+    <figure class="plot" id="fig-dist">
+      <figcaption>평면 $2x+y+2z=4$와 점 $P_1$이에요. 재생하면 $P_1$이 평면을 수직으로 통과해요. 파란 화살표 $\mathbf b$는 평면 위의 점 $P_0(2,0,0)$에서 출발하지만, 거리(빨간 선분)는 $\mathbf b$의 법선 방향 성분만이에요. 평면 아래로 가면 대입한 값이 음수가 되어 절댓값이 필요해요.</figcaption>
+    </figure>
+
+    <div class="problem"><span class="tag">예제 8</span>평행한 두 평면 $10x+2y-2z=5$와 $5x+y-z=1$ 사이의 거리를 구하라.</div>
+    <ol class="steps">
+      <li>법선벡터 $\langle10,2,-2\rangle=2\langle5,1,-1\rangle$이라 평행이 맞아요. 평행한 두 평면 사이의 거리는 한 평면 위의 아무 점에서 다른 평면까지의 거리예요.</li>
+      <li>첫째 평면에서 $y=z=0$이라 하면 $10x=5$, $x=\frac12$. 점 $\left(\frac12,0,0\right)$을 잡아요.</li>
+      <li>둘째 평면을 $5x+y-z-1=0$으로 쓰고 식 (9)에 넣으면
+        $$D=\frac{\left|5\left(\frac12\right)+0-0-1\right|}{\sqrt{5^2+1^2+(-1)^2}}=\frac{\frac32}{\sqrt{27}}=\frac{\frac32}{3\sqrt3}=\frac{1}{2\sqrt3}=\frac{\sqrt3}{6}\approx0.289$$</li>
+    </ol>
+
+    <div class="problem"><span class="tag">예제 9</span>예제 3에서 직선 $L_1:\ x=1+t,\ y=-2+3t,\ z=4-t$와 $L_2:\ x=2s,\ y=3+s,\ z=-3+4s$가 서로 꼬인 위치임을 보였다. 이들 사이의 거리를 구하라.</div>
+    <p>아이디어: 꼬인 두 직선은 <b>평행한 두 평면</b> 위에 각각 놓을 수 있어요. 두 평면의 공통 법선은 두 방향벡터에 모두 수직인 벡터, 즉 외적이에요. 그러면 직선 사이의 거리는 평면 사이의 거리(예제 8과 같은 문제)가 돼요.</p>
+    <ol class="steps">
+      <li>공통 법선:
+        $$\mathbf n=\mathbf v_1\times\mathbf v_2=\begin{vmatrix}\mathbf i&\mathbf j&\mathbf k\\1&3&-1\\2&1&4\end{vmatrix}=(12+1)\mathbf i-(4+2)\mathbf j+(1-6)\mathbf k=13\mathbf i-6\mathbf j-5\mathbf k$$</li>
+      <li>$L_2$를 품는 평면: $s=0$에서 $L_2$ 위의 점 $(0,3,-3)$을 지나고 법선이 $\mathbf n$이니
+        $$13(x-0)-6(y-3)-5(z+3)=0\quad\Longrightarrow\quad13x-6y-5z+3=0$$</li>
+      <li>$t=0$에서 $L_1$ 위의 점 $(1,-2,4)$에서 이 평면까지의 거리:
+        $$D=\frac{|13(1)-6(-2)-5(4)+3|}{\sqrt{13^2+(-6)^2+(-5)^2}}=\frac{|13+12-20+3|}{\sqrt{230}}=\frac{8}{\sqrt{230}}\approx0.53$$</li>
+    </ol>
+    <p>위 꼬인 위치 그림의 “최단 거리” 버튼이 보여 주는 값과 같아요.</p>
+
+    <!-- ===================================================== -->
+    <h2 id="summary">한눈에 정리</h2>
+    <div class="summary-box">
+      <ul>
+        <li>직선 = 점 $P_0$ + 방향벡터 $\langle a,b,c\rangle$: $\mathbf r=\mathbf r_0+t\mathbf v$, $x=x_0+at$ 등, $\dfrac{x-x_0}{a}=\dfrac{y-y_0}{b}=\dfrac{z-z_0}{c}$.</li>
+        <li>두 점을 지나는 직선의 방향은 두 점의 차. $0\le t\le1$이면 선분.</li>
+        <li>두 직선: 방향 평행 → 평행(또는 일치), 아니면 $t$, $s$ 연립해서 해가 있으면 교차, 없으면 꼬인 위치.</li>
+        <li>평면 = 점 $P_0$ + 법선 $\langle a,b,c\rangle$: $a(x-x_0)+b(y-y_0)+c(z-z_0)=0$. 계수가 곧 법선.</li>
+        <li>세 점 → 법선은 $\overrightarrow{PQ}\times\overrightarrow{PR}$. 두 평면의 교선 방향 → $\mathbf n_1\times\mathbf n_2$.</li>
+        <li>직선과 평면의 교점: 직선의 $x,y,z$를 평면 식에 대입해서 $t$를 구함.</li>
+        <li>평면 사이의 각 = 법선 사이의 예각. 법선이 평행하면 평면도 평행.</li>
+        <li>점과 평면 거리 $D=\dfrac{|ax_1+by_1+cz_1+d|}{\sqrt{a^2+b^2+c^2}}$. 평행한 평면, 꼬인 직선의 거리도 이걸로.</li>
+      </ul>
+    </div>
+
+    <!-- ===================================================== -->
+    <h2 id="check">자가 점검</h2>
+    <p>보기를 고르면 바로 정답과 풀이가 나와요.</p>
+    <div id="quiz"></div>
+
+    <nav class="pager" aria-label="절 이동"></nav>
+  </main>
+</div>
+
+<script src="assets/katex/katex.min.js"></script>
+<script src="assets/katex/auto-render.min.js"></script>
+<script src="assets/plot.js"></script>
+<script src="assets/space.js"></script>
+<script src="assets/quiz.js"></script>
+<script src="assets/site.js"></script>
+<script>
+(function () {
+  "use strict";
+  const { fmt, arrowHead } = Plot;
+  const V = Space.V;
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const num = (v, d) => fmt(v, d == null ? 2 : d);
+  const trim = (v) => String(+v.toFixed(3)).replace("-", "−");
+  const pt = (a) => "(" + a.map(trim).join(", ") + ")";
+  const vec = (a) => "⟨" + a.map(trim).join(", ") + "⟩";
+
+  /* ---------- 절 머리: 평면을 뚫고 지나가는 직선 ---------- */
+  (function () {
+    const cv = document.getElementById("hero"), ctx = cv.getContext("2d");
+    let W, H, k = reduce ? 1 : 0, start = 0;
+    function size() { const d = window.devicePixelRatio || 1; W = cv.clientWidth; H = cv.clientHeight; cv.width = W * d; cv.height = H * d; ctx.setTransform(d, 0, 0, d, 0, 0); }
+    function draw() {
+      const C = Plot.palette(); ctx.clearRect(0, 0, W, H);
+      const cam = Space.camera(20 + 30 * k, 14), s = Math.min(H / 3.2, W / 9);
+      const P = (p) => [W * 0.5 + V.dot(p, cam.r) * s, H * 0.55 - V.dot(p, cam.u) * s];
+      const half = Math.min(4.2, W / s / 2.6);
+      const corners = [[-half, -1.4, 0], [half, -1.4, 0], [half, 1.4, 0], [-half, 1.4, 0]].map(P);
+      ctx.save(); ctx.fillStyle = C.aux; ctx.globalAlpha = .14; ctx.beginPath(); corners.forEach((p, i) => (i ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1]))); ctx.closePath(); ctx.fill();
+      ctx.globalAlpha = .45; ctx.strokeStyle = C.aux; ctx.stroke(); ctx.restore();
+      const n0 = P([0, 0, 0]), n1 = P([0, 0, 1.3]);
+      ctx.save(); ctx.strokeStyle = C.ok; ctx.lineWidth = 2.4; ctx.beginPath(); ctx.moveTo(n0[0], n0[1]); ctx.lineTo(n1[0], n1[1] + 6); ctx.stroke(); ctx.restore();
+      arrowHead(ctx, n1[0], n1[1], -Math.PI / 2, 9, C.ok);
+      const A = [-3.2, 0.6, -1.4], B = [3.2, -0.6, 1.4], a = P(A), b = P(B);
+      ctx.save(); ctx.strokeStyle = C.curve; ctx.lineWidth = 2; ctx.setLineDash([6, 5]); ctx.globalAlpha = .7; ctx.beginPath(); ctx.moveTo(a[0], a[1]); ctx.lineTo(b[0], b[1]); ctx.stroke(); ctx.restore();
+      const m = P(V.lerp(A, B, k));
+      ctx.save(); ctx.fillStyle = C.curve; ctx.beginPath(); ctx.arc(m[0], m[1], 5, 0, Math.PI * 2); ctx.fill(); ctx.restore();
+      if (k > 0.5) { const c = P([0, 0, 0]); ctx.save(); ctx.strokeStyle = C.curve; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(c[0], c[1], 7, 0, Math.PI * 2); ctx.stroke(); ctx.restore(); }
+    }
+    function tick(now) { if (!start) start = now; k = Math.min(1, (now - start) / 3500); draw(); if (k < 1) requestAnimationFrame(tick); }
+    size(); reduce ? draw() : requestAnimationFrame(tick);
+    if ("ResizeObserver" in window) new ResizeObserver(() => { size(); draw(); }).observe(cv);
+  })();
+
+  /* ---------- 예제 2: r = r0 + t v ---------- */
+  (function () {
+    const A = [2, 4, -3], B = [3, -1, 1], v = V.sub(B, A);
+    Space.mount(document.getElementById("fig-line"), {
+      range: 4.6, center: [1.4, 1.8, -0.6], height: 400, axes: [4, 5.5, 3], grid: 1, view: { az: 24, el: 20 },
+      t: { min: -0.6, max: 1.6, value: 0.75, step: 0.05, label: "t", duration: 6 },
+      alt: "직선의 벡터방정식",
+      draw(S, C, api) {
+        const t = api.t, P = V.add(A, V.mul(v, t)), O = [0, 0, 0];
+        S.line(V.add(A, V.mul(v, -0.8)), V.add(A, V.mul(v, 1.8)), { color: "--ink", width: 1.6, alpha: .55 });
+        S.text(V.add(A, V.mul(v, 1.75)), "L", { italic: true, math: true, size: 16, dx: 6, color: "--muted" });
+        S.arrow(O, A, { color: "--curve", width: 2.2, label: "r₀", labelT: .55, dx: -18, dy: 0, math: false, size: 14 });
+        S.arrow(A, V.add(A, v), { color: "--ok", width: 2.4, label: "v", labelT: .5, dx: 8, dy: -6 });
+        S.arrow(O, P, { color: "--aux", width: 2.6, label: "r", labelT: .7, dx: 8, dy: 10 });
+        if (P[2] > 0.05 || P[2] < -0.05) S.line(P, [P[0], P[1], 0], { color: "--muted", dash: true, width: 1.2, alpha: .7 });
+        S.point(A, { color: "--ink", label: "A", dx: -14, dy: 14 });
+        S.point(B, { color: "--ink", label: "B", dx: 8, dy: -10 });
+        const X = V.add(A, V.mul(v, 0.75));
+        S.point(X, { color: "--ok", r: 4, label: "xy평면 교점", dx: 8, dy: 14, size: 12 });
+        S.point(P, { color: "--aux", r: 5.5 });
+      },
+      readout: (api) => {
+        const t = api.t, P = V.add(A, V.mul(v, t));
+        const tag = Math.abs(t) < 1e-9 ? " = A" : Math.abs(t - 1) < 1e-9 ? " = B" : Math.abs(t - 0.75) < 1e-9 ? " → z = 0, xy평면 위" : "";
+        return "t = <b>" + trim(t) + "</b> · r = ⟨2 + t, 4 − 5t, −3 + 4t⟩ = <b>" + vec(P) + "</b>" + tag;
+      },
+    });
+  })();
+
+  /* ---------- 예제 3, 9: 꼬인 두 직선 ---------- */
+  (function () {
+    const P0 = [1, -2, 4], v1 = [1, 3, -1], Q0 = [0, 3, -3], v2 = [2, 1, 4];
+    const w0 = V.sub(P0, Q0), a = V.dot(v1, v1), b = V.dot(v1, v2), c = V.dot(v2, v2), d = V.dot(v1, w0), e = V.dot(v2, w0);
+    const den = a * c - b * b, tBest = (b * e - c * d) / den, sBest = (a * e - b * d) / den;
+    const st = { t: 1, s: 1 };
+    const api = Space.mount(document.getElementById("fig-skew"), {
+      range: 6.4, center: [2.2, 3, 2.2], height: 420, axes: [5, 8, 7], view: { az: 30, el: 14 },
+      alt: "꼬인 위치의 두 직선",
+      controls: '<label><i>t</i> <input type="range" class="sk-t" min="-0.6" max="4" step="0.01" value="1"></label>' +
+        '<label><i>s</i> <input type="range" class="sk-s" min="-0.4" max="2.9" step="0.01" value="1"></label>' +
+        '<button type="button" class="space-reset sk-best" style="margin-left:0">최단 거리</button>',
+      draw(S, C) {
+        const P = V.add(P0, V.mul(v1, st.t)), Q = V.add(Q0, V.mul(v2, st.s));
+        S.line(V.add(P0, V.mul(v1, -0.6)), V.add(P0, V.mul(v1, 4)), { color: "--aux", width: 2.2 });
+        S.line(V.add(Q0, V.mul(v2, -0.4)), V.add(Q0, V.mul(v2, 2.9)), { color: "--curve", width: 2.2 });
+        S.text(V.add(P0, V.mul(v1, 4)), "L₁", { color: "--aux", bold: true, size: 14, dx: 6 });
+        S.text(V.add(Q0, V.mul(v2, 2.9)), "L₂", { color: "--curve", bold: true, size: 14, dx: 6 });
+        const best = Math.abs(st.t - tBest) < 0.006 && Math.abs(st.s - sBest) < 0.006;
+        S.line(P, Q, { color: best ? "--ok" : "--muted", width: best ? 2.6 : 1.6, dash: best ? false : [5, 4] });
+        S.point(P, { color: "--aux", r: 5 });
+        S.point(Q, { color: "--curve", r: 5 });
+      },
+      readout: () => {
+        const P = V.add(P0, V.mul(v1, st.t)), Q = V.add(Q0, V.mul(v2, st.s)), D = V.len(V.sub(P, Q));
+        return "L₁ 위 t = " + num(st.t) + ": " + pt(P) + " · L₂ 위 s = " + num(st.s) + ": " + pt(Q) + "<br>두 점 사이 거리 <b>" + num(D, 3) + "</b> · 가능한 최솟값 8/√230 ≈ " + num(8 / Math.sqrt(230), 3);
+      },
+    });
+    const ti = api.bar.querySelector(".sk-t"), si = api.bar.querySelector(".sk-s");
+    ti.addEventListener("input", () => { st.t = +ti.value; api.redraw(); });
+    si.addEventListener("input", () => { st.s = +si.value; api.redraw(); });
+    api.bar.querySelector(".sk-best").addEventListener("click", () => { st.t = tBest; st.s = sBest; ti.value = tBest; si.value = sBest; api.redraw(); });
+  })();
+
+  /* ---------- 예제 4: 평면 2x + 3y + 4z = 12 ---------- */
+  (function () {
+    const n = [2, 3, 4], P0 = [2, 4, -1];
+    Space.mount(document.getElementById("fig-plane"), {
+      range: 5, center: [2.4, 2.4, 0.2], height: 420, axes: [7, 5.5, 3.8], view: { az: 28, el: 20 },
+      t: { min: 0, max: 2 * Math.PI, value: 1, label: "τ", duration: 8 },
+      alt: "평면 2x+3y+4z=12와 법선벡터",
+      draw(S, C, api) {
+        const B = S.plane(n, P0, 3.4, { grid: 6 });
+        S.poly([[6, 0, 0], [0, 4, 0], [0, 0, 3]], { fill: "--aux", alpha: .3, stroke: "--aux", strokeAlpha: .9, width: 1.6 });
+        const P = V.add(P0, V.add(V.mul(B.u, 2.2 * Math.cos(api.t)), V.mul(B.w, 2.2 * Math.sin(api.t))));
+        S.arrow(P0, V.add(P0, V.mul(B.n, 2)), { color: "--ok", width: 2.6, label: "n", labelT: 1, dx: 8, dy: -6 });
+        S.rightAngle(P0, B.n, V.sub(P, P0), 0.35, { color: "--muted" });
+        S.arrow(P0, P, { color: "--curve", width: 2.4 });
+        S.point(P0, { color: "--ink", label: "P₀(2, 4, −1)", dx: 8, dy: 14, size: 12 });
+        S.point(P, { color: "--curve", r: 5, label: "P", dx: 8, dy: -8 });
+        [[6, 0, 0, "(6, 0, 0)"], [0, 4, 0, "(0, 4, 0)"], [0, 0, 3, "(0, 0, 3)"]].forEach(([x, y, z, l]) => S.point([x, y, z], { color: "--aux", r: 3.5, label: l, size: 11.5, dx: 6, dy: -8 }));
+      },
+      readout: (api) => {
+        const B = { u: null };
+        const nn = V.unit(n), ref = [0, 0, 1], u = V.unit(V.cross(nn, ref)), w = V.cross(nn, u);
+        const P = V.add(P0, V.add(V.mul(u, 2.2 * Math.cos(api.t)), V.mul(w, 2.2 * Math.sin(api.t)))), d = V.sub(P, P0);
+        return "P = " + pt(P) + " · 2x + 3y + 4z = <b>" + num(V.dot(n, P), 2) + "</b><br>P₀P = " + vec(d) + " · n · P₀P = <b>" + num(V.dot(n, d), 2) + "</b> (항상 0)";
+      },
+    });
+  })();
+
+  /* ---------- 예제 6: 직선이 평면을 뚫는 점 ---------- */
+  (function () {
+    const n = [4, 5, -2], L0 = [2, 0, 5], v = [3, -4, 1], X = [-4, 8, 3];
+    Space.mount(document.getElementById("fig-ex6"), {
+      range: 9, center: [-1.5, 5, 2.5], height: 400, axes: [8, 12, 8], view: { az: 26, el: 18 },
+      t: { min: -4, max: 1, value: -0.5, step: 0.05, label: "t", duration: 7 },
+      alt: "직선과 평면의 교점",
+      draw(S, C, api) {
+        S.plane(n, X, [6.5, 5], { grid: 6 });
+        S.line(V.add(L0, V.mul(v, -4.2)), V.add(L0, V.mul(v, 1.3)), { color: "--ink", width: 2, alpha: .7 });
+        S.point(X, { color: "--ok", r: 4.5, label: "(−4, 8, 3)", dx: 8, dy: 14, size: 12 });
+        const P = V.add(L0, V.mul(v, api.t)), on = Math.abs(api.t + 2) < 1e-6;
+        S.point(P, { color: on ? "--ok" : "--curve", r: 6 });
+      },
+      readout: (api) => {
+        const t = api.t, P = V.add(L0, V.mul(v, t)), val = V.dot(n, P);
+        return "t = <b>" + num(t) + "</b> · 점 " + pt(P) + "<br>4x + 5y − 2z = −2 − 10t = <b>" + num(val, 2) + "</b>" +
+          (Math.abs(val - 18) < 1e-6 ? " = 18 → 평면 위 (교점)" : val > 18 ? " &gt; 18 (평면 한쪽)" : " &lt; 18 (평면 반대쪽)");
+      },
+    });
+  })();
+
+  /* ---------- 예제 7: 두 평면과 교선 ---------- */
+  (function () {
+    const n1 = [1, 1, 1], n2 = [1, -2, 3], P = [1, 0, 0], vL = V.cross(n1, n2);
+    Space.mount(document.getElementById("fig-two"), {
+      range: 3, center: [1, 0, 0.2], height: 400, axes: [3.4, 3, 3], view: { az: 40, el: 22 },
+      alt: "두 평면의 교선과 법선벡터",
+      draw(S, C) {
+        const u = V.unit(vL);
+        const patch = (nv, col) => {
+          const w = V.unit(V.cross(nv, u));
+          const c = (i, j) => V.add(P, V.add(V.mul(u, 2.6 * i), V.mul(w, 1.9 * j)));
+          S.poly([c(-1, -1), c(1, -1), c(1, 1), c(-1, 1)], { fill: col, alpha: .16, stroke: col, strokeAlpha: .55 });
+        };
+        patch(n1, "--aux"); patch(n2, "--ok");
+        S.line(V.add(P, V.mul(u, -3)), V.add(P, V.mul(u, 3)), { color: "--curve", width: 3 });
+        S.text(V.add(P, V.mul(u, 3)), "L", { italic: true, math: true, bold: true, size: 16, color: "--curve", dx: 6 });
+        const a1 = V.mul(V.unit(n1), 1.6), a2 = V.mul(V.unit(n2), 1.6);
+        S.arc(P, a1, a2, 0.7, { color: "--muted", label: "θ", labelR: 1.45 });
+        S.arrow(P, V.add(P, a1), { color: "--aux", width: 2.6, label: "n₁", labelT: 1, math: false, dx: 6, dy: -6, size: 14 });
+        S.arrow(P, V.add(P, a2), { color: "--ok", width: 2.6, label: "n₂", labelT: 1, math: false, dx: 6, dy: -6, size: 14 });
+        S.point(P, { color: "--ink", r: 4, label: "(1, 0, 0)", dx: 8, dy: 14, size: 12 });
+      },
+      readout: () => "n₁ = ⟨1, 1, 1⟩, n₂ = ⟨1, −2, 3⟩ · cos θ = 2/√42 ≈ " + num(2 / Math.sqrt(42), 4) + " → θ ≈ <b>" + num(Math.acos(2 / Math.sqrt(42)) * 180 / Math.PI, 1) + "°</b><br>교선 방향 n₁ × n₂ = <b>" + vec(vL) + "</b>, 지나는 점 (1, 0, 0)",
+    });
+  })();
+
+  /* ---------- 점과 평면 사이의 거리 ---------- */
+  (function () {
+    const n = [2, 1, 2], nn = V.unit(n), F = [1, 1, 0.5], P0 = [2, 0, 0];
+    Space.mount(document.getElementById("fig-dist"), {
+      range: 3.4, center: [1.2, 0.8, 0.8], height: 400, axes: [3.6, 3.4, 3.4], view: { az: -72, el: 16 },
+      t: { min: -2.4, max: 2.8, value: 2, step: 0.05, label: "h", duration: 7 },
+      alt: "점에서 평면까지의 거리",
+      draw(S, C, api) {
+        const h = api.t, P1 = V.add(F, V.mul(nn, h));
+        S.plane(n, F, 2.6, { grid: 6 });
+        S.line(F, P1, { color: "--curve", width: 3.2 });
+        if (Math.abs(h) > 0.2) S.rightAngle(F, V.mul(nn, Math.sign(h)), V.sub(P0, F), 0.28, { color: "--muted" });
+        S.arrow(P0, P1, { color: "--aux", width: 2.4, label: "b", labelT: .5, dx: 8, dy: 4 });
+        S.arrow(P0, V.add(P0, V.mul(nn, 1.3)), { color: "--ok", width: 2.4, label: "n", labelT: 1, dx: 6, dy: -6 });
+        S.point(P0, { color: "--ink", r: 4, label: "P₀(2, 0, 0)", dx: 8, dy: 14, size: 12 });
+        S.point(P1, { color: "--curve", r: 5.5, label: "P₁", dx: 8, dy: -8 });
+        S.text(V.lerp(F, P1, 0.5), "D", { italic: true, math: true, bold: true, size: 16, color: "--curve", dx: -16 });
+      },
+      readout: (api) => {
+        const P1 = V.add(F, V.mul(nn, api.t)), val = V.dot(n, P1) - 4;
+        return "P₁ = " + pt(P1) + " · 2x₁ + y₁ + 2z₁ − 4 = <b>" + num(val, 2) + "</b><br>D = |" + num(val, 2) + "| / √(2² + 1² + 2²) = |" + num(val, 2) + "| / 3 = <b>" + num(Math.abs(val) / 3, 2) + "</b>";
+      },
+    });
+  })();
+
+  /* ---------- 자가 점검 ---------- */
+  (function () {
+    const R = String.raw;
+    Quiz.mount(document.getElementById("quiz"), [
+      {
+        q: R`점 $(1,2,3)$을 지나고 $\langle2,-1,4\rangle$에 평행한 직선의 대칭방정식은?`,
+        choices: [R`$\frac{x-2}{1}=\frac{y+1}{2}=\frac{z-4}{3}$`, R`$\frac{x-1}{2}=\frac{y-2}{-1}=\frac{z-3}{4}$`, R`$\frac{x+1}{2}=\frac{y+2}{-1}=\frac{z+3}{4}$`, R`$2(x-1)-(y-2)+4(z-3)=0$`],
+        answer: 1,
+        explain: R`<p>분자에서 지나는 점을 빼고, 분모에 방향벡터를 써요. A는 점과 방향을 바꿨고, D는 그 벡터를 법선으로 하는 <b>평면</b>이에요.</p>`,
+      },
+      {
+        q: R`점 $(1,0,-2)$를 지나고 법선벡터가 $\langle3,-1,2\rangle$인 평면은?`,
+        choices: [R`$3x-y+2z=-1$`, R`$3x-y+2z=7$`, R`$x-2z=3$`, R`$3x-y+2z=0$`],
+        answer: 0,
+        explain: R`<p>$3(x-1)-(y-0)+2(z+2)=0$을 전개하면 $3x-y+2z+1=0$, 즉 $3x-y+2z=-1$이에요. 검산: 점을 넣으면 $3-0-4=-1$.</p>`,
+      },
+      {
+        q: R`평면 $2x-3y+z=7$의 법선벡터는?`,
+        choices: [R`$\langle2,-3,1\rangle$`, R`$\langle2,-3,7\rangle$`, R`$\langle-3,1,7\rangle$`, R`$\langle7,0,0\rangle$`],
+        answer: 0,
+        explain: R`<p>$x,y,z$의 계수가 곧 법선이에요. 상수항 7은 평면의 위치만 정하고 방향과는 상관없어요.</p>`,
+      },
+      {
+        q: R`직선 $x=1+t$, $y=2t$, $z=3-t$와 평면 $x+y+z=6$의 교점은?`,
+        choices: [R`$(1,0,3)$`, R`$(2,2,2)$`, R`$(3,4,1)$`, R`만나지 않는다`],
+        answer: 1,
+        explain: R`<p>대입하면 $(1+t)+2t+(3-t)=4+2t=6$, $t=1$. 직선 식에 넣으면 $(2,2,2)$예요.</p>`,
+      },
+      {
+        q: R`평면 $x+y=0$과 $y+z=0$ 사이의 각은?`,
+        choices: [R`$30^\circ$`, R`$45^\circ$`, R`$60^\circ$`, R`$90^\circ$`],
+        answer: 2,
+        explain: R`<p>법선 $\langle1,1,0\rangle$, $\langle0,1,1\rangle$의 $\cos\theta=\frac{1}{\sqrt2\sqrt2}=\frac12$이라 $60^\circ$예요.</p>`,
+      },
+      {
+        q: R`점 $(1,2,3)$에서 평면 $2x-y+2z=1$까지의 거리는?`,
+        choices: [R`$\frac53$`, R`$\frac73$`, R`$5$`, R`$\frac{5}{\sqrt3}$`],
+        answer: 0,
+        explain: R`<p>$2x-y+2z-1=0$으로 쓰고 대입: $|2-2+6-1|=5$. 분모 $\sqrt{4+1+4}=3$이라 $\frac53$이에요. B는 $+1$로 잘못 넣은 경우($|2-2+6+1|=7$)예요.</p>`,
+      },
+      {
+        q: R`두 평면 $x+2y-z=1$과 $2x+4y-2z=5$ 사이의 거리는?`,
+        choices: [R`$\frac{\sqrt6}{4}$`, R`$\frac{4}{\sqrt6}$`, R`$\frac{3}{\sqrt6}$`, R`$0$ (만난다)`],
+        answer: 0,
+        explain: R`<p>법선이 $\langle2,4,-2\rangle=2\langle1,2,-1\rangle$이라 평행해요. 첫 평면 위의 점 $(1,0,0)$에서 $2x+4y-2z-5=0$까지: $\frac{|2-5|}{\sqrt{24}}=\frac{3}{2\sqrt6}=\frac{\sqrt6}{4}$이에요.</p>`,
+      },
+      {
+        q: R`방향벡터가 평행하지 않고, 연립했을 때 $t$, $s$의 해가 없는 두 직선은?`,
+        choices: ["평행", "한 점에서 만남", "꼬인 위치", "일치"],
+        answer: 2,
+        explain: R`<p>평행도 아니고 만나지도 않으니 꼬인 위치예요(예제 3). 이런 두 직선은 같은 평면 위에 있을 수 없어요.</p>`,
+      },
+    ]);
+  })();
+})();
+</script>
+</body>
+</html>

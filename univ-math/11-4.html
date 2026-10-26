@@ -1,0 +1,428 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>11.4 외적</title>
+<script>try{var t=localStorage.getItem("theme");if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
+<link rel="stylesheet" href="assets/katex/katex.min.css">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body data-section="11.4">
+<div class="shell">
+  <nav class="side" aria-label="이 절의 목차">
+    <a class="home" href="index.html">전체 목차로</a>
+    <ol>
+      <li><a href="#def">외적의 정의</a></li>
+      <li><a href="#basis">i, j, k의 외적 · 예제 2</a></li>
+      <li><a href="#perp">수직성과 오른손 법칙</a></li>
+      <li><a href="#len">크기와 평행사변형 넓이</a></li>
+      <li><a href="#lab">외적 실험실</a></li>
+      <li><a href="#ex34">예제 3, 4 · 법선과 넓이</a></li>
+      <li><a href="#prop">외적의 성질</a></li>
+      <li><a href="#triple">스칼라 삼중적과 부피</a></li>
+      <li><a href="#summary">한눈에 정리</a></li>
+      <li><a href="#check">자가 점검</a></li>
+    </ol>
+  </nav>
+
+  <main>
+    <header class="hero">
+      <p class="chapter">11장 벡터와 공간기하학</p>
+      <h1><span class="num">11.4</span>외적</h1>
+      <canvas id="hero" aria-hidden="true"></canvas>
+    </header>
+
+    <p class="lede">내적은 두 벡터를 곱해서 <b>수</b>를 만들었어요. 외적은 3차원 벡터 두 개를 곱해서 <b>벡터</b>를 만들어요. 이 벡터는 두 벡터에 <b>동시에 수직</b>이고, 길이는 두 벡터가 만드는 <b>평행사변형의 넓이</b>예요. 다음 절에서 평면의 방정식을 세울 때 법선벡터를 구하는 도구가 바로 이거예요.</p>
+
+    <!-- ===================================================== -->
+    <h2 id="def">외적의 정의</h2>
+    <div class="summary-box">
+      <p style="margin:0 0 .3rem"><b>1 정의</b> $\mathbf a=\langle a_1,a_2,a_3\rangle$, $\mathbf b=\langle b_1,b_2,b_3\rangle$일 때 $\mathbf a$와 $\mathbf b$의 <b>외적</b>은</p>
+      $$\mathbf a\times\mathbf b=\langle a_2b_3-a_3b_2,\ a_3b_1-a_1b_3,\ a_1b_2-a_2b_1\rangle$$
+    </div>
+    <p>결과가 벡터라서 벡터곱(vector product), 기호 때문에 크로스곱(cross product)이라고도 해요. 내적과 달리 <b>3차원 벡터끼리만</b> 정의돼요.</p>
+    <p class="note">슬라이드 제목의 “벡터곱(scalar product)”, “외적(inner product)”은 잘못 붙은 영어예요. scalar product, inner product는 내적이고, 외적은 vector product 또는 cross product예요.</p>
+
+    <h3>행렬식으로 외우기</h3>
+    <p>위 공식을 그대로 외우기는 어려워서 <b>행렬식</b> 모양으로 기억해요. 2차 행렬식은</p>
+    $$\begin{vmatrix}a&b\\c&d\end{vmatrix}=ad-bc$$
+    <p>이고, 3차 행렬식은 첫째 행을 따라 부호 $+,-,+$를 번갈아 붙이며 펼쳐요. 첫째 행에 $\mathbf i$, $\mathbf j$, $\mathbf k$를 넣으면 외적이 돼요.</p>
+    $$\mathbf a\times\mathbf b=\begin{vmatrix}\mathbf i&\mathbf j&\mathbf k\\a_1&a_2&a_3\\b_1&b_2&b_3\end{vmatrix}=\begin{vmatrix}a_2&a_3\\b_2&b_3\end{vmatrix}\mathbf i-\begin{vmatrix}a_1&a_3\\b_1&b_3\end{vmatrix}\mathbf j+\begin{vmatrix}a_1&a_2\\b_1&b_2\end{vmatrix}\mathbf k$$
+    <p>각 성분은 그 열을 가리고 남은 $2\times2$ 행렬식이에요. <b>가운데 $\mathbf j$ 성분의 마이너스</b>를 빼먹는 실수가 가장 흔해요.</p>
+
+    <div class="problem"><span class="tag">예제 1</span>$\mathbf a=\langle1,3,4\rangle$와 $\mathbf b=\langle2,7,-5\rangle$의 외적을 구하라.</div>
+    $$\mathbf a\times\mathbf b=\begin{vmatrix}\mathbf i&\mathbf j&\mathbf k\\1&3&4\\2&7&-5\end{vmatrix}=\begin{vmatrix}3&4\\7&-5\end{vmatrix}\mathbf i-\begin{vmatrix}1&4\\2&-5\end{vmatrix}\mathbf j+\begin{vmatrix}1&3\\2&7\end{vmatrix}\mathbf k$$
+    $$=(-15-28)\mathbf i-(-5-8)\mathbf j+(7-6)\mathbf k=-43\mathbf i+13\mathbf j+\mathbf k$$
+    <p>검산: $\langle-43,13,1\rangle\cdot\langle1,3,4\rangle=-43+39+4=0$, $\langle-43,13,1\rangle\cdot\langle2,7,-5\rangle=-86+91-5=0$. 두 벡터에 모두 수직이니 제대로 계산된 거예요. 이 검산은 시험에서도 10초면 끝나니 꼭 해 보세요.</p>
+
+    <!-- ===================================================== -->
+    <h2 id="basis">$\mathbf i$, $\mathbf j$, $\mathbf k$의 외적</h2>
+    <p>정의에 넣어 보면 기본 단위벡터끼리의 외적은</p>
+    $$\mathbf i\times\mathbf j=\mathbf k,\qquad\mathbf j\times\mathbf k=\mathbf i,\qquad\mathbf k\times\mathbf i=\mathbf j$$
+    $$\mathbf j\times\mathbf i=-\mathbf k,\qquad\mathbf k\times\mathbf j=-\mathbf i,\qquad\mathbf i\times\mathbf k=-\mathbf j$$
+    <p>$\mathbf i\to\mathbf j\to\mathbf k\to\mathbf i$ 순서(순환)로 곱하면 다음 것이 $+$로, 거꾸로 곱하면 $-$로 나와요. 순서를 바꾸면 부호가 바뀌니 <b>외적은 교환법칙이 성립하지 않아요.</b></p>
+
+    <div class="problem"><span class="tag">예제 2</span>$V_3$ 안의 임의의 벡터 $\mathbf a$에 대해 $\mathbf a\times\mathbf a=\mathbf 0$임을 보여라.</div>
+    $$\mathbf a\times\mathbf a=\begin{vmatrix}\mathbf i&\mathbf j&\mathbf k\\a_1&a_2&a_3\\a_1&a_2&a_3\end{vmatrix}=(a_2a_3-a_3a_2)\mathbf i-(a_1a_3-a_3a_1)\mathbf j+(a_1a_2-a_2a_1)\mathbf k=\mathbf 0$$
+    <p>결과는 수 0이 아니라 <b>영벡터</b> $\mathbf 0$이에요. 뒤에서 볼 기하학적 의미로는 “자기 자신과 만드는 평행사변형은 넓이가 0”이라는 뜻이에요.</p>
+
+    <!-- ===================================================== -->
+    <h2 id="perp">수직성과 오른손 법칙</h2>
+    <div class="summary-box">
+      <p style="margin:0"><b>8 정리</b> 벡터 $\mathbf a\times\mathbf b$는 $\mathbf a$와 $\mathbf b$에 모두 수직이다.</p>
+    </div>
+    <h3>증명</h3>
+    <p>내적이 0임을 보이면 돼요. $\mathbf a\times\mathbf b$의 성분을 $\mathbf a$의 성분과 곱해서 더하면</p>
+    $$\begin{aligned}(\mathbf a\times\mathbf b)\cdot\mathbf a&=(a_2b_3-a_3b_2)a_1+(a_3b_1-a_1b_3)a_2+(a_1b_2-a_2b_1)a_3\\&=a_1a_2b_3-a_1a_3b_2+a_2a_3b_1-a_1a_2b_3+a_1a_3b_2-a_2a_3b_1=0\end{aligned}$$
+    <p>여섯 항이 두 개씩 짝지어 지워져요. 같은 방법으로 $(\mathbf a\times\mathbf b)\cdot\mathbf b=0$이에요.</p>
+    <p>그러니까 $\mathbf a$, $\mathbf b$를 같은 시점에서 그리면, $\mathbf a\times\mathbf b$는 <b>두 벡터가 놓인 평면에 수직</b>이에요. 수직인 방향은 위아래 두 가지가 있는데, 어느 쪽인지는 <b>오른손 법칙</b>으로 정해요.</p>
+    <div class="def"><b>오른손 법칙.</b> 오른손 손가락을 $\mathbf a$ 방향으로 펴고, $\mathbf b$ 쪽으로(180°보다 작은 각으로) 감아쥐면 엄지가 가리키는 방향이 $\mathbf a\times\mathbf b$의 방향이에요. $\mathbf i\times\mathbf j=\mathbf k$가 기준이에요. $x$축에서 $y$축으로 감으면 엄지가 $z$축 위쪽을 가리켜요.</div>
+
+    <!-- ===================================================== -->
+    <h2 id="len">크기와 평행사변형 넓이</h2>
+    <div class="summary-box">
+      <p style="margin:0 0 .3rem"><b>9 정리</b> $\mathbf a$와 $\mathbf b$ 사이의 각을 $\theta$ ($0\le\theta\le\pi$)라 하면</p>
+      $$|\mathbf a\times\mathbf b|=|\mathbf a|\,|\mathbf b|\sin\theta$$
+    </div>
+    <h3>증명</h3>
+    <p>정의에서 직접 전개하면 다음 항등식이 나와요(라그랑주 항등식, 전개해서 비교하면 돼요).</p>
+    $$|\mathbf a\times\mathbf b|^2=(a_2b_3-a_3b_2)^2+(a_3b_1-a_1b_3)^2+(a_1b_2-a_2b_1)^2=|\mathbf a|^2|\mathbf b|^2-(\mathbf a\cdot\mathbf b)^2$$
+    <p>여기에 $\mathbf a\cdot\mathbf b=|\mathbf a|\,|\mathbf b|\cos\theta$를 넣으면</p>
+    $$|\mathbf a\times\mathbf b|^2=|\mathbf a|^2|\mathbf b|^2(1-\cos^2\theta)=|\mathbf a|^2|\mathbf b|^2\sin^2\theta$$
+    <p>$0\le\theta\le\pi$에서 $\sin\theta\ge0$이니 제곱근을 취하면 끝이에요. 내적은 $\cos$, 외적의 크기는 $\sin$이라고 짝지어 기억하세요.</p>
+
+    <div class="summary-box">
+      <p style="margin:0 0 .3rem"><b>10 따름정리</b> 영이 아닌 두 벡터 $\mathbf a$와 $\mathbf b$가 서로 평행이기 위한 필요충분조건은</p>
+      $$\mathbf a\times\mathbf b=\mathbf 0$$
+    </div>
+    <p>평행이면 $\theta=0$ 또는 $\pi$라 $\sin\theta=0$, 그래서 $|\mathbf a\times\mathbf b|=0$이고 영벡터예요. 거꾸로 $\mathbf a\times\mathbf b=\mathbf 0$이면 $|\mathbf a|,|\mathbf b|\ne0$이라 $\sin\theta=0$, 즉 평행이에요. <b>내적 0은 수직, 외적 $\mathbf 0$은 평행</b>이에요.</p>
+
+    <h3>정리 9의 기하학적 의미</h3>
+    <p>$\mathbf a$를 밑변으로 하는 평행사변형을 그리면, 높이는 $\mathbf b$의 끝에서 $\mathbf a$에 내린 수선의 길이 $|\mathbf b|\sin\theta$예요. 그래서</p>
+    $$\text{넓이}=(\text{밑변})(\text{높이})=|\mathbf a|\,\big(|\mathbf b|\sin\theta\big)=|\mathbf a\times\mathbf b|$$
+    <div class="summary-box">
+      <p style="margin:0">외적 $\mathbf a\times\mathbf b$의 크기는 $\mathbf a$와 $\mathbf b$로 결정되는 <b>평행사변형의 넓이</b>이다. (삼각형이면 그 절반)</p>
+    </div>
+
+    <!-- ===================================================== -->
+    <h2 id="lab">외적 실험실</h2>
+    <p>$\mathbf a$는 $x$축 방향에 고정하고, $\mathbf b$를 $xy$평면에서 돌려 보세요. 빨간 화살표가 외적이고, 그 길이가 파란 평행사변형의 넓이와 같아요. $\mathbf b$가 위에서 보아 시계 반대 방향으로 180°를 넘어가면 외적이 아래로 뒤집혀요. 버튼으로 $\mathbf b\times\mathbf a$로 바꾸면 방향만 반대가 돼요.</p>
+    <figure class="plot" id="fig-lab">
+      <figcaption>$|\mathbf a|=2$, $|\mathbf b|=1.5$예요. $\theta=90^\circ$에서 넓이가 최대 $3$이고, $0^\circ$, $180^\circ$(평행)에서 0이 돼요. 끌어서 돌려 보면 외적이 평면과 직각을 이루는 게 보여요.</figcaption>
+    </figure>
+
+    <!-- ===================================================== -->
+    <h2 id="ex34">예제 3, 4 · 법선과 넓이</h2>
+    <div class="problem"><span class="tag">예제 3</span>세 점 $P(1,4,6)$, $Q(-2,5,-1)$, $R(1,-1,1)$을 지나는 평면에 수직인 벡터를 구하라.</div>
+    <ol class="steps">
+      <li>평면 위에 있는 두 벡터를 만들어요. 끝점 − 시점이에요.
+        $$\overrightarrow{PQ}=\langle-3,1,-7\rangle,\qquad\overrightarrow{PR}=\langle0,-5,-5\rangle$$</li>
+      <li>정리 8에 의해 두 벡터의 외적은 둘 다에 수직, 즉 평면에 수직이에요.
+        $$\overrightarrow{PQ}\times\overrightarrow{PR}=\begin{vmatrix}\mathbf i&\mathbf j&\mathbf k\\-3&1&-7\\0&-5&-5\end{vmatrix}=(-5-35)\mathbf i-(15-0)\mathbf j+(15-0)\mathbf k=-40\mathbf i-15\mathbf j+15\mathbf k$$</li>
+    </ol>
+    <p>답은 $\langle-40,-15,15\rangle$예요. 이것의 0이 아닌 상수배(예: $\langle8,3,-3\rangle$)도 모두 답이에요. 방향만 중요하니까요.</p>
+
+    <div class="problem"><span class="tag">예제 4</span>꼭짓점이 $P(1,4,6)$, $Q(-2,5,-1)$, $R(1,-1,1)$인 삼각형의 넓이를 구하라.</div>
+    <p>예제 3의 외적 크기는 $\overrightarrow{PQ}$, $\overrightarrow{PR}$로 만든 평행사변형의 넓이이고, 삼각형은 그 절반이에요.</p>
+    $$\left|\overrightarrow{PQ}\times\overrightarrow{PR}\right|=\sqrt{(-40)^2+(-15)^2+15^2}=\sqrt{2050}=5\sqrt{82}$$
+    $$\text{삼각형 넓이}=\frac12\cdot5\sqrt{82}=\frac{5\sqrt{82}}{2}\approx22.6$$
+    <figure class="plot" id="fig-tri">
+      <figcaption>세 점이 만드는 삼각형과 평면에 수직인 벡터예요. 실제 외적 $\langle-40,-15,15\rangle$은 길이가 약 45라서 방향만 살려 짧게 그렸어요. 돌려서 삼각형을 옆에서 보면 화살표가 면과 직각인 게 보여요.</figcaption>
+    </figure>
+
+    <!-- ===================================================== -->
+    <h2 id="prop">외적의 성질</h2>
+    <div class="summary-box">
+      <p style="margin:0 0 .4rem"><b>11 외적의 성질</b> $\mathbf a$, $\mathbf b$, $\mathbf c$가 벡터이고 $c$가 스칼라이면</p>
+      <ol style="margin:0">
+        <li>$\mathbf a\times\mathbf b=-\mathbf b\times\mathbf a$</li>
+        <li>$(c\mathbf a)\times\mathbf b=c(\mathbf a\times\mathbf b)=\mathbf a\times(c\mathbf b)$</li>
+        <li>$\mathbf a\times(\mathbf b+\mathbf c)=\mathbf a\times\mathbf b+\mathbf a\times\mathbf c$</li>
+        <li>$(\mathbf a+\mathbf b)\times\mathbf c=\mathbf a\times\mathbf c+\mathbf b\times\mathbf c$</li>
+        <li>$\mathbf a\cdot(\mathbf b\times\mathbf c)=(\mathbf a\times\mathbf b)\cdot\mathbf c$</li>
+        <li>$\mathbf a\times(\mathbf b\times\mathbf c)=(\mathbf a\cdot\mathbf c)\mathbf b-(\mathbf a\cdot\mathbf b)\mathbf c$</li>
+      </ol>
+    </div>
+    <p>성질 1은 행렬식의 두 행을 바꾸면 부호가 바뀌는 것과 같아요. 실험실에서 $\mathbf b\times\mathbf a$로 바꿨을 때 본 그대로예요. 분배법칙(3, 4)은 성립하지만, 곱하는 순서는 지켜야 해요.</p>
+    <div class="exam"><strong>시험 포인트.</strong> 외적은 <b>교환법칙도 결합법칙도 성립하지 않아요.</b> 예를 들어
+      $$(\mathbf i\times\mathbf i)\times\mathbf j=\mathbf 0\times\mathbf j=\mathbf 0,\qquad\mathbf i\times(\mathbf i\times\mathbf j)=\mathbf i\times\mathbf k=-\mathbf j$$
+      괄호 위치에 따라 결과가 달라요. 성질 6이 괄호를 푸는 올바른 공식이에요(성분으로 펼쳐서 확인할 수 있어요).</div>
+    <h3>성질 5의 증명</h3>
+    $$\begin{aligned}\mathbf a\cdot(\mathbf b\times\mathbf c)&=a_1(b_2c_3-b_3c_2)-a_2(b_1c_3-b_3c_1)+a_3(b_1c_2-b_2c_1)\\&=a_1b_2c_3-a_1b_3c_2+a_2b_3c_1-a_2b_1c_3+a_3b_1c_2-a_3b_2c_1\\&=(a_2b_3-a_3b_2)c_1+(a_3b_1-a_1b_3)c_2+(a_1b_2-a_2b_1)c_3\\&=(\mathbf a\times\mathbf b)\cdot\mathbf c\end{aligned}$$
+    <p>둘째 줄의 여섯 항을 $c_1$, $c_2$, $c_3$끼리 다시 묶은 거예요. 점($\cdot$)과 가위표($\times$)의 자리를 바꿔도 값이 같다는 뜻이에요.</p>
+
+    <!-- ===================================================== -->
+    <h2 id="triple">스칼라 삼중적과 부피</h2>
+    <p>$\mathbf a\cdot(\mathbf b\times\mathbf c)$를 $\mathbf a$, $\mathbf b$, $\mathbf c$의 <b>스칼라 삼중적</b>이라 해요. 결과는 수예요. 성질 5의 첫 줄을 행렬식으로 쓰면 아주 간단해요.</p>
+    <div class="summary-box">
+      $$\mathbf a\cdot(\mathbf b\times\mathbf c)=\begin{vmatrix}a_1&a_2&a_3\\b_1&b_2&b_3\\c_1&c_2&c_3\end{vmatrix} \tag{13}$$
+    </div>
+    <h3>기하학적 의미</h3>
+    <p>$\mathbf a$, $\mathbf b$, $\mathbf c$로 결정되는 평행육면체를 생각해요. $\mathbf b$, $\mathbf c$가 만드는 평행사변형을 밑면으로 보면</p>
+    <ul>
+      <li>밑면의 넓이: $A=|\mathbf b\times\mathbf c|$ (정리 9)</li>
+      <li>높이: 밑면에 수직인 방향은 $\mathbf b\times\mathbf c$이니, 높이는 $\mathbf a$를 그 방향으로 사영한 길이 $h=|\mathbf a|\,|\cos\theta|$ ($\theta$는 $\mathbf a$와 $\mathbf b\times\mathbf c$ 사이의 각). $\theta>\frac\pi2$이면 $\cos\theta\lt0$이라 절댓값을 붙여요.</li>
+    </ul>
+    $$V=Ah=|\mathbf b\times\mathbf c|\,|\mathbf a|\,|\cos\theta|=|\mathbf a\cdot(\mathbf b\times\mathbf c)|$$
+    <div class="summary-box">
+      <p style="margin:0 0 .3rem"><b>14</b> 벡터 $\mathbf a$, $\mathbf b$, $\mathbf c$로 결정되는 평행육면체의 부피는 스칼라 삼중적의 크기(절댓값)이다.</p>
+      $$V=|\mathbf a\cdot(\mathbf b\times\mathbf c)|$$
+    </div>
+    <p>특히 부피가 0이면 평행육면체가 납작하게 눌린 것, 즉 <b>세 벡터가 같은 평면 위에 있다</b>는 뜻이에요.</p>
+    <figure class="plot" id="fig-vol">
+      <figcaption>초록 면이 $\mathbf b$, $\mathbf c$가 만드는 밑면이고, 점선이 높이예요. 슬라이더로 $\mathbf a$의 높이를 바꾸면 부피가 따라 바뀌고, $\mathbf a$가 밑면 아래로 내려가면 삼중적이 음수가 돼요(부피는 절댓값). 높이 0에서 세 벡터가 한 평면에 놓여 부피가 0이에요.</figcaption>
+    </figure>
+
+    <div class="problem"><span class="tag">예제 5</span>스칼라 삼중적을 이용해서 벡터 $\mathbf a=\langle1,4,-7\rangle$, $\mathbf b=\langle2,-1,4\rangle$, $\mathbf c=\langle0,-9,18\rangle$이 같은 평면 위에 있음을 보여라.</div>
+    $$\mathbf a\cdot(\mathbf b\times\mathbf c)=\begin{vmatrix}1&4&-7\\2&-1&4\\0&-9&18\end{vmatrix}=1\begin{vmatrix}-1&4\\-9&18\end{vmatrix}-4\begin{vmatrix}2&4\\0&18\end{vmatrix}+(-7)\begin{vmatrix}2&-1\\0&-9\end{vmatrix}$$
+    $$=1(-18+36)-4(36-0)-7(-18-0)=18-144+126=0$$
+    <p>스칼라 삼중적이 0이므로 평행육면체의 부피가 0이고, 세 벡터는 같은 평면 위에 있어요. 위 그림에서 “예제 5” 버튼을 누르면 세 벡터가 한 장의 평면에 붙어 있는 모습이 보여요. 끌어서 옆으로 돌리면 평행육면체가 종이처럼 납작해요. 실제로 $\mathbf c=-2\mathbf a+\mathbf b$라서 $\mathbf c$는 $\mathbf a$, $\mathbf b$가 만드는 평면 위에 있어요. 하지만 이런 관계를 찾지 않아도 행렬식 하나로 판정할 수 있다는 게 이 방법의 장점이에요.</p>
+
+    <!-- ===================================================== -->
+    <h2 id="summary">한눈에 정리</h2>
+    <div class="summary-box">
+      <ul>
+        <li>정의: $\mathbf a\times\mathbf b=\begin{vmatrix}\mathbf i&\mathbf j&\mathbf k\\a_1&a_2&a_3\\b_1&b_2&b_3\end{vmatrix}$ (결과는 벡터, $\mathbf j$ 성분 마이너스 주의).</li>
+        <li>$\mathbf i\times\mathbf j=\mathbf k$, $\mathbf j\times\mathbf k=\mathbf i$, $\mathbf k\times\mathbf i=\mathbf j$. 순서를 바꾸면 부호 반대. $\mathbf a\times\mathbf a=\mathbf 0$.</li>
+        <li>방향: $\mathbf a$, $\mathbf b$ 모두에 수직, 오른손 법칙. 검산은 내적이 0인지 확인.</li>
+        <li>크기: $|\mathbf a\times\mathbf b|=|\mathbf a|\,|\mathbf b|\sin\theta$ = 평행사변형 넓이, 삼각형은 절반.</li>
+        <li>평행 $\iff\mathbf a\times\mathbf b=\mathbf 0$ (수직 $\iff$ 내적 0과 짝).</li>
+        <li>세 점이 주어진 평면의 법선: $\overrightarrow{PQ}\times\overrightarrow{PR}$.</li>
+        <li>교환법칙, 결합법칙 성립 안 함. 분배법칙은 성립.</li>
+        <li>스칼라 삼중적 $\mathbf a\cdot(\mathbf b\times\mathbf c)$ = 3×3 행렬식, 평행육면체 부피는 그 절댓값, 0이면 세 벡터가 한 평면 위.</li>
+      </ul>
+    </div>
+
+    <!-- ===================================================== -->
+    <h2 id="check">자가 점검</h2>
+    <p>보기를 고르면 바로 정답과 풀이가 나와요.</p>
+    <div id="quiz"></div>
+
+    <nav class="pager" aria-label="절 이동"></nav>
+  </main>
+</div>
+
+<script src="assets/katex/katex.min.js"></script>
+<script src="assets/katex/auto-render.min.js"></script>
+<script src="assets/plot.js"></script>
+<script src="assets/space.js"></script>
+<script src="assets/quiz.js"></script>
+<script src="assets/site.js"></script>
+<script>
+(function () {
+  "use strict";
+  const { fmt, arrowHead } = Plot;
+  const V = Space.V;
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const segHtml = (labels, aria, cls) =>
+    '<span class="seg ' + (cls || "") + '" role="group" aria-label="' + aria + '">' +
+    labels.map((l, k) => '<button type="button" data-k="' + k + '" aria-pressed="false">' + l + "</button>").join("") + "</span>";
+  function pressOne(group, btn) { group.querySelectorAll("button").forEach((b) => b.setAttribute("aria-pressed", b === btn ? "true" : "false")); }
+  function wireSeg(api, cls, fn, first) {
+    const g = api.bar.querySelector("." + cls);
+    const bs = [...g.querySelectorAll("button")];
+    bs.forEach((b, k) => b.addEventListener("click", () => { pressOne(g, b); fn(k); }));
+    pressOne(g, bs[first || 0]);
+  }
+  const num = (v, d) => fmt(v, d == null ? 2 : d);
+  const trim = (v) => String(+v.toFixed(3)).replace("-", "−");
+  const vec = (a) => "⟨" + a.map(trim).join(", ") + "⟩";
+
+  /* ---------- 절 머리: b를 돌리면 외적이 자라고 뒤집힌다 ---------- */
+  (function () {
+    const cv = document.getElementById("hero"), ctx = cv.getContext("2d");
+    let W, H, k = reduce ? 1 : 0, start = 0;
+    function size() { const d = window.devicePixelRatio || 1; W = cv.clientWidth; H = cv.clientHeight; cv.width = W * d; cv.height = H * d; ctx.setTransform(d, 0, 0, d, 0, 0); }
+    function draw() {
+      const C = Plot.palette(); ctx.clearRect(0, 0, W, H);
+      const cam = Space.camera(28, 16);
+      const N = Math.max(4, Math.min(9, Math.floor(W / 100))), gap = W / N, s = Math.min(gap / 3.4, H / 4.6);
+      for (let i = 0; i < N; i++) {
+        const th = k * Math.PI * 1.75 * i / (N - 1);
+        const O = [gap * (i + 0.5) - 0.2 * s, H * 0.56];
+        const P = (p) => [O[0] + V.dot(p, cam.r) * s, O[1] - V.dot(p, cam.u) * s];
+        const a = [0, 1.6, 0], b = [-1.2 * Math.sin(th), 1.2 * Math.cos(th), 0], n = V.cross(a, b);
+        const pts = [[0, 0, 0], a, V.add(a, b), b].map(P);
+        ctx.save(); ctx.fillStyle = C.aux; ctx.globalAlpha = .16; ctx.beginPath();
+        pts.forEach((p, j) => (j ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1]))); ctx.closePath(); ctx.fill(); ctx.restore();
+        const line = (p, q, col, w) => {
+          const A = P(p), B = P(q), ang = Math.atan2(B[1] - A[1], B[0] - A[0]), L = Math.hypot(B[0] - A[0], B[1] - A[1]);
+          if (L < 3) return;
+          ctx.save(); ctx.strokeStyle = col; ctx.lineWidth = w; ctx.lineCap = "round"; ctx.beginPath(); ctx.moveTo(A[0], A[1]);
+          ctx.lineTo(B[0] - Math.cos(ang) * 5, B[1] - Math.sin(ang) * 5); ctx.stroke(); ctx.restore();
+          arrowHead(ctx, B[0], B[1], ang, 8, col);
+        };
+        line([0, 0, 0], a, C.aux, 2.2);
+        line([0, 0, 0], b, C.ink, 2.2);
+        line([0, 0, 0], n, C.curve, 2.6);
+      }
+    }
+    function tick(now) { if (!start) start = now; k = Math.min(1, (now - start) / 3200); draw(); if (k < 1) requestAnimationFrame(tick); }
+    size(); reduce ? draw() : requestAnimationFrame(tick);
+    if ("ResizeObserver" in window) new ResizeObserver(() => { size(); draw(); }).observe(cv);
+  })();
+
+  /* ---------- 외적 실험실 ---------- */
+  (function () {
+    const LA = 2, LB = 1.5;
+    const st = { deg: 70, flip: false };
+    const api = Space.mount(document.getElementById("fig-lab"), {
+      range: 3.3, center: [0.3, 0.3, 0], height: 400, axes: [2.6, 2.6, 3], grid: 1, view: { az: 32, el: 22 },
+      alt: "a와 b의 외적과 평행사변형",
+      controls: '<label>회전각 <input type="range" class="lab-th" min="0" max="360" step="1" value="70"> <output class="lab-out">70°</output></label>' +
+        segHtml(["a × b", "b × a"], "곱하는 순서", "lab-ord"),
+      draw(S, C) {
+        const th = st.deg * Math.PI / 180, a = [LA, 0, 0], b = [LB * Math.cos(th), LB * Math.sin(th), 0];
+        const n = st.flip ? V.cross(b, a) : V.cross(a, b);
+        S.poly([[0, 0, 0], a, V.add(a, b), b], { fill: "--aux", alpha: .16, stroke: "--aux", strokeAlpha: .45, dash: [4, 4] });
+        const sinv = Math.abs(Math.sin(th));
+        if (sinv > 0.05) {
+          S.arc([0, 0, 0], a, b, 0.6, { color: "--muted", label: "θ", labelR: 1.5 });
+          const up = V.unit(n);
+          S.rightAngle([0, 0, 0], up, a, 0.28, { color: "--muted" });
+        }
+        S.arrow([0, 0, 0], a, { color: "--aux", label: "a", labelT: 1, dx: 4, dy: 16 });
+        S.arrow([0, 0, 0], b, { color: "--ink", label: "b", labelT: 1, dx: 8, dy: -10 });
+        if (V.len(n) > 0.02) S.arrow([0, 0, 0], n, { color: "--curve", width: 3.2, label: st.flip ? "b×a" : "a×b", labelT: 1, dx: 10, dy: 0, size: 15 });
+        else S.point([0, 0, 0], { color: "--curve", r: 5 });
+      },
+      readout: () => {
+        const d = st.deg, between = d <= 180 ? d : 360 - d, s = Math.sin(between * Math.PI / 180), area = LA * LB * s;
+        const zc = (st.flip ? -1 : 1) * LA * LB * Math.sin(d * Math.PI / 180);
+        const dir = Math.abs(zc) < 1e-9 ? "영벡터 (평행)" : zc > 0 ? "+z 방향 (위)" : "−z 방향 (아래)";
+        return "사이각 θ = <b>" + between + "°</b> · 평행사변형 넓이 = |a||b| sin θ = 2 × 1.5 × " + num(s, 3) + " = <b>" + num(area, 2) + "</b><br>" +
+          (st.flip ? "b × a" : "a × b") + " = ⟨0, 0, " + num(zc, 2) + "⟩ → 길이 " + num(Math.abs(zc), 2) + ", " + dir;
+      },
+    });
+    const inp = api.bar.querySelector(".lab-th"), out = api.bar.querySelector(".lab-out");
+    inp.addEventListener("input", () => { st.deg = +inp.value; out.textContent = st.deg + "°"; api.redraw(); });
+    wireSeg(api, "lab-ord", (k) => { st.flip = k === 1; api.redraw(); });
+  })();
+
+  /* ---------- 예제 3, 4: 삼각형과 법선 ---------- */
+  (function () {
+    const P = [1, 4, 6], Q = [-2, 5, -1], R = [1, -1, 1];
+    const PQ = V.sub(Q, P), PR = V.sub(R, P), n = V.cross(PQ, PR);
+    Space.mount(document.getElementById("fig-tri"), {
+      range: 5.4, center: [0, 2.6, 3], height: 380, axes: [4, 7, 7], view: { az: 18, el: 18 },
+      alt: "세 점이 만드는 삼각형과 법선벡터",
+      draw(S, C) {
+        S.poly([P, Q, R], { fill: "--aux", alpha: .18, stroke: "--aux", strokeAlpha: .6 });
+        S.arrow(P, Q, { color: "--aux", width: 2.4 });
+        S.arrow(P, R, { color: "--ink", width: 2.4 });
+        S.arrow(P, V.add(P, V.mul(V.unit(n), 3.2)), { color: "--curve", width: 3, label: "PQ × PR 방향", labelT: 1, math: false, size: 13, dx: 8, dy: -6 });
+        S.rightAngle(P, n, PQ, 0.5, { color: "--muted" });
+        S.point(P, { color: "--ink", label: "P(1, 4, 6)", dx: -12, dy: 16, math: false });
+        S.point(Q, { color: "--aux", label: "Q(−2, 5, −1)", dx: 8, dy: 14 });
+        S.point(R, { color: "--ink", label: "R(1, −1, 1)", dx: 8, dy: 14 });
+      },
+      readout: () => "PQ = " + vec(PQ) + ", PR = " + vec(PR) + "<br>PQ × PR = <b>" + vec(n) + "</b> · |PQ × PR| = √2050 ≈ " + num(V.len(n), 2) +
+        " · 삼각형 넓이 ≈ <b>" + num(V.len(n) / 2, 2) + "</b>",
+    });
+  })();
+
+  /* ---------- 스칼라 삼중적과 평행육면체 ---------- */
+  (function () {
+    const B0 = [3, 0, 0], C0 = [1, 2.2, 0];
+    const EX = { a: [1, 4, -7], b: [2, -1, 4], c: [0, -9, 18] };
+    const st = { mode: 0, h: 1.8 };
+    const FR = [
+      { range: 2.7, center: [1.6, 1.2, 0.5], axes: [4, 3.6, 2.8] },
+      { range: 15.5, center: [1.5, -4, 7.5], axes: [6, 10, 19] },
+    ];
+    const vecs = () => (st.mode === 0 ? { a: [0.6, 0.8, st.h], b: B0, c: C0 } : EX);
+    const api = Space.mount(document.getElementById("fig-vol"), Object.assign({}, FR[0], {
+      height: 380, view: { az: 30, el: 20 }, alt: "세 벡터가 만드는 평행육면체",
+      controls: segHtml(["직접 조절", "예제 5"], "보기 고르기", "vol-mode") +
+        '<label class="vol-h-l">a의 높이 <input type="range" class="vol-h" min="-2" max="2.4" step="0.1" value="1.8"> <output class="vol-out">1.8</output></label>',
+      draw(S, C) {
+        const { a, b, c } = vecs(), O = [0, 0, 0];
+        const bc = V.cross(b, c), u = V.unit(bc), t = V.dot(a, bc);
+        // 밑면
+        S.poly([O, b, V.add(b, c), c], { fill: "--ok", alpha: .2, stroke: "--ok", strokeAlpha: .7 });
+        // 윗면과 옆면
+        const top = [a, V.add(a, b), V.add(V.add(a, b), c), V.add(a, c)];
+        S.poly(top, { fill: "--aux", alpha: .08, stroke: "--aux", strokeAlpha: .5 });
+        [[O, a], [b, V.add(a, b)], [V.add(b, c), V.add(V.add(a, b), c)], [c, V.add(a, c)]].forEach(([p, q]) => S.line(p, q, { color: "--aux", alpha: .5, width: 1.2 }));
+        // 높이
+        const foot = V.sub(a, V.mul(u, V.dot(a, u)));
+        if (Math.abs(t) > 1e-9) {
+          S.line(a, foot, { color: "--muted", dash: true, width: 1.6 });
+          S.text(V.lerp(a, foot, 0.5), "h", { italic: true, math: true, size: 15, dx: 8, color: "--muted" });
+        }
+        const L = st.mode === 0 ? 1.6 : 7;
+        S.arrow(O, V.mul(u, L), { color: "--curve", width: 2.4, label: "b×c 방향", labelT: 1, math: false, size: 12.5, dx: -8, dy: -4, align: "right", alpha: .9 });
+        S.arrow(O, b, { color: "--ink", label: "b", labelT: 1, dx: 6, dy: 14 });
+        S.arrow(O, c, { color: "--ink", label: "c", labelT: 1, dx: 8, dy: 12 });
+        S.arrow(O, a, { color: "--aux", label: "a", labelT: 1, dx: 8, dy: -8 });
+      },
+      readout: () => {
+        const { a, b, c } = vecs(), bc = V.cross(b, c), t = V.dot(a, bc);
+        const msg = Math.abs(t) < 1e-9 ? "부피 0 → 세 벡터가 한 평면 위" : t > 0 ? "a가 b×c와 같은 쪽" : "a가 b×c와 반대쪽 (삼중적 음수)";
+        return "a = " + vec(a) + ", b = " + vec(b) + ", c = " + vec(c) + "<br>b × c = " + vec(bc) + " · a·(b×c) = <b>" + trim(t) + "</b> · V = |a·(b×c)| = <b>" + trim(Math.abs(t)) + "</b> (" + msg + ")";
+      },
+    }));
+    const hl = api.bar.querySelector(".vol-h-l"), hin = api.bar.querySelector(".vol-h"), hout = api.bar.querySelector(".vol-out");
+    hin.addEventListener("input", () => { st.h = +hin.value; hout.textContent = st.h.toFixed(1).replace("-", "−"); api.redraw(); });
+    wireSeg(api, "vol-mode", (k) => { st.mode = k; hl.hidden = k === 1; api.setFrame(FR[k]); if (k === 1) api.setView(-48, -14); else api.setView(30, 20); });
+  })();
+
+  /* ---------- 자가 점검 ---------- */
+  (function () {
+    const R = String.raw;
+    Quiz.mount(document.getElementById("quiz"), [
+      {
+        q: R`$\langle1,2,0\rangle\times\langle0,1,3\rangle$는?`,
+        choices: [R`$\langle6,3,1\rangle$`, R`$\langle6,-3,1\rangle$`, R`$\langle-6,3,-1\rangle$`, R`$5$`],
+        answer: 1,
+        explain: R`<p>$\mathbf i$: $2\cdot3-0\cdot1=6$, $\mathbf j$: $-(1\cdot3-0\cdot0)=-3$, $\mathbf k$: $1\cdot1-2\cdot0=1$. A는 $\mathbf j$의 마이너스를 빼먹은 것, C는 순서를 바꾼 $\mathbf b\times\mathbf a$, D는 내적처럼 수로 계산한 거예요.</p>`,
+      },
+      {
+        q: R`$\mathbf k\times\mathbf j$는?`,
+        choices: [R`$\mathbf i$`, R`$-\mathbf i$`, R`$\mathbf 0$`, R`$1$`],
+        answer: 1,
+        explain: R`<p>$\mathbf j\times\mathbf k=\mathbf i$이고 순서를 바꾸면 부호가 바뀌니 $\mathbf k\times\mathbf j=-\mathbf i$예요.</p>`,
+      },
+      {
+        q: R`$|\mathbf a|=3$, $|\mathbf b|=4$, 사이각이 $\frac\pi6$일 때 $|\mathbf a\times\mathbf b|$는?`,
+        choices: [R`$6\sqrt3$`, R`$6$`, R`$12$`, R`$3$`],
+        answer: 1,
+        explain: R`<p>$3\cdot4\cdot\sin\frac\pi6=12\cdot\frac12=6$. A는 $\cos$를 쓴 내적 값이에요.</p>`,
+      },
+      {
+        q: R`$\langle1,1,0\rangle$과 $\langle0,1,1\rangle$로 결정되는 평행사변형의 넓이는?`,
+        choices: [R`$1$`, R`$\sqrt2$`, R`$\sqrt3$`, R`$\frac{\sqrt3}{2}$`],
+        answer: 2,
+        explain: R`<p>외적은 $\langle1\cdot1-0\cdot1,\,-(1\cdot1-0\cdot0),\,1\cdot1-1\cdot0\rangle=\langle1,-1,1\rangle$이고 길이 $\sqrt3$이에요. D는 삼각형 넓이예요.</p>`,
+      },
+      {
+        q: R`$\mathbf a\times\mathbf b=\langle1,-2,3\rangle$일 때 $\mathbf b\times\mathbf a$는?`,
+        choices: [R`$\langle1,-2,3\rangle$`, R`$\langle-1,2,-3\rangle$`, R`$\langle3,-2,1\rangle$`, R`알 수 없다`],
+        answer: 1,
+        explain: R`<p>성질 1: $\mathbf b\times\mathbf a=-\mathbf a\times\mathbf b$. 길이는 같고 방향만 반대예요.</p>`,
+      },
+      {
+        q: R`영이 아닌 벡터 $\mathbf a$, $\mathbf b$에 대해 항상 성립하는 것은?`,
+        choices: [R`$\mathbf a\times\mathbf b=\mathbf b\times\mathbf a$`, R`$\mathbf a\cdot(\mathbf a\times\mathbf b)=0$`, R`$|\mathbf a\times\mathbf b|=|\mathbf a|\,|\mathbf b|$`, R`$(\mathbf a\times\mathbf a)\times\mathbf b=\mathbf a\times(\mathbf a\times\mathbf b)$`],
+        answer: 1,
+        explain: R`<p>정리 8: $\mathbf a\times\mathbf b$는 $\mathbf a$에 수직이라 내적이 0이에요. A는 부호가 반대, C는 수직일 때만, D는 결합법칙이 성립하지 않아 틀려요(왼쪽은 항상 $\mathbf 0$).</p>`,
+      },
+      {
+        q: R`$\langle1,1,0\rangle$, $\langle0,1,1\rangle$, $\langle1,0,1\rangle$로 결정되는 평행육면체의 부피는?`,
+        choices: [R`$0$`, R`$1$`, R`$2$`, R`$3$`],
+        answer: 2,
+        explain: R`<p>$\begin{vmatrix}1&1&0\\0&1&1\\1&0&1\end{vmatrix}=1(1-0)-1(0-1)+0=2$. 부피는 절댓값이라 2예요.</p>`,
+      },
+      {
+        q: R`$\langle1,2,3\rangle$, $\langle0,1,1\rangle$, $\langle1,k,4\rangle$가 같은 평면 위에 있도록 하는 $k$는?`,
+        choices: [R`$1$`, R`$2$`, R`$3$`, R`$4$`],
+        answer: 2,
+        explain: R`<p>$\begin{vmatrix}1&2&3\\0&1&1\\1&k&4\end{vmatrix}=1(4-k)-2(0-1)+3(0-1)=3-k=0$이라 $k=3$이에요. 같은 평면 $\iff$ 스칼라 삼중적 0.</p>`,
+      },
+    ]);
+  })();
+})();
+</script>
+</body>
+</html>

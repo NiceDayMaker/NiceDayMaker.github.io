@@ -1,0 +1,294 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>10.7 급수 판정 전략</title>
+<script>try{var t=localStorage.getItem("theme");if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
+<link rel="stylesheet" href="assets/katex/katex.min.css">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body data-section="10.7">
+<div class="shell">
+  <nav class="side" aria-label="이 절의 목차">
+    <a class="home" href="index.html">전체 목차로</a>
+    <ol>
+      <li><a href="#order">판정 순서</a></li>
+      <li><a href="#examples">예제 6개 판정하기</a></li>
+      <li><a href="#table">판정법 한 장 정리</a></li>
+      <li><a href="#mistakes">자주 하는 실수</a></li>
+      <li><a href="#check">자가 점검</a></li>
+    </ol>
+  </nav>
+
+  <main>
+    <header class="hero">
+      <p class="chapter">10장 무한수열과 급수</p>
+      <h1><span class="num">10.7</span>급수 판정을 위한 전략</h1>
+      <canvas id="hero" aria-hidden="true"></canvas>
+    </header>
+
+    <p class="lede">새로운 판정법은 없어요. 지금까지 배운 여덟 가지 판정법 중 <b>무엇을 먼저 꺼낼지</b>를 정하는 절이에요. 시험에서는 판정법 자체보다 이 선택이 시간을 좌우합니다.</p>
+
+    <!-- ===================================================== -->
+    <h2 id="order">판정 순서</h2>
+    <p>급수를 받으면 위에서부터 차례로 질문해 보세요. 해당하는 칸을 찾으면 거기서 판정합니다. 꼭 이 순서를 지켜야 하는 건 아니지만, 위쪽일수록 확인이 빠르고 아래쪽일수록 계산이 길어요.</p>
+
+    <ol class="flow" id="flow">
+      <li data-step="1"><span class="name">발산판정법</span><span class="ask">항이 0으로 가는가?</span>
+        <div>$\lim a_n\neq0$이면 바로 <b>발산</b>. 0으로 가면 아무것도 모르니 다음으로.</div>
+      </li>
+      <li data-step="2"><span class="name">$p$급수</span><span class="ask">정확히 $\sum 1/n^p$ 꼴인가?</span>
+        <div>$p>1$이면 수렴, $p\le1$이면 발산.</div>
+      </li>
+      <li data-step="3"><span class="name">기하급수</span><span class="ask">정확히 $\sum ar^{n-1}$ 꼴인가?</span>
+        <div>$|r|<1$이면 수렴(합 $\frac{a}{1-r}$), $|r|\ge1$이면 발산.</div>
+      </li>
+      <li data-step="4"><span class="name">비교판정법</span><span class="ask">$p$급수나 기하급수와 <b>비슷한</b> 꼴인가?</span>
+        <div>분수식, 루트 식은 최고차항만 남겨서 $p$급수와 비교. $c^n$이 섞이면 기하급수와 비교.</div>
+      </li>
+      <li data-step="5"><span class="name">교대급수판정법</span><span class="ask">$\sum(-1)^nb_n$ 꼴인가?</span>
+        <div>$b_n>0$이 (i) 감소하고 (ii) 0으로 가면 수렴.</div>
+      </li>
+      <li data-step="6"><span class="name">비판정법</span><span class="ask">계승 $n!$이나 $c^n$ 같은 곱이 있는가?</span>
+        <div>$\lim|a_{n+1}/a_n|<1$이면 절대수렴, $>1$이면 발산.</div>
+      </li>
+      <li data-step="7"><span class="name">근판정법</span><span class="ask">항 전체가 $(b_n)^n$ 꼴인가?</span>
+        <div>$\lim\sqrt[n]{|a_n|}<1$이면 절대수렴, $>1$이면 발산.</div>
+      </li>
+      <li data-step="8"><span class="name">적분판정법</span><span class="ask">$\int_1^\infty f(x)\,dx$를 쉽게 계산할 수 있는가?</span>
+        <div>$f$가 양수, 연속, 감소일 때. 적분이 수렴하면 급수도 수렴.</div>
+      </li>
+    </ol>
+
+    <!-- ===================================================== -->
+    <h2 id="examples">예제 6개 판정하기</h2>
+    <p>강의 자료의 예제 6개예요. 그래프 아래에서 급수를 고르면 실제 부분합 $S_n$이 그려지고, 그 밑에 위 순서도의 <b>몇 번에서 판정이 끝나는지</b>와 풀이가 나와요.</p>
+    <div class="problem">
+      <span class="tag">예제</span>다음 급수의 수렴성을 판정하는 데 알맞은 판정법을 고르고 판정하라.
+      $$\text{①}\sum_{n=1}^\infty\frac{n-1}{2n+1}\qquad\text{②}\sum_{n=1}^\infty\frac{\sqrt{n^3+1}}{3n^3+4n^2+2}\qquad\text{③}\sum_{n=1}^\infty ne^{-n^2}$$
+      $$\text{④}\sum_{n=1}^\infty(-1)^n\frac{n^3}{n^4+1}\qquad\text{⑤}\sum_{k=1}^\infty\frac{2^k}{k!}\qquad\text{⑥}\sum_{n=1}^\infty\frac{1}{2+3^n}$$
+    </div>
+    <figure class="plot" id="fig-ex">
+      <figcaption>수렴하는 급수는 초록 점선(합)에서 멈추고, ④처럼 교대하는 급수는 합 위아래를 번갈아 오가며 좁혀 들어가요. ①은 항이 $\frac12$에 머물러 부분합이 일정하게 커져요.</figcaption>
+    </figure>
+
+    <div class="path" id="path" aria-live="polite">
+      <p class="path-title">판정 경로</p>
+      <div class="path-steps"><span data-step="1"><b>1</b> 발산판정법</span><span data-step="2"><b>2</b> p급수</span><span data-step="3"><b>3</b> 기하급수</span><span data-step="4"><b>4</b> 비교판정법</span><span data-step="5"><b>5</b> 교대급수판정법</span><span data-step="6"><b>6</b> 비판정법</span><span data-step="7"><b>7</b> 근판정법</span><span data-step="8"><b>8</b> 적분판정법</span></div>
+      <div class="path-sol">
+        <div data-ex="0">
+          $$\lim_{n\to\infty}\frac{n-1}{2n+1}=\lim_{n\to\infty}\frac{1-1/n}{2+1/n}=\frac12\neq0$$
+            <p>항이 $\frac12$로 가므로 <span class="verdict div">발산</span>해요. 항이 0으로 가지 않으면 다른 판정법은 볼 필요가 없어요.</p>
+        </div>
+        <div data-ex="1" hidden>
+          <p>분자는 $\sqrt{n^3}=n^{3/2}$, 분모는 $3n^3$처럼 자라요. 최고차항만 남기면</p>
+            $$b_n=\frac{n^{3/2}}{3n^3}=\frac{1}{3n^{3/2}}$$
+            <p>극한비교판정법으로 비교하면</p>
+            $$\lim_{n\to\infty}\frac{a_n}{b_n}=\lim_{n\to\infty}\frac{3n^{3/2}\sqrt{n^3+1}}{3n^3+4n^2+2}=\lim_{n\to\infty}\frac{3\sqrt{1+1/n^3}}{3+4/n+2/n^3}=1$$
+            <p>극한이 양의 유한값이고 $\sum b_n$은 $p=\frac32>1$인 $p$급수라 수렴하므로, 주어진 급수도 <span class="verdict conv">수렴</span>해요.</p>
+        </div>
+        <div data-ex="2" hidden>
+          <p>$f(x)=xe^{-x^2}$은 양수이고, $f'(x)=e^{-x^2}(1-2x^2)<0$ ($x\ge1$)이라 감소해요. 치환 $u=x^2$으로 적분이 바로 나와요.</p>
+            $$\int_1^\infty xe^{-x^2}\,dx=\lim_{t\to\infty}\Big[-\tfrac12e^{-x^2}\Big]_1^t=\frac{1}{2e}$$
+            <p>적분이 유한하므로 적분판정법에 의해 <span class="verdict conv">수렴</span>해요. 비판정법으로도 돼요: $\frac{a_{n+1}}{a_n}=\frac{n+1}{n}e^{-(2n+1)}\to0$.</p>
+        </div>
+        <div data-ex="3" hidden>
+          <p>$b_n=\frac{n^3}{n^4+1}>0$이고 두 조건을 확인해요.</p>
+            <ul>
+              <li>(ii) $b_n=\frac{1/n}{1+1/n^4}\to0$.</li>
+              <li>(i) $f(x)=\frac{x^3}{x^4+1}$이라 하면 $f'(x)=\frac{x^2(3-x^4)}{(x^4+1)^2}$이고, $x>\sqrt[4]3\approx1.32$에서 음수예요. 그래서 $n\ge2$부터 감소해요.</li>
+            </ul>
+            <p>교대급수판정법에 의해 <span class="verdict conv">수렴</span>해요. 한편 $\sum b_n$은 $\sum\frac1n$과 비슷해서 발산하므로, 정확히는 <b>조건수렴</b>입니다.</p>
+        </div>
+        <div data-ex="4" hidden>
+          $$\left|\frac{a_{k+1}}{a_k}\right|=\frac{2^{k+1}}{(k+1)!}\cdot\frac{k!}{2^k}=\frac{2}{k+1}\to0<1$$
+            <p>비판정법에 의해 <span class="verdict conv">절대수렴</span>해요. (실제 합은 $e^2-1$)</p>
+        </div>
+        <div data-ex="5" hidden>
+          <p>분모의 $2$는 $3^n$에 비하면 무시할 만해요. 그래서 기하급수 $\sum\frac{1}{3^n}$과 비교합니다.</p>
+            $$0<\frac{1}{2+3^n}<\frac{1}{3^n}=\left(\frac13\right)^n$$
+            <p>오른쪽은 공비 $\frac13$인 기하급수라 수렴하므로, 비교판정법에 의해 <span class="verdict conv">수렴</span>해요.</p>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="exam"><strong>참고.</strong> 강의 자료의 표기 두 곳을 바로잡았어요. $p$급수는 “$p\le1$이면 발산”이 맞고(자료에는 $p\ge1$), 예제 ②의 비교 급수는 $b_n=\frac{1}{3n^{3/2}}$이 맞아요(자료에는 지수가 $3/3$).</div>
+
+    <!-- ===================================================== -->
+    <h2 id="table">판정법 한 장 정리</h2>
+    <table class="vals compare" aria-label="판정법 요약">
+      <thead><tr><th>판정법</th><th>언제</th><th>결론</th><th>주의</th></tr></thead>
+      <tbody>
+        <tr><th>발산판정법</th><td>항상 제일 먼저</td><td>$a_n\not\to0$이면 발산</td><td>$a_n\to0$이어도 수렴 보장 없음</td></tr>
+        <tr><th>$p$급수</th><td>$\sum1/n^p$</td><td>$p>1$ 수렴, $p\le1$ 발산</td><td>$p=1$(조화급수)은 발산</td></tr>
+        <tr><th>기하급수</th><td>$\sum ar^{n-1}$</td><td>$|r|<1$ 수렴</td><td>합은 $\frac{\text{첫 항}}{1-r}$</td></tr>
+        <tr><th>비교판정법</th><td>$p$급수, 기하급수와 비슷</td><td>큰 쪽 수렴이면 수렴, 작은 쪽 발산이면 발산</td><td>방향을 반대로 쓰면 결론 없음</td></tr>
+        <tr><th>극한비교</th><td>비교할 부등식이 귀찮을 때</td><td>$\lim a_n/b_n=c>0$이면 같은 운명</td><td>$c$는 양의 유한값이어야 함</td></tr>
+        <tr><th>교대급수</th><td>$\sum(-1)^nb_n$</td><td>$b_n$ 감소, $\to0$이면 수렴</td><td>절대수렴인지 조건수렴인지 따로 확인</td></tr>
+        <tr><th>비판정법</th><td>$n!$, $c^n$, 곱</td><td>$L<1$ 절대수렴, $L>1$ 발산</td><td>분수식은 $L=1$이라 판정불가</td></tr>
+        <tr><th>근판정법</th><td>$(b_n)^n$</td><td>$L<1$ 절대수렴, $L>1$ 발산</td><td>$L=1$이면 판정불가</td></tr>
+        <tr><th>적분판정법</th><td>$\int f$가 쉬움</td><td>적분과 같은 운명</td><td>$f$가 양수, 연속, 감소인지 확인</td></tr>
+      </tbody>
+    </table>
+
+    <!-- ===================================================== -->
+    <h2 id="mistakes">자주 하는 실수</h2>
+    <div class="exam"><strong>시험 포인트.</strong>
+      <ul style="margin:.4rem 0 0">
+        <li><b>“항이 0으로 가니까 수렴”은 틀린 논리</b>예요. 조화급수 $\sum\frac1n$이 반례입니다. 발산판정법은 발산만 판정할 수 있어요.</li>
+        <li>비교판정법에서 <b>수렴하는 급수보다 크다</b>거나 <b>발산하는 급수보다 작다</b>는 건 아무 결론도 안 돼요.</li>
+        <li>교대급수판정법으로 수렴을 보였다면 “조건수렴인지 절대수렴인지”를 묻는 문제가 많아요. $\sum|a_n|$도 꼭 확인하세요.</li>
+        <li>분수식에 비판정법을 쓰면 $L=1$이 나와 시간만 버려요. 최고차항끼리 보고 $p$급수와 비교하세요.</li>
+      </ul>
+    </div>
+
+    <!-- ===================================================== -->
+    <h2 id="check">자가 점검</h2>
+    <p>급수를 보고 어떤 판정법을 먼저 꺼낼지, 그리고 결론이 무엇인지 골라 보세요.</p>
+    <div id="quiz"></div>
+
+    <nav class="pager" aria-label="절 이동"></nav>
+  </main>
+</div>
+
+<script src="assets/katex/katex.min.js"></script>
+<script src="assets/katex/auto-render.min.js"></script>
+<script src="assets/plot.js"></script>
+<script src="assets/quiz.js"></script>
+<script src="assets/site.js"></script>
+<script>
+(function () {
+  "use strict";
+  const { fmt, seqPanel } = Plot;
+  const i = (s) => "<i>" + s + "</i>";
+  const segHtml = (labels, aria, cls) =>
+    '<span class="seg ' + (cls || "") + '" role="group" aria-label="' + aria + '">' +
+    labels.map((l, k) => '<button type="button" data-k="' + k + '" aria-pressed="false">' + l + "</button>").join("") + "</span>";
+  function pressOne(group, btn) { group.querySelectorAll("button").forEach((b) => b.setAttribute("aria-pressed", b === btn ? "true" : "false")); }
+  const fact = (n) => { let p = 1; for (let k = 2; k <= n; k++) p *= k; return p; };
+
+  Plot.heroSeries(document.getElementById("hero"), (n) => 6 / (Math.PI * Math.PI * n * n), 24, 1);
+
+  /* ---------- 예제 6개 ---------- */
+  (function () {
+    const NMAX = 40;
+    const ex = [
+      { label: "① (n−1)/(2n+1)", a: (n) => (n - 1) / (2 * n + 1), stop: 1, verdict: "발산 (발산판정법, aₙ → 1/2)", conv: false, y: [0, 20] },
+      { label: "② √(n³+1)/(3n³+4n²+2)", a: (n) => Math.sqrt(n ** 3 + 1) / (3 * n ** 3 + 4 * n * n + 2), stop: 4, verdict: "수렴 (1/(3n^(3/2))와 극한비교)", conv: true, y: [0, 0.9], tail: (N) => 2 / (3 * Math.sqrt(N)) },
+      { label: "③ n·e^(−n²)", a: (n) => n * Math.exp(-n * n), stop: 8, verdict: "수렴 (적분판정법, 적분값 1/(2e))", conv: true, y: [0, 0.6] },
+      { label: "④ (−1)ⁿ n³/(n⁴+1)", a: (n) => (n % 2 ? -1 : 1) * n ** 3 / (n ** 4 + 1), stop: 5, verdict: "조건수렴 (교대급수판정법)", conv: true, y: [-0.7, 0.3], alt: true },
+      { label: "⑤ 2ᵏ/k!", a: (n) => 2 ** n / fact(n), stop: 6, verdict: "절대수렴 (비판정법, L = 0)", conv: true, y: [0, 7.5], sum: Math.exp(2) - 1 },
+      { label: "⑥ 1/(2+3ⁿ)", a: (n) => 1 / (2 + 3 ** n), stop: 4, verdict: "수렴 (기하급수 (1/3)ⁿ와 비교)", conv: true, y: [0, 0.4] },
+    ];
+    ex.forEach((e) => {
+      e.S = [0]; for (let k = 1; k <= NMAX; k++) e.S[k] = e.S[k - 1] + e.a(k);
+      if (e.conv && e.sum == null) {
+        if (e.alt) { let s = 0, prev = 0; for (let k = 1; k <= 20001; k++) { prev = s; s += e.a(k); } e.sum = (s + prev) / 2; }
+        else { let s = 0; const N = e.tail ? 200000 : 400; for (let k = 1; k <= N; k++) s += e.a(k); e.sum = s + (e.tail ? e.tail(N) : 0); }
+      }
+    });
+    const st = { e: ex[0] };
+    const path = document.getElementById("path");
+    function showFlow() {
+      const e = st.e, k = ex.indexOf(e);
+      path.querySelectorAll(".path-steps > span").forEach((sp) => {
+        const s = +sp.dataset.step;
+        sp.className = s === e.stop ? "on" : s < e.stop ? "passed" : "later";
+      });
+      path.querySelectorAll(".path-sol [data-ex]").forEach((d) => (d.hidden = +d.dataset.ex !== k));
+    }
+    const panel = seqPanel({ f: (n) => st.e.S[n], nMax: NMAX, y: [0, 20], title: "부분합 Sₙ", color: "--aux", joined: true, height: 240, yTicks: [] });
+    function config() {
+      const e = st.e, span = e.y[1] - e.y[0];
+      panel.view.y = [e.y[0] - span * 0.09, e.y[1]];
+      const step = span > 10 ? 5 : span > 3 ? 1 : span > 0.8 ? 0.2 : 0.1;
+      const t = []; for (let v = Math.ceil(e.y[0] / step) * step; v < e.y[1] - 1e-9; v += step) if (Math.abs(v) > 1e-9) t.push(Math.round(v * 100) / 100);
+      panel.ticks.y = t;
+    }
+    panel.under = function (ctx, T, N, C) {
+      const e = st.e;
+      if (e.sum != null) {
+        ctx.save(); ctx.strokeStyle = C.ok; ctx.lineWidth = 1.4; ctx.setLineDash([5, 4]);
+        ctx.beginPath(); ctx.moveTo(T.X(0), T.Y(e.sum)); ctx.lineTo(T.w, T.Y(e.sum)); ctx.stroke(); ctx.restore();
+        Plot.label(ctx, "합 ≈ " + fmt(e.sum, 4), T.w - 4, T.Y(e.sum) - 9, { size: 11.5, color: C.ok, align: "right", halo: C.surface });
+      }
+    };
+    config();
+    const api = Plot.mount(document.getElementById("fig-ex"), {
+      t: { min: 1, max: NMAX, value: NMAX, label: "n" },
+      duration: 6,
+      panels: [panel],
+      controls: segHtml(ex.map((e) => e.label), "예제 고르기", "ex-pick"),
+      readout: (N) => {
+        const n = Math.floor(N + 1e-9);
+        return i("n") + " = <b>" + n + "</b>, S<sub>" + n + "</sub> = <b>" + fmt(st.e.S[n], 4) + "</b><br>" +
+          "순서도 <b>" + st.e.stop + "번</b>에서 판정: " + '<span class="verdict ' + (st.e.conv ? "conv" : "div") + '">' + st.e.verdict + "</span>";
+      },
+    });
+    const g = api.bar.querySelector(".ex-pick");
+    g.querySelectorAll("button").forEach((b, k) => b.addEventListener("click", () => {
+      st.e = ex[k]; pressOne(g, b); config(); showFlow(); api.panels[0].resize(); api.setRange(1, NMAX, 1); api.play();
+    }));
+    pressOne(g, g.querySelector("button")); showFlow();
+  })();
+
+  /* ---------- 자가 점검 ---------- */
+  (function () {
+    const R = String.raw;
+    Quiz.mount(document.getElementById("quiz"), [
+      {
+        q: R`$\displaystyle\sum_{n=1}^\infty\frac{n}{n+1}$을 판정할 때 <b>가장 먼저</b> 확인할 것과 결론은?`,
+        choices: ["비판정법, 판정불가", "발산판정법, 발산", "p급수, 발산", "비교판정법, 수렴"],
+        answer: 1,
+        explain: R`<p>$\frac{n}{n+1}\to1\neq0$이므로 발산판정법으로 바로 <b>발산</b>이에요. 항의 극한부터 보는 습관이면 몇 초면 끝나는 문제예요.</p>`,
+      },
+      {
+        q: R`$\displaystyle\sum_{n=1}^\infty\frac{n^2}{n^3+1}$은?`,
+        choices: [R`$\frac1{n^2}$과 비교해서 수렴`, R`$\frac1n$과 극한비교해서 발산`, "비판정법으로 수렴", "발산판정법으로 발산"],
+        answer: 1,
+        explain: R`<p>최고차항만 보면 $\frac{n^2}{n^3}=\frac1n$이에요. $\lim\frac{a_n}{1/n}=\lim\frac{n^3}{n^3+1}=1>0$이고 $\sum\frac1n$이 발산하므로 <b>발산</b>합니다. 항은 0으로 가니까 발산판정법(D)으로는 결론이 안 나요.</p>`,
+      },
+      {
+        q: R`$\displaystyle\sum_{n=1}^\infty\frac{(-1)^n}{\sqrt n}$에 대해 옳은 것은?`,
+        choices: ["절대수렴", "발산", "조건수렴", "판정불가"],
+        answer: 2,
+        explain: R`<p>$b_n=\frac1{\sqrt n}$은 감소하고 0으로 가므로 교대급수판정법에 의해 수렴해요. 그런데 $\sum\frac1{\sqrt n}$은 $p=\frac12\le1$이라 발산하므로 <b>조건수렴</b>입니다.</p>`,
+      },
+      {
+        q: R`$\displaystyle\sum_{n=1}^\infty\frac{3^n}{n!}$에 가장 알맞은 판정법은?`,
+        choices: ["발산판정법", "p급수", "교대급수판정법", "비판정법"],
+        answer: 3,
+        explain: R`<p>계승과 $3^n$이 있으니 비판정법이에요. $\frac{a_{n+1}}{a_n}=\frac{3}{n+1}\to0<1$이라 절대수렴합니다.</p>`,
+      },
+      {
+        q: R`$\displaystyle\sum_{n=1}^\infty\left(\frac{n}{3n+1}\right)^n$에 가장 알맞은 판정법과 결론은?`,
+        choices: [R`근판정법, $L=\frac13$로 수렴`, R`비판정법, $L=1$로 판정불가`, R`근판정법, $L=1$로 판정불가`, "발산판정법, 발산"],
+        answer: 0,
+        explain: R`<p>항 전체가 $n$제곱 꼴이라 근판정법이에요. $\sqrt[n]{a_n}=\frac{n}{3n+1}\to\frac13<1$이므로 수렴합니다.</p>`,
+      },
+      {
+        q: R`$\displaystyle\sum_{n=2}^\infty\frac{1}{n\ln n}$은?`,
+        choices: ["적분판정법으로 수렴", "비판정법으로 수렴", "적분판정법으로 발산", "p급수라서 수렴"],
+        answer: 2,
+        explain: R`<p>$f(x)=\frac1{x\ln x}$은 $x\ge2$에서 양수, 연속, 감소이고, 치환 $u=\ln x$로</p>$$\int_2^\infty\frac{dx}{x\ln x}=\lim_{t\to\infty}\Big[\ln(\ln x)\Big]_2^t=\infty$$<p>이므로 <b>발산</b>해요. $\frac1n$보다 아주 조금 작을 뿐이라 여전히 발산하는 유명한 예예요.</p>`,
+      },
+      {
+        q: R`$\displaystyle\sum_{n=1}^\infty\frac{\cos n}{n^2}$에 대해 옳은 것은?`,
+        choices: ["교대급수판정법으로 수렴", "절대수렴", "판정불가", "발산"],
+        answer: 1,
+        explain: R`<p>$\cos n$의 부호는 규칙적으로 바뀌지 않아서 교대급수판정법은 쓸 수 없어요. 대신 절댓값을 보면 $\left|\frac{\cos n}{n^2}\right|\le\frac1{n^2}$이고 $\sum\frac1{n^2}$이 수렴하므로, 비교판정법에 의해 <b>절대수렴</b>해요.</p>`,
+      },
+      {
+        q: R`다음 중 <b>올바른</b> 추론은?`,
+        choices: [R`$a_n\to0$이므로 $\sum a_n$은 수렴한다`, R`$a_n\ge\frac1{n^2}$이고 $\sum\frac1{n^2}$이 수렴하므로 $\sum a_n$은 수렴한다`, R`$0\le a_n\le\frac1{2^n}$이고 $\sum\frac1{2^n}$이 수렴하므로 $\sum a_n$은 수렴한다`, R`비판정법에서 $L=1$이므로 $\sum a_n$은 발산한다`],
+        answer: 2,
+        explain: R`<p>수렴하는 급수보다 <b>작은</b> 양수 급수는 수렴해요(C). A는 조화급수가 반례, B는 비교 방향이 반대라 결론이 없고, D는 $L=1$이면 판정불가예요.</p>`,
+      },
+    ]);
+  })();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,421 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>10.8 거듭제곱급수</title>
+<script>try{var t=localStorage.getItem("theme");if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
+<link rel="stylesheet" href="assets/katex/katex.min.css">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body data-section="10.8">
+<div class="shell">
+  <nav class="side" aria-label="이 절의 목차">
+    <a class="home" href="index.html">전체 목차로</a>
+    <ol>
+      <li><a href="#def">거듭제곱급수란</a></li>
+      <li><a href="#geo">기하급수로 보는 그림</a></li>
+      <li><a href="#ex123">예제 1~3 · 어디서 수렴하나</a></li>
+      <li><a href="#interval">수렴 반지름과 수렴 구간</a></li>
+      <li><a href="#ex45">예제 4, 5 · 끝점까지</a></li>
+      <li><a href="#lab">수렴 구간 실험실</a></li>
+      <li><a href="#summary">한눈에 정리</a></li>
+      <li><a href="#check">자가 점검</a></li>
+    </ol>
+  </nav>
+
+  <main>
+    <header class="hero">
+      <p class="chapter">10장 무한수열과 급수</p>
+      <h1><span class="num">10.8</span>거듭제곱급수</h1>
+      <canvas id="hero" aria-hidden="true"></canvas>
+    </header>
+
+    <p class="lede">지금까지는 숫자를 더하는 급수였다면, 이제 항마다 $x$의 거듭제곱이 들어간 급수예요. $x$에 어떤 값을 넣느냐에 따라 수렴하기도, 발산하기도 해서 <b>수렴하는 $x$의 범위</b>를 찾는 게 이 절의 전부입니다.</p>
+
+    <!-- ===================================================== -->
+    <h2 id="def">거듭제곱급수란</h2>
+    <div class="summary-box">
+      $$\sum_{n=0}^\infty c_nx^n=c_0+c_1x+c_2x^2+c_3x^3+\cdots$$
+      <p style="margin:0">$x$는 변수, 상수 $c_n$은 <b>계수</b>(coefficient)예요. 급수가 수렴하는 $x$ 전체가 이 함수의 정의역이 됩니다.</p>
+    </div>
+    <p>중심을 $a$로 옮긴 꼴도 있어요. 이것을 <b>중심이 $a$인 거듭제곱급수</b>(또는 $x-a$의 거듭제곱급수)라고 불러요.</p>
+    $$\sum_{n=0}^\infty c_n(x-a)^n=c_0+c_1(x-a)+c_2(x-a)^2+\cdots$$
+    <ul>
+      <li>$n=0$인 항은 $x^0=1$, $(x-a)^0=1$로 약속해요. ($x=a$일 때도)</li>
+      <li>$x=a$를 넣으면 $n\ge1$인 항이 모두 0이라, 거듭제곱급수는 <b>중심에서는 항상 수렴</b>해요.</li>
+      <li>수렴하는 $x$를 찾을 때는 보통 <b>비판정법</b>(가끔 근판정법)을 써요.</li>
+    </ul>
+
+    <!-- ===================================================== -->
+    <h2 id="geo">기하급수로 보는 그림</h2>
+    <p>모든 계수를 $c_n=1$로 두면 기하급수가 돼요.</p>
+    $$\sum_{n=0}^\infty x^n=1+x+x^2+x^3+\cdots=\frac{1}{1-x}\qquad(-1\lt x<1)$$
+    <p>$|x|\ge1$이면 발산해요. 아래 그림에서 $N$을 키워 보세요. 부분합 $S_N(x)=1+x+\cdots+x^N$ 그래프가 초록 구간 $(-1,1)$ 안에서는 점선 $\frac{1}{1-x}$에 달라붙지만, 구간 밖에서는 아무리 많이 더해도 따라가지 못해요.</p>
+    <figure class="plot" id="fig-geo">
+      <figcaption>빨간 곡선은 $N$차까지 더한 다항식 $S_N(x)$, 점선은 극한 $\frac1{1-x}$예요. $x$가 $-1$이나 $1$에 가까울수록 붙는 데 더 많은 항이 필요해요.</figcaption>
+    </figure>
+
+    <!-- ===================================================== -->
+    <h2 id="ex123">예제 1~3 · 어디서 수렴하나</h2>
+    <div class="problem"><span class="tag">예제 1</span>급수 $\displaystyle\sum_{n=1}^\infty\frac{(x-3)^n}{n}$은 $x$가 어떤 값을 가질 때 수렴하는가?</div>
+    <ol class="steps">
+      <li><b>비판정법.</b> $a_n=\frac{(x-3)^n}{n}$이라 두면
+        $$\left|\frac{a_{n+1}}{a_n}\right|=\left|\frac{(x-3)^{n+1}}{n+1}\cdot\frac{n}{(x-3)^n}\right|=\frac{n}{n+1}|x-3|\to|x-3|$$</li>
+      <li>$|x-3|<1$, 즉 $2\lt x<4$이면 수렴하고, $|x-3|>1$이면 발산해요.</li>
+      <li><b>끝점은 따로.</b> 비판정법은 $|x-3|=1$일 때 $L=1$이라 판정불가예요.
+        <ul>
+          <li>$x=4$: $\sum\frac1n$, 조화급수라 <b>발산</b>.</li>
+          <li>$x=2$: $\sum\frac{(-1)^n}{n}$, 교대급수판정법으로 <b>수렴</b>.</li>
+        </ul></li>
+      <li>따라서 수렴하는 $x$는 $2\le x<4$, 즉 $[2,4)$예요.</li>
+    </ol>
+
+    <div class="problem"><span class="tag">예제 2</span>급수 $\displaystyle\sum_{n=0}^\infty n!\,x^n$은 $x$가 어떤 값을 가질 때 수렴하는가?</div>
+    <ol class="steps">
+      <li>$x\neq0$이면
+        $$\left|\frac{a_{n+1}}{a_n}\right|=\left|\frac{(n+1)!\,x^{n+1}}{n!\,x^n}\right|=(n+1)|x|\to\infty$$
+        이므로 발산해요.</li>
+      <li>$x=0$이면 $0!\cdot0^0=1$ 외의 모든 항이 0이라 수렴해요.</li>
+      <li>따라서 <b>$x=0$에서만</b> 수렴해요. 계승이 너무 빨리 커서 아무리 작은 $x$로도 못 막아요.</li>
+    </ol>
+
+    <div class="problem"><span class="tag">예제 3</span>급수 $\displaystyle\sum_{n=0}^\infty\frac{x^n}{(2n)!}$은 $x$가 어떤 값을 가질 때 수렴하는가?</div>
+    <ol class="steps">
+      <li>$(2(n+1))!=(2n+2)!=(2n+2)(2n+1)\cdot(2n)!$임을 써요.
+        $$\left|\frac{a_{n+1}}{a_n}\right|=\left|\frac{x^{n+1}}{(2n+2)!}\cdot\frac{(2n)!}{x^n}\right|=\frac{|x|}{(2n+2)(2n+1)}\to0<1$$</li>
+      <li>$x$가 무엇이든 극한이 0이라 <b>모든 실수 $x$</b>에서 수렴해요.</li>
+    </ol>
+    <div class="exam"><strong>시험 포인트.</strong> $(2n)!$에서 $n$을 $n+1$로 바꾸면 $(2n+2)!$이에요. 슬라이드 수식처럼 $2(n+1)!$로 쓰면 전혀 다른 수가 되니 괄호 위치에 주의하세요. $\frac{(2n+2)!}{(2n)!}=(2n+2)(2n+1)$은 자주 나오니 외워 두세요.</div>
+
+    <!-- ===================================================== -->
+    <h2 id="interval">수렴 반지름과 수렴 구간</h2>
+    <div class="summary-box">
+      <p style="margin:0 0 .4rem"><b>정리</b> 거듭제곱급수 $\sum c_n(x-a)^n$은 다음 세 가지 중 <b>하나만</b> 가능하다.</p>
+      <ul>
+        <li>(i) $x=a$에서만 수렴한다. → $R=0$</li>
+        <li>(ii) 모든 $x$에서 수렴한다. → $R=\infty$</li>
+        <li>(iii) 어떤 양수 $R$이 있어서 $|x-a|\lt R$이면 수렴, $|x-a|>R$이면 발산한다.</li>
+      </ul>
+    </div>
+    <p>(iii)의 $R$을 <b>수렴 반지름</b>(radius of convergence), 실제로 수렴하는 $x$ 전체를 <b>수렴 구간</b>(interval of convergence)이라고 해요. $|x-a|\lt R$은 $a-R\lt x\lt a+R$이고, <b>끝점 $x=a\pm R$에서는 무슨 일이든 일어날 수 있어서</b> 수렴 구간은 네 가지 중 하나예요.</p>
+    $$(a-R,\,a+R)\qquad(a-R,\,a+R]\qquad[a-R,\,a+R)\qquad[a-R,\,a+R]$$
+    <table class="vals compare" aria-label="수렴 반지름과 수렴 구간 정리">
+      <thead><tr><th>급수</th><th>수렴 반지름</th><th>수렴 구간</th></tr></thead>
+      <tbody>
+        <tr><th>기하급수 $\sum x^n$</th><td>$R=1$</td><td>$(-1,1)$</td></tr>
+        <tr><th>예제 1 $\sum\frac{(x-3)^n}{n}$</th><td>$R=1$</td><td>$[2,4)$</td></tr>
+        <tr><th>예제 2 $\sum n!\,x^n$</th><td>$R=0$</td><td>$\{0\}$</td></tr>
+        <tr><th>예제 3 $\sum\frac{x^n}{(2n)!}$</th><td>$R=\infty$</td><td>$(-\infty,\infty)$</td></tr>
+      </tbody>
+    </table>
+    <p>강의 자료 표에는 예제 1의 수렴 구간이 $[2,4]$로 되어 있는데, 위에서 본 것처럼 $x=4$에서는 조화급수라 발산해요. $[2,4)$가 맞아요.</p>
+    <div class="exam"><strong>시험 포인트.</strong> 비판정법은 $R$만 알려 주고 <b>끝점에서는 항상 $L=1$</b>이라 판정을 못 해요. 끝점은 직접 대입해서 $p$급수, 교대급수판정법, 발산판정법 등으로 <b>따로</b> 확인해야 하고, 이걸 빼먹으면 감점이에요.</div>
+
+    <!-- ===================================================== -->
+    <h2 id="ex45">예제 4, 5 · 끝점까지</h2>
+    <div class="problem"><span class="tag">예제 4</span>급수 $\displaystyle\sum_{n=0}^\infty\frac{(-3)^nx^n}{\sqrt{n+1}}$의 수렴 반지름 및 수렴 구간을 구하라.</div>
+    <ol class="steps">
+      <li><b>반지름.</b>
+        $$\left|\frac{a_{n+1}}{a_n}\right|=\left|\frac{(-3)^{n+1}x^{n+1}}{\sqrt{n+2}}\cdot\frac{\sqrt{n+1}}{(-3)^nx^n}\right|=3|x|\sqrt{\frac{n+1}{n+2}}\to3|x|$$
+        $3|x|\lt1$에서 수렴하므로 $R=\frac13$, 일단 $-\frac13\lt x\lt\frac13$.</li>
+      <li><b>$x=\frac13$.</b> $(-3)^n\left(\frac13\right)^n=(-1)^n$이라 $\sum\frac{(-1)^n}{\sqrt{n+1}}$. $\frac1{\sqrt{n+1}}$은 감소하며 0으로 가므로 교대급수판정법으로 <b>수렴</b>.</li>
+      <li><b>$x=-\frac13$.</b> $(-3)^n\left(-\frac13\right)^n=1$이라 $\sum\frac{1}{\sqrt{n+1}}=\sum_{n=1}^\infty\frac1{\sqrt n}$. $p=\frac12\le1$이라 <b>발산</b>.</li>
+      <li>수렴 구간은 $\left(-\frac13,\frac13\right]$.</li>
+    </ol>
+
+    <div class="problem"><span class="tag">예제 5</span>거듭제곱급수 $\displaystyle\sum_{n=0}^\infty\frac{n(x+2)^n}{3^{n+1}}$의 수렴 반지름 및 수렴 구간을 구하라.</div>
+    <ol class="steps">
+      <li><b>반지름.</b>
+        $$\left|\frac{a_{n+1}}{a_n}\right|=\left|\frac{(n+1)(x+2)^{n+1}}{3^{n+2}}\cdot\frac{3^{n+1}}{n(x+2)^n}\right|=\frac{n+1}{n}\cdot\frac{|x+2|}{3}\to\frac{|x+2|}{3}$$
+        $|x+2|\lt3$에서 수렴하므로 중심 $a=-2$, $R=3$, 일단 $-5\lt x\lt1$.</li>
+      <li><b>$x=1$.</b> $\sum\frac{n\cdot3^n}{3^{n+1}}=\sum\frac n3$. 항이 0으로 가지 않으니 <b>발산</b>.</li>
+      <li><b>$x=-5$.</b> $\sum\frac{n(-3)^n}{3^{n+1}}=\sum(-1)^n\frac n3$. 역시 항이 0으로 가지 않으니 <b>발산</b>.</li>
+      <li>수렴 구간은 $(-5,1)$.</li>
+    </ol>
+    <p>중심이 $-2$라는 것에 주의하세요. $(x+2)=(x-(-2))$예요.</p>
+
+    <!-- ===================================================== -->
+    <h2 id="lab">수렴 구간 실험실</h2>
+    <p>급수를 고르고 $x$를 움직여 보세요. 위쪽 수직선에 수렴 구간이 표시되고(채운 끝점은 수렴, 빈 끝점은 발산), 아래 그래프는 그 $x$에서의 부분합 $S_1, S_2, \dots, S_{40}$이에요. 구간 안에서는 점들이 한 값으로 모이고, 밖에서는 튀어 나가요. “끝점” 버튼으로 정확히 끝점에 놓고 어떻게 되는지도 확인해 보세요.</p>
+    <figure class="plot" id="fig-lab">
+      <figcaption>위아래로 향한 화살표는 값이 그래프 밖으로 나간 부분합이에요. 끝점 근처에서는 수렴하더라도 아주 천천히 모여요.</figcaption>
+    </figure>
+
+    <!-- ===================================================== -->
+    <h2 id="summary">한눈에 정리</h2>
+    <div class="summary-box">
+      <ul>
+        <li>거듭제곱급수 $\sum c_n(x-a)^n$: 중심 $a$에서는 항상 수렴.</li>
+        <li>가능한 경우는 셋뿐: $R=0$ (중심에서만), $R=\infty$ (모든 $x$), $0\lt R\lt\infty$.</li>
+        <li>$R$ 구하기: 비판정법으로 $\lim|a_{n+1}/a_n|=(\text{무엇})\cdot|x-a|\lt1$을 풀기.</li>
+        <li>끝점 $x=a\pm R$은 <b>직접 대입해서 따로 판정</b>. 구간은 $()$, $(]$, $[)$, $[]$ 중 하나.</li>
+        <li>계승이 분자에 있으면 $R=0$ 쪽, 분모에 있으면 $R=\infty$ 쪽으로 가기 쉽다.</li>
+      </ul>
+    </div>
+
+    <!-- ===================================================== -->
+    <h2 id="check">자가 점검</h2>
+    <p>보기를 고르면 바로 정답과 풀이가 나와요.</p>
+    <div id="quiz"></div>
+
+    <nav class="pager" aria-label="절 이동"></nav>
+  </main>
+</div>
+
+<script src="assets/katex/katex.min.js"></script>
+<script src="assets/katex/auto-render.min.js"></script>
+<script src="assets/plot.js"></script>
+<script src="assets/quiz.js"></script>
+<script src="assets/site.js"></script>
+<script>
+(function () {
+  "use strict";
+  const { fmt, label, dot, hollow, arrowHead, seqPanel } = Plot;
+  const i = (s) => "<i>" + s + "</i>";
+  const segHtml = (labels, aria, cls) =>
+    '<span class="seg ' + (cls || "") + '" role="group" aria-label="' + aria + '">' +
+    labels.map((l, k) => '<button type="button" data-k="' + k + '" aria-pressed="false">' + l + "</button>").join("") + "</span>";
+  function pressOne(group, btn) { group.querySelectorAll("button").forEach((b) => b.setAttribute("aria-pressed", b === btn ? "true" : "false")); }
+  const fact = (n) => { let p = 1; for (let k = 2; k <= n; k++) p *= k; return p; };
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  function niceTicks(lo, hi) {
+    const span = hi - lo, raw = span / 4, mag = Math.pow(10, Math.floor(Math.log10(raw)));
+    const st = [1, 2, 5, 10].map((m) => m * mag).find((s) => s >= raw) || raw;
+    const t = []; for (let v = Math.ceil(lo / st) * st; v < hi - st * 0.2; v += st) if (Math.abs(v) > st * 1e-6) t.push(+v.toFixed(6));
+    return t;
+  }
+
+  /* ---------- 절 머리: 부분합 다항식이 1/(1−x)에 붙는 모습 ---------- */
+  (function () {
+    const cv = document.getElementById("hero"), ctx = cv.getContext("2d");
+    let W, H, k = reduce ? 1 : 0, start = 0;
+    function size() { const d = window.devicePixelRatio || 1; W = cv.clientWidth; H = cv.clientHeight; cv.width = W * d; cv.height = H * d; ctx.setTransform(d, 0, 0, d, 0, 0); }
+    function draw() {
+      const C = Plot.palette(); ctx.clearRect(0, 0, W, H);
+      const X = (x) => (x + 1.15) / 2.3 * W, Y = (y) => H - 6 - (y + 0.2) / 5.4 * (H - 12);
+      ctx.fillStyle = C.ok; ctx.globalAlpha = .08; ctx.fillRect(X(-1), 0, X(1) - X(-1), H); ctx.globalAlpha = 1;
+      ctx.strokeStyle = C.rule; ctx.beginPath(); ctx.moveTo(0, Y(0)); ctx.lineTo(W, Y(0)); ctx.stroke();
+      ctx.save(); ctx.setLineDash([5, 5]); ctx.strokeStyle = C.muted; ctx.beginPath();
+      for (let j = 0; j <= 200; j++) { const x = -1.15 + 2.03 * j / 200; const y = 1 / (1 - x); j ? ctx.lineTo(X(x), Y(y)) : ctx.moveTo(X(x), Y(y)); }
+      ctx.stroke(); ctx.restore();
+      const nShow = Math.max(1, Math.round(k * 9));
+      ctx.save(); ctx.beginPath(); ctx.rect(0, 0, W, H); ctx.clip();
+      for (let N = 1; N <= nShow; N++) {
+        ctx.strokeStyle = C.curve; ctx.globalAlpha = N === nShow ? 1 : 0.15 + 0.5 * N / nShow; ctx.lineWidth = N === nShow ? 2.2 : 1.2;
+        ctx.beginPath();
+        for (let j = 0; j <= 200; j++) { const x = -1.15 + 2.3 * j / 200; let s = 0, p = 1; for (let m = 0; m <= N; m++) { s += p; p *= x; } const yy = Math.max(-60, Math.min(60, s)); j ? ctx.lineTo(X(x), Y(yy)) : ctx.moveTo(X(x), Y(yy)); }
+        ctx.stroke();
+      }
+      ctx.restore();
+      ctx.globalAlpha = 1;
+    }
+    function tick(now) { if (!start) start = now; k = Math.min(1, (now - start) / 3000); draw(); if (k < 1) requestAnimationFrame(tick); }
+    size(); reduce ? draw() : requestAnimationFrame(tick);
+    if ("ResizeObserver" in window) new ResizeObserver(() => { size(); draw(); }).observe(cv);
+  })();
+
+  /* ---------- 기하급수: 부분합 다항식 ---------- */
+  (function () {
+    const SN = (x, N) => { let s = 0, p = 1; for (let m = 0; m <= N; m++) { s += p; p *= x; } return s; };
+    Plot.mount(document.getElementById("fig-geo"), {
+      t: { min: 1, max: 30, value: 4, step: 1, label: "N" },
+      duration: 7,
+      panels: [{
+        curve: false, x: () => 0, y: () => 0, grid: 0, origin: false, height: 320,
+        view: { x: [-1.75, 1.75], y: [-2.2, 6.2] },
+        ticks: { x: [-1, 1], y: [2, 4, 6] },
+        alt: "기하급수의 부분합 다항식과 1/(1−x)",
+        under(ctx, T, N, C) {
+          ctx.save(); ctx.fillStyle = C.ok; ctx.globalAlpha = .08; ctx.fillRect(T.X(-1), 0, T.X(1) - T.X(-1), T.h); ctx.restore();
+          label(ctx, "수렴 구간 (−1, 1)", T.X(-1) + 6, 14, { size: 11.5, color: C.ok });
+          ctx.save(); ctx.setLineDash([5, 5]); ctx.strokeStyle = C.muted; ctx.lineWidth = 1.6; ctx.beginPath();
+          for (let j = 0; j <= 300; j++) { const x = -1.75 + 2.72 * j / 300; const y = 1 / (1 - x); j ? ctx.lineTo(T.X(x), T.Y(Math.min(9, y))) : ctx.moveTo(T.X(x), T.Y(y)); }
+          ctx.stroke(); ctx.restore();
+        },
+        over(ctx, T, N, C) {
+          ctx.save(); ctx.beginPath(); ctx.rect(0, 0, T.w, T.h); ctx.clip();
+          ctx.strokeStyle = C.curve; ctx.lineWidth = 2.4; ctx.beginPath();
+          for (let j = 0; j <= 400; j++) { const x = -1.75 + 3.5 * j / 400; const y = Math.max(-50, Math.min(50, SN(x, N))); j ? ctx.lineTo(T.X(x), T.Y(y)) : ctx.moveTo(T.X(x), T.Y(y)); }
+          ctx.stroke(); ctx.restore();
+        },
+      }],
+      readout: (N) => {
+        const pts = [-0.9, -0.5, 0.5, 0.9];
+        return i("N") + " = <b>" + N + "</b>, " + i("S") + "<sub>N</sub>(" + i("x") + ") = 1 + " + i("x") + " + ⋯ + " + i("x") + "<sup>" + N + "</sup><br>" +
+          pts.map((x) => i("x") + " = " + x + ": " + fmt(SN(x, N), 3) + " (목표 " + fmt(1 / (1 - x), 3) + ")").join(", ");
+      },
+    });
+  })();
+
+  /* ---------- 수렴 구간 실험실 ---------- */
+  (function () {
+    const NMAX = 40;
+    const S = [
+      { label: "Σ xⁿ", n0: 0, term: (n, x) => Math.pow(x, n), a: 0, R: 1, range: [-1.6, 1.6], x0: 0.6, iv: "(−1, 1)", left: false, right: false,
+        leftWhy: "x = −1: 1 − 1 + 1 − ⋯, 항이 0으로 안 감 → 발산", rightWhy: "x = 1: 1 + 1 + 1 + ⋯ → 발산" },
+      { label: "예제 1", n0: 1, term: (n, x) => Math.pow(x - 3, n) / n, a: 3, R: 1, range: [1.4, 4.6], x0: 2.5, iv: "[2, 4)", left: true, right: false,
+        leftWhy: "x = 2: Σ(−1)ⁿ/n, 교대급수 → 수렴", rightWhy: "x = 4: Σ 1/n, 조화급수 → 발산" },
+      { label: "예제 2", n0: 0, term: (n, x) => fact(n) * Math.pow(x, n), a: 0, R: 0, range: [-0.3, 0.3], x0: 0.15, iv: "{0}" },
+      { label: "예제 3", n0: 0, term: (n, x) => Math.pow(x, n) / fact(2 * n), a: 0, R: Infinity, range: [-25, 25], x0: 10, iv: "(−∞, ∞)" },
+      { label: "예제 4", n0: 0, term: (n, x) => Math.pow(-3 * x, n) / Math.sqrt(n + 1), a: 0, R: 1 / 3, range: [-0.55, 0.55], x0: 0.2, iv: "(−1/3, 1/3]", left: false, right: true,
+        leftWhy: "x = −1/3: Σ 1/√(n+1), p = 1/2 → 발산", rightWhy: "x = 1/3: Σ(−1)ⁿ/√(n+1), 교대급수 → 수렴" },
+      { label: "예제 5", n0: 0, term: (n, x) => n * Math.pow(x + 2, n) / Math.pow(3, n + 1), a: -2, R: 3, range: [-6.5, 2.5], x0: -1, iv: "(−5, 1)", left: false, right: false,
+        leftWhy: "x = −5: Σ(−1)ⁿ n/3, 항이 0으로 안 감 → 발산", rightWhy: "x = 1: Σ n/3, 항이 0으로 안 감 → 발산" },
+    ];
+    const st = { s: S[1], ps: [] };
+    const CAP = 30;
+    function sums(x) {
+      const s = st.s, out = [0]; let acc = 0;
+      for (let k = 0; k < NMAX; k++) { acc += s.term(s.n0 + k, x); out.push(acc); }
+      return out;
+    }
+    function where(x) {
+      const s = st.s, d = Math.abs(x - s.a), tol = (s.range[1] - s.range[0]) * 1e-4;
+      if (s.R === Infinity) return "in";
+      if (s.R === 0) return d < tol ? "center" : "out";
+      if (Math.abs(d - s.R) < tol) return x > s.a ? "right" : "left";
+      return d < s.R ? "in" : "out";
+    }
+    const line = {
+      curve: false, x: () => 0, y: () => 0, grid: 0, origin: false, yAxis: false, height: 92, axisLabels: ["x", ""],
+      view: { x: S[1].range.slice(), y: [-1, 1.2] }, ticks: { x: [] }, alt: "수렴 구간을 표시한 수직선",
+      under(ctx, T, x, C) {
+        const s = st.s, y0 = T.Y(0);
+        // 부분합 패널의 보이는 범위를 지금 x에 맞춘다
+        st.ps = sums(x);
+        let lo = Infinity, hi = -Infinity;
+        st.ps.slice(1).forEach((v) => { if (isFinite(v)) { lo = Math.min(lo, v); hi = Math.max(hi, v); } });
+        const w0 = where(x), capped = w0 === "out" || (w0 === "left" && !s.left) || (w0 === "right" && !s.right);
+        if (capped) { lo = Math.max(-CAP, lo); hi = Math.min(CAP, hi); }
+        lo = Math.min(0, lo); hi = Math.max(0, hi);
+        if (hi - lo < 1) { hi += 0.5; lo -= 0.5; }
+        const pad = (hi - lo) * 0.08;
+        sumP.view.y = [lo - pad, hi + pad];
+        sumP.ticks.y = niceTicks(lo - pad, hi + pad);
+        // 발산 영역, 수렴 영역
+        const xa = s.range[0], xb = s.range[1];
+        ctx.save(); ctx.lineCap = "butt";
+        ctx.strokeStyle = C.curve; ctx.globalAlpha = .35; ctx.lineWidth = 6;
+        ctx.beginPath(); ctx.moveTo(T.X(xa), y0); ctx.lineTo(T.X(xb), y0); ctx.stroke();
+        ctx.globalAlpha = 1; ctx.strokeStyle = C.ok; ctx.lineWidth = 6;
+        const L = s.R === Infinity ? xa : s.a - s.R, Rr = s.R === Infinity ? xb : s.a + s.R;
+        if (s.R > 0) { ctx.beginPath(); ctx.moveTo(T.X(Math.max(xa, L)), y0); ctx.lineTo(T.X(Math.min(xb, Rr)), y0); ctx.stroke(); }
+        ctx.restore();
+        if (s.R === 0) dot(ctx, T.X(s.a), y0, 5.5, C.ok, C.surface);
+        if (s.R > 0 && s.R < Infinity) {
+          [[L, s.left], [Rr, s.right]].forEach(([p, ok]) => (ok ? dot(ctx, T.X(p), y0, 6, C.ok, C.surface) : hollow(ctx, T.X(p), y0, 6, C.curve, C.surface)));
+          label(ctx, fmtv(L), T.X(L), y0 + 22, { size: 12, color: C.muted, align: "center" });
+          label(ctx, fmtv(Rr), T.X(Rr), y0 + 22, { size: 12, color: C.muted, align: "center" });
+        }
+        label(ctx, "a = " + fmtv(s.a), T.X(s.a), y0 - 20, { size: 11.5, color: C.muted, align: "center", halo: C.surface });
+        ctx.save(); ctx.strokeStyle = C.muted; ctx.beginPath(); ctx.moveTo(T.X(s.a), y0 - 10); ctx.lineTo(T.X(s.a), y0 + 6); ctx.stroke(); ctx.restore();
+        label(ctx, "수렴 구간 " + s.iv, 4, 12, { size: 12, color: C.ok, bold: true });
+      },
+      over(ctx, T, x, C) {
+        const w = where(x), col = w === "out" ? C.curve : w === "in" || w === "center" ? C.ok : (w === "left" ? st.s.left : st.s.right) ? C.ok : C.curve;
+        const y0 = T.Y(0);
+        arrowHead(ctx, T.X(x), y0 - 13, Math.PI / 2, 8, C.ink);
+        dot(ctx, T.X(x), y0, 4, col, C.surface);
+      },
+    };
+    const sumP = seqPanel({ f: (n) => st.ps[n], nMax: NMAX, y: [-1, 1], title: "이 x에서의 부분합 S₁, …, S₄₀", color: "--aux", joined: true, height: 230 });
+    const baseOver = sumP.over;
+    sumP.over = function (ctx, T, x, C) { baseOver.call(this, ctx, T, NMAX, C); };
+    function fmtv(v) {
+      const m = { "0.3333": "1/3", "-0.3333": "−1/3" }; const k = v.toFixed(4);
+      return m[k] || fmt(v, Number.isInteger(v) ? 0 : 2);
+    }
+
+    const api = Plot.mount(document.getElementById("fig-lab"), {
+      t: { min: S[1].range[0], max: S[1].range[1], value: S[1].x0, label: "x" },
+      duration: 10, stack: true,
+      panels: [line, sumP],
+      controls:
+        segHtml(S.map((s) => s.label), "급수 고르기", "lab-s") +
+        segHtml(["왼쪽 끝점", "중심", "오른쪽 끝점"], "x 위치로 이동", "lab-x"),
+      readout: (x) => {
+        const s = st.s, w = where(x), last = st.ps[NMAX];
+        let msg;
+        if (w === "in") msg = s.R === Infinity ? "R = ∞ 라서 어떤 x에서든 <b>수렴</b>" : "|x − a| = " + fmt(Math.abs(x - s.a), 3) + " &lt; R = " + fmtv(s.R) + " 이라 <b>수렴</b>";
+        else if (w === "center") msg = "중심 x = a 에서는 항상 <b>수렴</b>";
+        else if (w === "out") msg = s.R === 0 ? "R = 0 이라 중심 밖에서는 <b>발산</b> (|x|가 작으면 n이 1/|x|를 넘은 뒤에야 항이 커지기 시작해요)" : "|x − a| = " + fmt(Math.abs(x - s.a), 3) + " &gt; R = " + fmtv(s.R) + " 이라 <b>발산</b>";
+        else msg = "끝점이라 비판정법은 판정불가. 따로 확인: " + (w === "left" ? s.leftWhy : s.rightWhy);
+        return i("x") + " = <b>" + fmt(x, 4) + "</b>, S<sub>40</sub> = " + (isFinite(last) && Math.abs(last) < 1e6 ? fmt(last, 4) : "매우 큼") + "<br>" + msg;
+      },
+    });
+    function applySeries(k, b) {
+      st.s = S[k]; pressOne(gS, b);
+      line.view.x = st.s.range.slice();
+      api.setRange(st.s.range[0], st.s.range[1], st.s.x0);
+    }
+    const gS = api.bar.querySelector(".lab-s"), gX = api.bar.querySelector(".lab-x");
+    gS.querySelectorAll("button").forEach((b, k) => b.addEventListener("click", () => applySeries(k, b)));
+    gX.querySelectorAll("button").forEach((b, k) => b.addEventListener("click", () => {
+      const s = st.s; let x;
+      if (k === 1 || s.R === 0) x = s.a;
+      else if (s.R === Infinity) x = k === 0 ? s.range[0] : s.range[1];
+      else x = k === 0 ? s.a - s.R : s.a + s.R;
+      api.pause(); api.setT(x);
+    }));
+    applySeries(1, gS.querySelectorAll("button")[1]);
+  })();
+
+  /* ---------- 자가 점검 ---------- */
+  (function () {
+    const R = String.raw;
+    Quiz.mount(document.getElementById("quiz"), [
+      {
+        q: R`$\displaystyle\sum_{n=1}^\infty\frac{x^n}{n}$의 수렴 구간은?`,
+        choices: [R`$(-1,1)$`, R`$[-1,1)$`, R`$(-1,1]$`, R`$[-1,1]$`],
+        answer: 1,
+        explain: R`<p>비판정법으로 $\frac{n}{n+1}|x|\to|x|$이라 $R=1$. 끝점: $x=1$이면 $\sum\frac1n$ 발산, $x=-1$이면 $\sum\frac{(-1)^n}{n}$ 수렴. 따라서 $[-1,1)$이에요. 예제 1과 같은 구조입니다.</p>`,
+      },
+      {
+        q: R`$\displaystyle\sum_{n=1}^\infty\frac{x^n}{n^2}$의 수렴 구간은?`,
+        choices: [R`$(-1,1)$`, R`$[-1,1)$`, R`$(-1,1]$`, R`$[-1,1]$`],
+        answer: 3,
+        explain: R`<p>$R=1$은 같아요. 끝점에서는 $\left|\frac{(\pm1)^n}{n^2}\right|=\frac1{n^2}$이고 $\sum\frac1{n^2}$이 수렴하므로 양쪽 끝점 모두 (절대)수렴. $[-1,1]$이에요.</p>`,
+      },
+      {
+        q: R`$\displaystyle\sum_{n=0}^\infty\frac{(x-2)^n}{3^n}$의 수렴 구간은?`,
+        choices: [R`$(-1,5)$`, R`$[-1,5)$`, R`$(-3,3)$`, R`$(1,3)$`],
+        answer: 0,
+        explain: R`<p>공비가 $\frac{x-2}{3}$인 기하급수예요. $\left|\frac{x-2}3\right|\lt1$, 즉 $-1\lt x\lt5$에서 수렴하고, 끝점에서는 공비가 $\pm1$이라 발산해요. 중심 $a=2$, $R=3$.</p>`,
+      },
+      {
+        q: R`$\displaystyle\sum_{n=0}^\infty n!\,(x-1)^n$의 수렴 반지름은?`,
+        choices: [R`$R=1$`, R`$R=\infty$`, R`$R=0$, $x=1$에서만 수렴`, R`$R=\frac12$`],
+        answer: 2,
+        explain: R`<p>$x\neq1$이면 $(n+1)|x-1|\to\infty$이라 발산. 예제 2와 같은 꼴이고, 중심만 $1$로 옮겼어요.</p>`,
+      },
+      {
+        q: R`$\displaystyle\sum_{n=0}^\infty\frac{x^n}{n!}$의 수렴 반지름은?`,
+        choices: [R`$R=\infty$`, R`$R=1$`, R`$R=0$`, R`$R=e$`],
+        answer: 0,
+        explain: R`<p>$\frac{|x|}{n+1}\to0$이라 모든 $x$에서 수렴해요. 이 급수의 합은 $e^x$인데, 10.10 테일러 급수에서 다시 나와요.</p>`,
+      },
+      {
+        q: R`$\displaystyle\sum_{n=1}^\infty\frac{(-1)^nx^n}{n\,4^n}$의 수렴 구간은?`,
+        choices: [R`$(-4,4)$`, R`$[-4,4)$`, R`$(-4,4]$`, R`$[-4,4]$`],
+        answer: 2,
+        explain: R`<p>비판정법으로 $\frac{n}{n+1}\cdot\frac{|x|}{4}\to\frac{|x|}4$이라 $R=4$. $x=4$이면 $\sum\frac{(-1)^n}{n}$ 수렴, $x=-4$이면 $(-1)^n(-4)^n=4^n$이라 $\sum\frac1n$ 발산. 따라서 $(-4,4]$예요.</p>`,
+      },
+      {
+        q: R`중심이 $2$인 거듭제곱급수가 $x=5$에서 수렴하고 $x=-3$에서 발산한다. <b>반드시</b> 참인 것은?`,
+        choices: [R`$x=6$에서 수렴한다`, R`$x=4$에서 수렴한다`, R`$x=8$에서 수렴한다`, R`$x=-1$에서 발산한다`],
+        answer: 1,
+        explain: R`<p>$x=5$에서 수렴하니 $R\ge|5-2|=3$, $x=-3$에서 발산하니 $R\le|-3-2|=5$. $x=4$는 $|4-2|=2\lt3\le R$이라 반드시 수렴해요. $x=8$은 $6>5\ge R$이라 반드시 발산하고, $x=6$과 $x=-1$은 $R$의 정확한 값에 따라 달라요.</p>`,
+      },
+      {
+        q: R`수렴 반지름 $R$을 비판정법으로 구한 뒤, 끝점 $x=a\pm R$에서 비판정법을 다시 쓰면?`,
+        choices: ["수렴한다고 나온다", "발산한다고 나온다", "항상 L = 1이라 판정불가", "절대수렴한다고 나온다"],
+        answer: 2,
+        explain: R`<p>$R$을 $\lim|a_{n+1}/a_n|=1$이 되는 경계로 정했으니, 끝점에서는 당연히 $L=1$이에요. 끝점은 대입한 급수를 다른 판정법으로 따로 봐야 합니다.</p>`,
+      },
+    ]);
+  })();
+})();
+</script>
+</body>
+</html>

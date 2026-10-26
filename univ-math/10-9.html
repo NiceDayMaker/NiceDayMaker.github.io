@@ -1,0 +1,399 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>10.9 함수를 거듭제곱급수로</title>
+<script>try{var t=localStorage.getItem("theme");if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
+<link rel="stylesheet" href="assets/katex/katex.min.css">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body data-section="10.9">
+<div class="shell">
+  <nav class="side" aria-label="이 절의 목차">
+    <a class="home" href="index.html">전체 목차로</a>
+    <ol>
+      <li><a href="#base">출발점: 1/(1−x)</a></li>
+      <li><a href="#ex123">예제 1~3 · 바꿔 넣기</a></li>
+      <li><a href="#calc">항별 미분과 적분</a></li>
+      <li><a href="#ex456">예제 4~6 · 미분, 적분해서 얻기</a></li>
+      <li><a href="#lab">급수 실험실</a></li>
+      <li><a href="#ex7">예제 7 · 적분값 추정</a></li>
+      <li><a href="#ex8">예제 8 · 베셀함수</a></li>
+      <li><a href="#summary">한눈에 정리</a></li>
+      <li><a href="#check">자가 점검</a></li>
+    </ol>
+  </nav>
+
+  <main>
+    <header class="hero">
+      <p class="chapter">10장 무한수열과 급수</p>
+      <h1><span class="num">10.9</span>함수를 거듭제곱급수로 나타내기</h1>
+      <canvas id="hero" aria-hidden="true"></canvas>
+    </header>
+
+    <p class="lede">10.8에서는 급수가 주어지면 어디서 수렴하는지 봤어요. 이번엔 반대로, <b>함수가 주어지면 그 함수와 같은 거듭제곱급수를 찾아요.</b> 재료는 기하급수 공식 하나뿐이고, 여기에 바꿔 넣기, 곱하기, 미분, 적분을 적용해서 여러 함수를 만들어 냅니다.</p>
+
+    <!-- ===================================================== -->
+    <h2 id="base">출발점: $\frac{1}{1-x}$</h2>
+    <div class="summary-box">
+      $$\frac{1}{1-x}=1+x+x^2+x^3+\cdots=\sum_{n=0}^\infty x^n,\qquad|x|\lt1 \tag{1}$$
+    </div>
+    <p>10.2절의 기하급수($a=1$, $r=x$) 공식이에요. 이번 절에서는 관점을 바꿔서, 이 식을 <b>함수 $\frac1{1-x}$를 거듭제곱급수의 합으로 나타낸 것</b>으로 봐요. 이것을 구간 $(-1,1)$에서 $\frac1{1-x}$의 <b>거듭제곱급수 표현</b>이라고 불러요.</p>
+    <p>그림으로 보면, $n$번째 부분합 $s_n(x)=1+x+\cdots+x^n$은 다항식이고 $n$이 커질수록 $(-1,1)$에서 $\frac1{1-x}$에 점점 가까워져요. 10.8의 첫 그림이 바로 이 모습이었어요.</p>
+
+    <div class="exam"><strong>핵심 요령.</strong> 주어진 함수를 어떻게든 $\dfrac{\text{(상수)}}{1-(\text{무언가})}$ 꼴로 만든 다음, 식 (1)의 $x$ 자리에 그 “무언가”를 넣어요. 수렴 조건도 $|\text{무언가}|\lt1$로 바뀝니다.</div>
+
+    <!-- ===================================================== -->
+    <h2 id="ex123">예제 1~3 · 바꿔 넣기</h2>
+    <div class="problem"><span class="tag">예제 1</span>$\dfrac{1}{1+x^2}$을 거듭제곱급수의 합으로 나타내고 그 수렴 구간을 구하라.</div>
+    <ol class="steps">
+      <li>$1+x^2=1-(-x^2)$이므로 식 (1)의 $x$ 자리에 $-x^2$을 넣어요.
+        $$\frac{1}{1+x^2}=\frac{1}{1-(-x^2)}=\sum_{n=0}^\infty(-x^2)^n=\sum_{n=0}^\infty(-1)^nx^{2n}=1-x^2+x^4-x^6+\cdots$$</li>
+      <li>수렴 조건은 $|-x^2|\lt1$, 즉 $x^2\lt1$, $|x|\lt1$. 끝점 $x=\pm1$에서는 $1-1+1-\cdots$라 항이 0으로 가지 않아 발산하므로 수렴 구간은 $(-1,1)$이에요.</li>
+    </ol>
+    <figure class="plot" id="fig-ex1">
+      <figcaption>$\frac1{1+x^2}$은 모든 실수에서 매끄러운 함수인데도, 급수는 $(-1,1)$ 밖에서 전혀 따라가지 못해요. 항을 늘리면 구간 안은 더 잘 맞고 밖은 더 크게 벗어나요.</figcaption>
+    </figure>
+
+    <div class="problem"><span class="tag">예제 2</span>$\dfrac{1}{x+2}$를 거듭제곱급수로 나타내라.</div>
+    <ol class="steps">
+      <li>분모를 “$1-$무언가” 꼴로 만들기 위해 2로 묶어요.
+        $$\frac{1}{x+2}=\frac{1}{2\left(1+\frac x2\right)}=\frac12\cdot\frac{1}{1-\left(-\frac x2\right)}$$</li>
+      <li>식 (1)의 $x$ 자리에 $-\frac x2$를 넣어요.
+        $$\frac{1}{x+2}=\frac12\sum_{n=0}^\infty\left(-\frac x2\right)^n=\sum_{n=0}^\infty\frac{(-1)^n}{2^{n+1}}x^n=\frac12-\frac x4+\frac{x^2}8-\cdots$$</li>
+      <li>수렴 조건 $\left|-\frac x2\right|\lt1$, 즉 $|x|\lt2$. 수렴 구간은 $(-2,2)$예요.</li>
+    </ol>
+
+    <div class="problem"><span class="tag">예제 3</span>$\dfrac{x^3}{x+2}$를 거듭제곱급수로 나타내라.</div>
+    <p>예제 2의 결과에 $x^3$을 곱하기만 하면 돼요. 곱해도 수렴 반지름은 그대로예요.</p>
+    $$\frac{x^3}{x+2}=x^3\sum_{n=0}^\infty\frac{(-1)^n}{2^{n+1}}x^n=\sum_{n=0}^\infty\frac{(-1)^n}{2^{n+1}}x^{n+3}=\frac12x^3-\frac14x^4+\frac18x^5-\cdots$$
+    <p>수렴 구간은 역시 $(-2,2)$예요.</p>
+
+    <!-- ===================================================== -->
+    <h2 id="calc">항별 미분과 적분</h2>
+    <p>거듭제곱급수의 합 $f(x)=\sum c_n(x-a)^n$은 수렴하는 구간을 정의역으로 갖는 함수예요. 이 함수는 다항식처럼 <b>한 항씩 미분하고 적분</b>할 수 있어요.</p>
+    <div class="summary-box">
+      <p style="margin:0 0 .3rem"><b>정리</b> $\sum c_n(x-a)^n$의 수렴 반지름이 $R>0$이면 $f(x)=\sum c_n(x-a)^n$은 $(a-R,\,a+R)$에서 미분, 적분 가능하고(따라서 연속)</p>
+      $$\text{(i)}\quad f'(x)=c_1+2c_2(x-a)+3c_3(x-a)^2+\cdots=\sum_{n=1}^\infty nc_n(x-a)^{n-1}$$
+      $$\text{(ii)}\quad\int f(x)\,dx=C+c_0(x-a)+c_1\frac{(x-a)^2}{2}+\cdots=C+\sum_{n=0}^\infty c_n\frac{(x-a)^{n+1}}{n+1}$$
+      <p style="margin:0">이 두 급수의 수렴 반지름도 모두 $R$이에요.</p>
+    </div>
+    <p><b>NOTE 1.</b> 위 정리는 “합의 미분은 미분의 합, 합의 적분은 적분의 합”이 무한합인 거듭제곱급수에서도 성립한다는 뜻이에요.</p>
+    $$\frac{d}{dx}\left[\sum c_n(x-a)^n\right]=\sum\frac{d}{dx}\big[c_n(x-a)^n\big],\qquad\int\left[\sum c_n(x-a)^n\right]dx=\sum\int c_n(x-a)^n\,dx$$
+    <div class="exam"><strong>NOTE 2 (시험 포인트).</strong> 미분하거나 적분해도 <b>수렴 반지름 $R$은 그대로</b>지만, <b>수렴 구간(끝점)은 바뀔 수 있어요.</b> 예제 6에서 $\frac{1}{1+x^2}$의 급수는 $x=\pm1$에서 발산하지만, 그것을 적분한 $\tan^{-1}x$의 급수는 $x=\pm1$에서 수렴해요. 그래서 미분, 적분한 뒤에는 끝점을 다시 확인해야 해요.</div>
+
+    <!-- ===================================================== -->
+    <h2 id="ex456">예제 4~6 · 미분, 적분해서 얻기</h2>
+    <div class="problem"><span class="tag">예제 4</span>식 (1)을 미분해서 $\dfrac{1}{(1-x)^2}$을 거듭제곱급수로 나타내고, 그 수렴 반지름을 구하라.</div>
+    <p>양변을 미분하면 왼쪽은 $\frac{d}{dx}(1-x)^{-1}=(1-x)^{-2}$, 오른쪽은 항별 미분이에요.</p>
+    $$\frac{1}{(1-x)^2}=1+2x+3x^2+4x^3+\cdots=\sum_{n=1}^\infty nx^{n-1}=\sum_{n=0}^\infty(n+1)x^n$$
+    <p>마지막 등호는 첨자를 $n\to n+1$로 바꾼 거예요. 수렴 반지름은 원래와 같은 $R=1$이에요.</p>
+
+    <div class="problem"><span class="tag">예제 5</span>$\ln(1+x)$를 거듭제곱급수로 나타내고, 수렴 반지름을 구하라.</div>
+    <ol class="steps">
+      <li>$\frac{d}{dx}\ln(1+x)=\frac{1}{1+x}$이고, 식 (1)에 $-x$를 넣으면
+        $$\frac{1}{1+x}=\sum_{n=0}^\infty(-1)^nx^n=1-x+x^2-x^3+\cdots,\qquad|x|\lt1$$</li>
+      <li>양변을 적분해요.
+        $$\ln(1+x)=\int\frac{dx}{1+x}=C+\sum_{n=0}^\infty(-1)^n\frac{x^{n+1}}{n+1}$$</li>
+      <li>$x=0$을 넣으면 $\ln1=0=C$이므로 $C=0$.
+        $$\ln(1+x)=x-\frac{x^2}{2}+\frac{x^3}{3}-\frac{x^4}{4}+\cdots=\sum_{n=1}^\infty(-1)^{n-1}\frac{x^n}{n},\qquad R=1$$</li>
+    </ol>
+    <p>끝점도 보면 $x=1$에서는 교대조화급수라 수렴(합은 $\ln2$), $x=-1$에서는 $-\sum\frac1n$이라 발산해요. 수렴 구간은 $(-1,1]$이에요.</p>
+
+    <div class="problem"><span class="tag">예제 6</span>$f(x)=\tan^{-1}x$에 대한 거듭제곱급수 표현을 구하라.</div>
+    <ol class="steps">
+      <li>$\frac{d}{dx}\tan^{-1}x=\frac{1}{1+x^2}$이고, 예제 1에서 $\frac1{1+x^2}=\sum(-1)^nx^{2n}$이었어요.</li>
+      <li>적분하면
+        $$\tan^{-1}x=C+\sum_{n=0}^\infty(-1)^n\frac{x^{2n+1}}{2n+1}$$</li>
+      <li>$\tan^{-1}0=0$이므로 $C=0$.
+        $$\tan^{-1}x=x-\frac{x^3}{3}+\frac{x^5}{5}-\frac{x^7}{7}+\cdots=\sum_{n=0}^\infty(-1)^n\frac{x^{2n+1}}{2n+1},\qquad R=1$$</li>
+    </ol>
+    <p>이 급수는 $x=\pm1$에서도 (교대급수로) 수렴해서 수렴 구간이 $[-1,1]$이에요. 특히 $x=1$을 넣으면 유명한 식이 나와요.</p>
+    $$\frac\pi4=1-\frac13+\frac15-\frac17+\cdots$$
+    <div class="exam"><strong>시험 포인트.</strong> 적분해서 급수를 얻을 때는 <b>적분상수 $C$를 꼭 구하세요.</b> 보통 $x=a$(중심)를 넣어서 정해요. $\ln(1+x)$와 $\tan^{-1}x$는 $x=0$에서 0이라 $C=0$이지만, 항상 그런 건 아니에요.</div>
+
+    <!-- ===================================================== -->
+    <h2 id="lab">급수 실험실</h2>
+    <p>이 절에서 만든 급수를 모두 모았어요. 함수를 고르고 항의 개수를 늘려 보세요. 점선이 원래 함수, 빨간 곡선이 급수의 부분합, 초록 영역이 수렴 구간이에요. 아래 설명에 그 급수를 <b>식 (1)에서 어떻게 만들었는지</b>도 함께 나와요.</p>
+    <figure class="plot" id="fig-lab">
+      <figcaption>예제 5의 $\ln(1+x)$와 예제 6의 $\tan^{-1}x$는 끝점 $x=1$에서도 아주 천천히 원래 값에 다가가요. 반대로 $\frac1{1+x^2}$은 $x=\pm1$에서 끝까지 맞지 않아요. NOTE 2에서 말한 끝점 차이가 이거예요.</figcaption>
+    </figure>
+
+    <!-- ===================================================== -->
+    <h2 id="ex7">예제 7 · 적분값 추정</h2>
+    <div class="problem"><span class="tag">예제 7</span>(a) 거듭제곱급수로서 $\displaystyle\int\frac{1}{1+x^7}\,dx$를 계산하라.<br>(b) (a)를 이용하여 $\displaystyle\int_0^{0.5}\frac{dx}{1+x^7}$를 오차 범위 $10^{-7}$ 이내로 정확히 추정하라.</div>
+    <p>$\frac1{1+x^7}$은 역도함수를 초등함수로 쓸 수 없어요. 그래서 급수로 바꿔서 적분해요.</p>
+    <h3>(a)</h3>
+    $$\frac{1}{1+x^7}=\frac{1}{1-(-x^7)}=\sum_{n=0}^\infty(-x^7)^n=\sum_{n=0}^\infty(-1)^nx^{7n}=1-x^7+x^{14}-x^{21}+\cdots$$
+    $$\int\frac{dx}{1+x^7}=C+\sum_{n=0}^\infty\frac{(-1)^n}{7n+1}x^{7n+1}=C+x-\frac{x^8}{8}+\frac{x^{15}}{15}-\frac{x^{22}}{22}+\cdots$$
+    <p>이 급수는 $|x^7|\lt1$, 즉 $|x|\lt1$에서 수렴해요.</p>
+    <h3>(b)</h3>
+    <p>미적분학의 기본정리는 어떤 역도함수를 써도 되니 $C=0$으로 두면</p>
+    $$\int_0^{0.5}\frac{dx}{1+x^7}=\left[x-\frac{x^8}{8}+\frac{x^{15}}{15}-\cdots\right]_0^{0.5}=\frac12-\frac{1}{8\cdot2^8}+\frac{1}{15\cdot2^{15}}-\frac{1}{22\cdot2^{22}}+\cdots$$
+    <p>교대급수이고 항의 크기가 줄어들므로, <b>교대급수 추정정리</b>에 의해 어디서 멈추든 오차는 바로 다음 항보다 작아요.</p>
+    <table class="vals" aria-label="예제 7 부분합과 오차">
+      <thead><tr><th>$n$</th><th>더하는 항 $\frac{(-1)^n}{(7n+1)2^{7n+1}}$</th><th>부분합</th><th>오차 한계(다음 항)</th></tr></thead>
+      <tbody>
+        <tr><td>0</td><td>$+0.5$</td><td>0.500000000</td><td>$4.9\times10^{-4}$</td></tr>
+        <tr><td>1</td><td>$-4.88\times10^{-4}$</td><td>0.499511719</td><td>$2.0\times10^{-6}$</td></tr>
+        <tr><td>2</td><td>$+2.03\times10^{-6}$</td><td>0.499513753</td><td>$1.1\times10^{-8}$</td></tr>
+        <tr><td class="hit">3</td><td>$-1.08\times10^{-8}$</td><td class="hit">0.499513742</td><td class="hit">$6.4\times10^{-11}$</td></tr>
+      </tbody>
+    </table>
+    <p>$n=2$까지면 오차 한계가 $1.1\times10^{-8}$이라 이미 $10^{-7}$보다 작아요. 교재는 넉넉하게 $n=3$까지 더해서</p>
+    $$\int_0^{0.5}\frac{dx}{1+x^7}\approx\frac12-\frac{1}{8\cdot2^8}+\frac{1}{15\cdot2^{15}}-\frac{1}{22\cdot2^{22}}\approx0.49951374$$
+    <p>이고, 오차는 $\frac{1}{29\cdot2^{29}}\approx6.4\times10^{-11}$보다 작아요. (수치 적분으로 확인한 값도 $0.4995137425$예요.)</p>
+
+    <!-- ===================================================== -->
+    <h2 id="ex8">예제 8 · 베셀함수</h2>
+    <div class="problem"><span class="tag">예제 8</span>0차 베셀함수는 $J_0(x)=\displaystyle\sum_{n=0}^\infty\frac{(-1)^nx^{2n}}{2^{2n}(n!)^2}$로 정의된다. (a) $J_0$의 정의역을 구하라. (b) $J_0$의 도함수를 구하라.</div>
+    <h3>(a) 정의역 = 수렴 구간</h3>
+    $$\left|\frac{a_{n+1}}{a_n}\right|=\left|\frac{x^{2n+2}}{2^{2n+2}((n+1)!)^2}\cdot\frac{2^{2n}(n!)^2}{x^{2n}}\right|=\frac{x^2}{4(n+1)^2}\to0<1$$
+    <p>모든 $x$에서 수렴하므로 정의역은 $(-\infty,\infty)$, 즉 $R=\infty$예요. 실험실에서 “$J_0$”를 고르면 항을 늘릴수록 점점 넓은 범위에서 출렁이는 곡선을 따라가는 게 보여요.</p>
+    <h3>(b) 도함수</h3>
+    <p>항별 미분해요. $n=0$인 항은 상수 1이라 미분하면 사라지므로 $n=1$부터 시작해요.</p>
+    $$J_0'(x)=\sum_{n=1}^\infty\frac{(-1)^n\,2n\,x^{2n-1}}{2^{2n}(n!)^2}=-\frac x2+\frac{x^3}{16}-\frac{x^5}{384}+\cdots$$
+
+    <!-- ===================================================== -->
+    <h2 id="summary">한눈에 정리</h2>
+    <div class="summary-box">
+      <ul>
+        <li>출발점 $\frac1{1-x}=\sum x^n$ ($|x|\lt1$). 함수를 $\frac{\text{상수}}{1-(\text{무언가})}$ 꼴로 만든 뒤 바꿔 넣기.</li>
+        <li>바꿔 넣으면 수렴 조건도 $|\text{무언가}|\lt1$로 바뀐다. 예: $-x^2$이면 $|x|\lt1$, $-\frac x2$이면 $|x|\lt2$.</li>
+        <li>$x^k$를 곱해도, 항별 미분, 적분을 해도 $R$은 그대로. 끝점은 다시 확인.</li>
+        <li>적분하면 상수 $C$가 생긴다. 중심을 넣어서 정한다.</li>
+        <li>외워 둘 결과: $\frac1{(1-x)^2}=\sum(n+1)x^n$, $\ln(1+x)=\sum(-1)^{n-1}\frac{x^n}{n}$, $\tan^{-1}x=\sum(-1)^n\frac{x^{2n+1}}{2n+1}$.</li>
+        <li>교대급수로 근사할 때 오차는 다음 항의 크기보다 작다.</li>
+      </ul>
+    </div>
+
+    <!-- ===================================================== -->
+    <h2 id="check">자가 점검</h2>
+    <p>보기를 고르면 바로 정답과 풀이가 나와요.</p>
+    <div id="quiz"></div>
+
+    <nav class="pager" aria-label="절 이동"></nav>
+  </main>
+</div>
+
+<script src="assets/katex/katex.min.js"></script>
+<script src="assets/katex/auto-render.min.js"></script>
+<script src="assets/plot.js"></script>
+<script src="assets/quiz.js"></script>
+<script src="assets/site.js"></script>
+<script>
+(function () {
+  "use strict";
+  const { fmt, label } = Plot;
+  const i = (s) => "<i>" + s + "</i>";
+  const segHtml = (labels, aria, cls) =>
+    '<span class="seg ' + (cls || "") + '" role="group" aria-label="' + aria + '">' +
+    labels.map((l, k) => '<button type="button" data-k="' + k + '" aria-pressed="false">' + l + "</button>").join("") + "</span>";
+  function pressOne(group, btn) { group.querySelectorAll("button").forEach((b) => b.setAttribute("aria-pressed", b === btn ? "true" : "false")); }
+  const FACT = [1]; for (let k = 1; k <= 170; k++) FACT[k] = FACT[k - 1] * k;
+  const fact = (n) => FACT[n];
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  // 함수와 급수 모음. term(n, x)는 n번째 항(n = 0부터), 부분합은 앞에서 k개.
+  const J0 = (x) => { let s = 0; for (let n = 0; n < 80; n++) s += Math.pow(-1, n) * Math.pow(x / 2, 2 * n) / (fact(n) ** 2); return s; };
+  const FN = [
+    { label: "1/(1−x)", f: (x) => 1 / (1 - x), term: (n, x) => Math.pow(x, n), R: 1, a: 0, iv: "(−1, 1)", ivL: -1, ivR: 1,
+      how: "출발점, 식 (1) 그대로", series: "1 + x + x² + x³ + ⋯", view: { x: [-1.8, 1.8], y: [-2.5, 6] } },
+    { label: "1/(1+x²)", f: (x) => 1 / (1 + x * x), term: (n, x) => Math.pow(-1, n) * Math.pow(x, 2 * n), R: 1, iv: "(−1, 1)", ivL: -1, ivR: 1,
+      how: "식 (1)의 x 대신 −x² (예제 1)", series: "1 − x² + x⁴ − x⁶ + ⋯", view: { x: [-2.2, 2.2], y: [-1.6, 2.6] } },
+    { label: "1/(x+2)", f: (x) => 1 / (x + 2), term: (n, x) => Math.pow(-1, n) * Math.pow(x, n) / Math.pow(2, n + 1), R: 2, iv: "(−2, 2)", ivL: -2, ivR: 2,
+      how: "½로 묶고 x 대신 −x/2 (예제 2)", series: "1/2 − x/4 + x²/8 − ⋯", view: { x: [-3.6, 3.6], y: [-2, 3] } },
+    { label: "x³/(x+2)", f: (x) => x ** 3 / (x + 2), term: (n, x) => Math.pow(-1, n) * Math.pow(x, n + 3) / Math.pow(2, n + 1), R: 2, iv: "(−2, 2)", ivL: -2, ivR: 2,
+      how: "예제 2의 급수에 x³ 곱하기 (예제 3)", series: "x³/2 − x⁴/4 + x⁵/8 − ⋯", view: { x: [-3.2, 3.2], y: [-4, 6] } },
+    { label: "1/(1−x)²", f: (x) => 1 / ((1 - x) ** 2), term: (n, x) => (n + 1) * Math.pow(x, n), R: 1, iv: "(−1, 1)", ivL: -1, ivR: 1,
+      how: "식 (1)을 항별 미분 (예제 4)", series: "1 + 2x + 3x² + 4x³ + ⋯", view: { x: [-1.7, 1.7], y: [-2, 8] } },
+    { label: "ln(1+x)", f: (x) => (x > -1 ? Math.log(1 + x) : NaN), term: (n, x) => Math.pow(-1, n) * Math.pow(x, n + 1) / (n + 1), R: 1, iv: "(−1, 1]", ivL: -1, ivR: 1, rightIn: true,
+      how: "x 대신 −x를 넣은 1/(1+x)를 항별 적분 (예제 5)", series: "x − x²/2 + x³/3 − ⋯", view: { x: [-1.7, 2.3], y: [-3, 2] } },
+    { label: "tan⁻¹x", f: Math.atan, term: (n, x) => Math.pow(-1, n) * Math.pow(x, 2 * n + 1) / (2 * n + 1), R: 1, iv: "[−1, 1]", ivL: -1, ivR: 1, leftIn: true, rightIn: true,
+      how: "1/(1+x²)의 급수를 항별 적분 (예제 6)", series: "x − x³/3 + x⁵/5 − ⋯", view: { x: [-2.3, 2.3], y: [-2, 2] } },
+    { label: "J₀(x)", f: J0, term: (n, x) => Math.pow(-1, n) * Math.pow(x / 2, 2 * n) / (fact(n) ** 2), R: Infinity, iv: "(−∞, ∞)",
+      how: "베셀함수, 급수로 정의 (예제 8)", series: "1 − x²/4 + x⁴/64 − ⋯", view: { x: [-14, 14], y: [-1.6, 1.6] } },
+  ];
+  const partial = (F, k, x) => { let s = 0; for (let n = 0; n < k; n++) s += F.term(n, x); return s; };
+
+  function seriesPanel(st) {
+    return {
+      curve: false, x: () => 0, y: () => 0, grid: 0, origin: false, height: 320,
+      view: st.F.view, ticks: { x: [], y: [] }, alt: "함수와 거듭제곱급수의 부분합",
+      under(ctx, T, k, C) {
+        const F = st.F, v = this.view;
+        if (F.R === Infinity) { ctx.save(); ctx.fillStyle = C.ok; ctx.globalAlpha = .06; ctx.fillRect(0, 0, T.w, T.h); ctx.restore(); }
+        else {
+          ctx.save(); ctx.fillStyle = C.ok; ctx.globalAlpha = .09; ctx.fillRect(T.X(F.ivL), 0, T.X(F.ivR) - T.X(F.ivL), T.h); ctx.restore();
+          [[F.ivL, F.leftIn], [F.ivR, F.rightIn]].forEach(([p, inn]) => {
+            ctx.save(); ctx.strokeStyle = inn ? C.ok : C.curve; ctx.globalAlpha = .6; ctx.setLineDash([3, 4]);
+            ctx.beginPath(); ctx.moveTo(T.X(p), 0); ctx.lineTo(T.X(p), T.h); ctx.stroke(); ctx.restore();
+          });
+        }
+        label(ctx, "수렴 구간 " + F.iv, 6, 14, { size: 12, bold: true, color: C.ok, halo: C.surface });
+        // 원래 함수 (점선)
+        ctx.save(); ctx.setLineDash([6, 5]); ctx.strokeStyle = C.ink; ctx.globalAlpha = .55; ctx.lineWidth = 1.8;
+        ctx.beginPath(); let pen = false;
+        for (let j = 0; j <= 500; j++) {
+          const x = v.x[0] + (v.x[1] - v.x[0]) * j / 500, y = F.f(x);
+          if (!isFinite(y) || y > v.y[1] + 5 || y < v.y[0] - 5) { pen = false; continue; }
+          pen ? ctx.lineTo(T.X(x), T.Y(y)) : ctx.moveTo(T.X(x), T.Y(y)); pen = true;
+        }
+        ctx.stroke(); ctx.restore();
+      },
+      over(ctx, T, k, C) {
+        const F = st.F, v = this.view, n = Math.round(k);
+        ctx.save(); ctx.beginPath(); ctx.rect(0, 0, T.w, T.h); ctx.clip();
+        ctx.strokeStyle = C.curve; ctx.lineWidth = 2.4; ctx.beginPath();
+        for (let j = 0; j <= 600; j++) {
+          const x = v.x[0] + (v.x[1] - v.x[0]) * j / 600;
+          const y = Math.max(v.y[0] - 50, Math.min(v.y[1] + 50, partial(F, n, x)));
+          j ? ctx.lineTo(T.X(x), T.Y(y)) : ctx.moveTo(T.X(x), T.Y(y));
+        }
+        ctx.stroke(); ctx.restore();
+        { // 범례
+          const x1 = T.w - 8, rows = [["원래 함수", C.ink, [6, 5], .55], ["급수의 부분합", C.curve, null, 1]];
+          rows.forEach(([txt, col, dash, a], i) => {
+            const y = 14 + i * 18;
+            ctx.save(); ctx.font = "12px " + getComputedStyle(document.body).fontFamily; const w = ctx.measureText(txt).width; ctx.restore();
+            const xl = x1 - w - 34;
+            ctx.save(); ctx.fillStyle = C.surface; ctx.globalAlpha = .85; ctx.fillRect(xl - 4, y - 8, w + 42, 16); ctx.restore();
+            ctx.save(); ctx.strokeStyle = col; ctx.globalAlpha = a; ctx.lineWidth = 2.2; if (dash) ctx.setLineDash(dash);
+            ctx.beginPath(); ctx.moveTo(xl, y); ctx.lineTo(xl + 26, y); ctx.stroke(); ctx.restore();
+            label(ctx, txt, x1, y, { size: 12, color: C.ink, align: "right" });
+          });
+        }
+      },
+    };
+  }
+
+  /* ---------- 절 머리: tan⁻¹x에 다가가는 부분합들 ---------- */
+  (function () {
+    const cv = document.getElementById("hero"), ctx = cv.getContext("2d");
+    let W, H, k = reduce ? 1 : 0, start = 0;
+    function size() { const d = window.devicePixelRatio || 1; W = cv.clientWidth; H = cv.clientHeight; cv.width = W * d; cv.height = H * d; ctx.setTransform(d, 0, 0, d, 0, 0); }
+    function draw() {
+      const C = Plot.palette(); ctx.clearRect(0, 0, W, H);
+      const X = (x) => (x + 2.4) / 4.8 * W, Y = (y) => H / 2 - y / 1.9 * (H / 2 - 6);
+      ctx.fillStyle = C.ok; ctx.globalAlpha = .08; ctx.fillRect(X(-1), 0, X(1) - X(-1), H); ctx.globalAlpha = 1;
+      ctx.strokeStyle = C.rule; ctx.beginPath(); ctx.moveTo(0, Y(0)); ctx.lineTo(W, Y(0)); ctx.stroke();
+      ctx.save(); ctx.setLineDash([5, 5]); ctx.strokeStyle = C.muted; ctx.beginPath();
+      for (let j = 0; j <= 200; j++) { const x = -2.4 + 4.8 * j / 200; j ? ctx.lineTo(X(x), Y(Math.atan(x))) : ctx.moveTo(X(x), Y(Math.atan(x))); }
+      ctx.stroke(); ctx.restore();
+      const F = FN[6], shown = Math.max(1, Math.round(k * 8));
+      ctx.save(); ctx.beginPath(); ctx.rect(0, 0, W, H); ctx.clip();
+      for (let m = 1; m <= shown; m++) {
+        ctx.strokeStyle = C.curve; ctx.globalAlpha = m === shown ? 1 : 0.12 + 0.45 * m / shown; ctx.lineWidth = m === shown ? 2.2 : 1.2;
+        ctx.beginPath();
+        for (let j = 0; j <= 200; j++) { const x = -2.4 + 4.8 * j / 200; const y = Math.max(-3, Math.min(3, partial(F, m, x))); j ? ctx.lineTo(X(x), Y(y)) : ctx.moveTo(X(x), Y(y)); }
+        ctx.stroke();
+      }
+      ctx.restore();
+    }
+    function tick(now) { if (!start) start = now; k = Math.min(1, (now - start) / 3000); draw(); if (k < 1) requestAnimationFrame(tick); }
+    size(); reduce ? draw() : requestAnimationFrame(tick);
+    if ("ResizeObserver" in window) new ResizeObserver(() => { size(); draw(); }).observe(cv);
+  })();
+
+  /* ---------- 예제 1 그림 ---------- */
+  (function () {
+    const st = { F: FN[1] };
+    const p = seriesPanel(st);
+    p.ticks = { x: [-2, -1, 1, 2], y: [1, 2] };
+    Plot.mount(document.getElementById("fig-ex1"), {
+      t: { min: 1, max: 25, value: 5, step: 1, label: "항" },
+      duration: 7, panels: [p],
+      readout: (k) => "항 <b>" + k + "</b>개: 1 − x² + x⁴ − ⋯ (" + (2 * (k - 1)) + "차 다항식)<br>" +
+        [0.5, 0.9, 1.2].map((x) => i("x") + " = " + x + ": 급수 " + fmt(partial(FN[1], k, x), 3) + ", 함수 " + fmt(FN[1].f(x), 3)).join(", "),
+    });
+  })();
+
+  /* ---------- 급수 실험실 ---------- */
+  (function () {
+    const st = { F: FN[0] };
+    const p = seriesPanel(st);
+    function ticksFor(F) {
+      const v = F.view, tx = [], ty = [];
+      const sx = v.x[1] - v.x[0] > 10 ? 5 : 1, sy = v.y[1] - v.y[0] > 6 ? 2 : 1;
+      for (let a = Math.ceil(v.x[0] / sx) * sx; a < v.x[1]; a += sx) if (a) tx.push(a);
+      for (let a = Math.ceil(v.y[0] / sy) * sy; a < v.y[1]; a += sy) if (a) ty.push(a);
+      return { x: tx, y: ty };
+    }
+    p.ticks = ticksFor(st.F);
+    const api = Plot.mount(document.getElementById("fig-lab"), {
+      t: { min: 1, max: 30, value: 6, step: 1, label: "항" },
+      duration: 8, panels: [p],
+      controls: segHtml(FN.map((F) => F.label), "함수 고르기", "lab-f"),
+      readout: (k) => {
+        const F = st.F;
+        return "<b>" + F.label + "</b> = " + F.series + ", 수렴 반지름 R = " + (F.R === Infinity ? "∞" : F.R) + ", 수렴 구간 " + F.iv + "<br>" +
+          "만든 방법: " + F.how + "<br>지금 항 <b>" + k + "</b>개를 더한 부분합을 그리는 중";
+      },
+    });
+    const g = api.bar.querySelector(".lab-f");
+    g.querySelectorAll("button").forEach((b, k) => b.addEventListener("click", () => {
+      st.F = FN[k]; pressOne(g, b); p.view = st.F.view; p.ticks = ticksFor(st.F);
+      api.panels[0].resize(); api.setRange(1, 30, 1); api.play();
+    }));
+    pressOne(g, g.querySelector("button"));
+  })();
+
+  /* ---------- 자가 점검 ---------- */
+  (function () {
+    const R = String.raw;
+    Quiz.mount(document.getElementById("quiz"), [
+      {
+        q: R`$\dfrac{1}{1-x^3}$의 거듭제곱급수와 수렴 반지름은?`,
+        choices: [R`$\sum x^{3n}$, $R=1$`, R`$\sum 3x^n$, $R=\frac13$`, R`$\sum(-1)^nx^{3n}$, $R=1$`, R`$\sum x^{3n}$, $R=3$`],
+        answer: 0,
+        explain: R`<p>식 (1)의 $x$ 자리에 $x^3$을 넣으면 $\sum(x^3)^n=\sum x^{3n}$. 조건 $|x^3|\lt1$은 $|x|\lt1$과 같으니 $R=1$이에요.</p>`,
+      },
+      {
+        q: R`$\dfrac{1}{1+4x^2}$의 거듭제곱급수의 수렴 반지름은?`,
+        choices: [R`$R=4$`, R`$R=2$`, R`$R=\frac12$`, R`$R=\frac14$`],
+        answer: 2,
+        explain: R`<p>$x$ 자리에 $-4x^2$을 넣으면 $\sum(-1)^n4^nx^{2n}$. 조건 $|4x^2|\lt1$은 $x^2\lt\frac14$, 즉 $|x|\lt\frac12$이에요.</p>`,
+      },
+      {
+        q: R`$\dfrac{x}{(1-x)^2}$의 거듭제곱급수는?`,
+        choices: [R`$\sum_{n=0}^\infty(n+1)x^n$`, R`$\sum_{n=1}^\infty nx^n$`, R`$\sum_{n=1}^\infty nx^{n-1}$`, R`$\sum_{n=0}^\infty\frac{x^{n+1}}{n+1}$`],
+        answer: 1,
+        explain: R`<p>예제 4에서 $\frac1{(1-x)^2}=\sum_{n=1}^\infty nx^{n-1}$. 양변에 $x$를 곱하면 $\sum_{n=1}^\infty nx^n=x+2x^2+3x^3+\cdots$예요.</p>`,
+      },
+      {
+        q: R`$\ln(1-x)$의 거듭제곱급수는?`,
+        choices: [R`$\sum_{n=1}^\infty\frac{x^n}{n}$`, R`$\sum_{n=1}^\infty(-1)^{n-1}\frac{x^n}{n}$`, R`$\sum_{n=0}^\infty x^n$`, R`$-\sum_{n=1}^\infty\frac{x^n}{n}$`],
+        answer: 3,
+        explain: R`<p>$\frac{d}{dx}\ln(1-x)=-\frac1{1-x}=-\sum x^n$. 적분하면 $\ln(1-x)=C-\sum\frac{x^{n+1}}{n+1}$이고, $x=0$에서 $C=0$이라 $-\sum_{n=1}^\infty\frac{x^n}{n}=-x-\frac{x^2}2-\frac{x^3}3-\cdots$예요. 예제 5에서 $x$ 대신 $-x$를 넣어도 같아요.</p>`,
+      },
+      {
+        q: R`수렴 반지름이 $R$인 거듭제곱급수를 항별 미분했을 때 옳은 것은?`,
+        choices: ["수렴 반지름이 R보다 커진다", "수렴 반지름이 R보다 작아진다", "수렴 반지름은 R 그대로이고, 수렴 구간도 항상 그대로다", "수렴 반지름은 R 그대로지만, 끝점에서의 수렴은 달라질 수 있다"],
+        answer: 3,
+        explain: R`<p>NOTE 2예요. $R$은 변하지 않지만 끝점은 다시 확인해야 해요. 예를 들어 $\sum\frac{x^n}{n^2}$은 $[-1,1]$에서 수렴하지만, 미분한 $\sum\frac{x^{n-1}}{n}$은 $x=1$에서 조화급수라 발산해요.</p>`,
+      },
+      {
+        q: R`$\tan^{-1}x$의 급수에 $x=1$을 넣으면 얻는 식은?`,
+        choices: [R`$\ln2=1-\frac12+\frac13-\cdots$`, R`$\frac\pi4=1-\frac13+\frac15-\cdots$`, R`$\frac{\pi^2}6=1+\frac14+\frac19+\cdots$`, R`$e=1+1+\frac12+\frac16+\cdots$`],
+        answer: 1,
+        explain: R`<p>$\tan^{-1}1=\frac\pi4$이고 급수는 $1-\frac13+\frac15-\frac17+\cdots$예요. A는 $\ln(1+x)$에 $x=1$을 넣은 식이에요.</p>`,
+      },
+      {
+        q: R`$\dfrac{1}{3-x}$를 중심 0인 거듭제곱급수로 나타낼 때 수렴 구간은?`,
+        choices: [R`$(-1,1)$`, R`$(-3,3)$`, R`$\left(-\frac13,\frac13\right)$`, R`$[-3,3)$`],
+        answer: 1,
+        explain: R`<p>$\frac1{3-x}=\frac13\cdot\frac1{1-\frac x3}=\sum\frac{x^n}{3^{n+1}}$. 조건 $\left|\frac x3\right|\lt1$이라 $|x|\lt3$이고, 끝점에서는 공비가 $\pm1$이라 발산해서 $(-3,3)$이에요.</p>`,
+      },
+      {
+        q: R`$\int\frac{1}{1+x^2}dx$를 급수로 계산할 때 적분상수 $C$를 $0$으로 둘 수 있는 이유는?`,
+        choices: ["적분상수는 항상 0이라서", R`$\tan^{-1}0=0$이고 급수도 $x=0$에서 0이라서`, "급수는 상수항이 없어서", "수렴 반지름이 1이라서"],
+        answer: 1,
+        explain: R`<p>양변에 중심 $x=0$을 넣어 보면 왼쪽 $\tan^{-1}0=0$, 오른쪽 급수 부분도 0이라 $C=0$이에요. 함수가 중심에서 0이 아니면 $C$도 0이 아니니, 항상 직접 대입해서 정하세요.</p>`,
+      },
+    ]);
+  })();
+})();
+</script>
+</body>
+</html>

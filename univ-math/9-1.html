@@ -1,0 +1,698 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>9.1 매개변수곡선</title>
+<script>try{var t=localStorage.getItem("theme");if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
+<link rel="stylesheet" href="assets/katex/katex.min.css">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body data-section="9.1">
+<div class="shell">
+  <nav class="side" aria-label="이 절의 목차">
+    <a class="home" href="index.html">전체 목차로</a>
+    <ol>
+      <li><a href="#idea">왜 매개변수인가</a></li>
+      <li><a href="#def">정의와 용어</a></li>
+      <li><a href="#ex1">예제 1 · 포물선</a></li>
+      <li><a href="#ex23">예제 2, 3 · 같은 원, 다른 곡선</a></li>
+      <li><a href="#ex4">예제 4 · 일반적인 원</a></li>
+      <li><a href="#ex5">예제 5 · 포물선의 일부</a></li>
+      <li><a href="#ex7">예제 7 · 사이클로이드</a></li>
+      <li><a href="#history">최속강하선과 등시곡선</a></li>
+      <li><a href="#summary">한눈에 정리</a></li>
+      <li><a href="#check">자가 점검</a></li>
+    </ol>
+  </nav>
+
+  <main>
+    <header class="hero">
+      <p class="chapter">9장 매개변수방정식과 극좌표</p>
+      <h1><span class="num">9.1</span>매개변수방정식으로 정의된 곡선</h1>
+      <canvas id="hero" aria-hidden="true"></canvas>
+    </header>
+
+    <p class="lede">곡선을 “점들의 모양”이 아니라 “시간에 따라 움직이는 점의 자취”로 보는 방법이에요. 그림의 재생 버튼을 누르거나 슬라이더를 움직여서 점이 어떻게 움직이는지 직접 확인해 보세요.</p>
+
+    <!-- ===================================================== -->
+    <h2 id="idea">왜 매개변수인가</h2>
+    <p>아래 곡선은 같은 $x$ 값에서 $y$가 여러 개예요. 수직선 판정법을 통과하지 못하니 $y=f(x)$ 꼴의 함수로는 나타낼 수 없습니다.</p>
+    <p>그런데 곡선을 따라 움직이는 입자를 생각하면 이야기가 달라집니다. 입자의 $x$좌표와 $y$좌표는 각각 <b>시간 $t$의 함수</b>이므로 $x=f(t)$, $y=g(t)$로 쓸 수 있어요.</p>
+
+    <figure class="plot" id="fig-idea">
+      <figcaption>예시 곡선 $x=t-2\sin t,\ y=2-2\cos t$. 파란 점선 $x=2\pi$가 곡선과 세 번 만나므로 함수의 그래프가 아니지만, $t$마다 점은 정확히 하나로 정해집니다.</figcaption>
+    </figure>
+
+    <!-- ===================================================== -->
+    <h2 id="def">정의와 용어</h2>
+    <dl class="def">
+      <dt>매개변수<span class="en">parameter</span></dt>
+      <dd>$x$와 $y$를 함께 결정하는 제3의 변수 $t$.</dd>
+      <dt>매개변수방정식<span class="en">parametric equation</span></dt>
+      <dd>$x=f(t),\quad y=g(t)$ 와 같은 방정식의 쌍.</dd>
+      <dt>매개변수곡선<span class="en">parametric curve</span></dt>
+      <dd>$t$가 변할 때 점 $(x,y)=(f(t),g(t))$가 그리는 자취 $C$.</dd>
+      <dt>시점과 종점<span class="en">initial / terminal point</span></dt>
+      <dd>$a\le t\le b$로 제한하면 시점은 $(f(a),g(a))$, 종점은 $(f(b),g(b))$.</dd>
+    </dl>
+    <p>$t$를 시간으로 해석하면 $(f(t),g(t))$는 <b>시각 $t$일 때 입자의 위치</b>입니다. 그래서 매개변수곡선에는 점들의 모양에 더해 <b>어느 방향으로, 몇 번 그려지는지</b>라는 정보까지 담겨 있어요.</p>
+
+    <!-- ===================================================== -->
+    <h2 id="ex1">예제 1 · 포물선</h2>
+    <div class="problem"><span class="tag">예제 1</span>매개변수방정식 $x=t^2-2t,\ y=t+1$로 정의된 곡선을 그리고, 이를 확인하라.</div>
+
+    <h3>점을 찍어서 그리기</h3>
+    <p>$t$ 하나를 넣으면 점 하나가 나옵니다. 예를 들어 $t=0$이면 $x=0,\ y=1$이므로 점 $(0,1)$이에요.</p>
+    <table class="vals" aria-label="t에 따른 x, y 값">
+      <thead><tr><th>$t$</th><th>$-2$</th><th>$-1$</th><th>$0$</th><th>$1$</th><th>$2$</th><th>$3$</th><th>$4$</th></tr></thead>
+      <tbody>
+        <tr><th>$x$</th><td>8</td><td>3</td><td>0</td><td class="hit">−1</td><td>0</td><td>3</td><td>8</td></tr>
+        <tr><th>$y$</th><td>−1</td><td>0</td><td>1</td><td class="hit">2</td><td>3</td><td>4</td><td>5</td></tr>
+      </tbody>
+    </table>
+
+    <figure class="plot" id="fig-ex1">
+      <figcaption>점 옆의 숫자는 그 점을 지날 때의 $t$ 값이에요. $t=1$에서 $x$가 가장 작아집니다(꼭짓점 $(-1,2)$).</figcaption>
+    </figure>
+
+    <h3>$t$를 소거해서 확인하기</h3>
+    <ol class="steps">
+      <li>둘째 식에서 $t$를 풀면 $t=y-1$.</li>
+      <li>첫째 식에 대입합니다.
+        $$x=(y-1)^2-2(y-1)=y^2-4y+3$$</li>
+      <li>$x$가 $y$의 이차식이므로 <b>옆으로 누운 포물선</b>이에요. $t$가 커지면 $y=t+1$도 커지므로 곡선은 <b>아래에서 위로</b> 그려집니다.</li>
+    </ol>
+
+    <h3>$t$의 범위를 제한하면</h3>
+    <p>예제 1에서는 $t$에 아무 제약이 없어서 $t$가 모든 실수를 지나요. 위 그림의 <b>$0\le t\le 4$</b> 버튼을 눌러 보세요. 같은 포물선의 일부만 남고, 시점 $(0,1)$에서 출발해 종점 $(8,5)$에서 끝납니다.</p>
+
+    <!-- ===================================================== -->
+    <h2 id="ex23">예제 2, 3 · 같은 원, 다른 곡선</h2>
+    <div class="problem"><span class="tag">예제 2</span>매개변수방정식 $x=\cos t,\ y=\sin t,\ 0\le t\le 2\pi$로 표현되는 곡선은 무엇인가?</div>
+    <div class="problem"><span class="tag">예제 3</span>매개변수방정식 $x=\sin 2t,\ y=\cos 2t,\ 0\le t\le 2\pi$로 표현되는 곡선은 무엇인가?</div>
+
+    <p>두 경우 모두 $x^2+y^2=1$이 성립하므로 점들은 전부 <b>단위원</b> 위에 있어요.</p>
+    $$\cos^2t+\sin^2t=1,\qquad \sin^2 2t+\cos^2 2t=1$$
+    <p>하지만 같은 슬라이더로 두 점을 동시에 움직여 보면 그려지는 방식이 전혀 달라요.</p>
+
+    <figure class="plot" id="fig-ex23">
+      <figcaption>예제 3에서 두 번째 바퀴는 겹쳐 보이지 않도록 조금씩 바깥으로 벌려서 그렸어요(교재 그림과 같은 방식). 실제로는 같은 원을 두 번 지납니다.</figcaption>
+    </figure>
+
+    <table class="vals compare" aria-label="예제 2와 예제 3 비교">
+      <thead><tr><th></th><th>예제 2</th><th>예제 3</th></tr></thead>
+      <tbody>
+        <tr><th>시작점</th><td>$(1,0)$</td><td>$(0,1)$</td></tr>
+        <tr><th>방향</th><td>반시계</td><td class="hit">시계</td></tr>
+        <tr><th>회전 수</th><td>한 바퀴</td><td class="hit">두 바퀴</td></tr>
+        <tr><th>각도</th><td>$t$: $0\to2\pi$</td><td>$2t$: $0\to4\pi$</td></tr>
+      </tbody>
+    </table>
+
+    <p>예제 3의 방향은 $t$를 0에서 조금만 키워 보면 알 수 있어요. $x=\sin 2t>0$, $y=\cos 2t<1$이 되니 점 $(0,1)$에서 <b>오른쪽 아래</b>로 내려갑니다. 그러니 시계 방향이에요.</p>
+
+    <div class="exam"><strong>시험 포인트.</strong> 서로 다른 매개변수방정식이 <b>같은 곡선(점들의 집합)</b>을 나타낼 수 있어요. 그래서 “곡선”과 “매개변수곡선”을 구분해야 합니다. 시작점, 방향, 회전 수를 묻는 문제로 잘 나와요.</div>
+
+    <!-- ===================================================== -->
+    <h2 id="ex4">예제 4 · 일반적인 원</h2>
+    <div class="problem"><span class="tag">예제 4</span>반지름이 $r$이고 중심이 $(h,k)$인 원의 매개변수방정식을 구하라.</div>
+
+    <ol class="steps">
+      <li>단위원 $x=\cos t,\ y=\sin t$에서 시작합니다.</li>
+      <li>$x$, $y$에 각각 $r$을 곱하면 반지름이 $r$인 원이 돼요.</li>
+      <li>$x$에 $h$, $y$에 $k$를 더하면 중심이 $(h,k)$로 옮겨집니다.</li>
+    </ol>
+    $$x=h+r\cos t,\qquad y=k+r\sin t,\qquad 0\le t\le 2\pi$$
+    <p>확인해 보면 $(x-h)^2+(y-k)^2=r^2\cos^2t+r^2\sin^2t=r^2$ 이에요. 아래 슬라이더로 $h,k,r$을 바꿔 보세요.</p>
+
+    <figure class="plot" id="fig-ex4"></figure>
+
+    <!-- ===================================================== -->
+    <h2 id="ex5">예제 5 · 포물선의 일부</h2>
+    <div class="problem"><span class="tag">예제 5</span>매개변수방정식이 $x=\sin t,\ y=\sin^2 t$인 곡선을 그려라.</div>
+
+    <p>$y=(\sin t)^2=x^2$ 이므로 포물선 위의 점이에요. 하지만 <b>$x=\sin t$는 $-1$과 $1$ 사이 값만</b> 가질 수 있어서 포물선 전체가 아니라 $-1\le x\le 1$ 부분만 그려집니다.</p>
+    <p>게다가 $t$가 커지면 $\sin t$는 $-1$과 $1$ 사이를 계속 오가요. 그래서 점은 $(-1,1)$과 $(1,1)$ 사이를 <b>끝없이 왕복</b>합니다. 교재 그림에 화살표가 양쪽으로 그려진 이유가 이거예요.</p>
+
+    <figure class="plot" id="fig-ex5">
+      <figcaption>왼쪽의 회색 점선은 포물선 $y=x^2$ 전체, 빨간 선이 실제 곡선이에요. 오른쪽 그래프로 $x=\sin t$가 어떻게 왕복하는지 함께 보세요. 작은 화살표는 지금 점이 움직이는 방향입니다.</figcaption>
+    </figure>
+
+    <div class="exam"><strong>시험 포인트.</strong> $t$를 소거한 다음에는 <b>$x$, $y$가 가질 수 있는 범위</b>를 꼭 확인하세요. 소거한 식만 쓰면 감점되는 대표적인 유형이에요.</div>
+
+    <!-- ===================================================== -->
+    <h2 id="ex7">예제 7 · 사이클로이드</h2>
+    <div class="problem"><span class="tag">예제 7</span>직선을 따라 원이 구를 때 원주 위의 점 $P$가 그리는 곡선을 <b>사이클로이드</b>(cycloid)라 한다. 원의 반지름이 $r$이고 $x$축을 따라 구르며, 점 $P$의 한 위치가 원점일 때 사이클로이드의 매개변수방정식을 구하라.</div>
+
+    <p>원이 회전한 각 $\theta$(라디안)를 매개변수로 잡습니다. 아래 그림에서 원을 굴려 보면서 유도 과정을 따라가 보세요.</p>
+
+    <figure class="plot" id="fig-ex7">
+      <figcaption>연한 파란색으로 칠한 두 부분, 즉 바닥의 선분 $OT$와 원 위의 호 $PT$는 길이가 항상 같아요. 원이 미끄러지지 않고 구르기 때문입니다.</figcaption>
+    </figure>
+
+    <ol class="steps">
+      <li><b>중심의 위치.</b> 원이 미끄러지지 않고 구르므로, 바닥에 닿은 거리와 원 위의 호의 길이가 같아요.
+        $$|OT|=\overset{\frown}{PT}=r\theta$$
+        따라서 중심은 $C(r\theta,\ r)$입니다.</li>
+      <li><b>직각삼각형 $PQC$.</b> 빗변이 $r$이고 $C$에서의 각이 $\theta$이므로
+        $$|PQ|=r\sin\theta,\qquad |QC|=r\cos\theta$$</li>
+      <li><b>좌표 읽기.</b> $P$의 $x$좌표는 $T$에서 $|PQ|$만큼 왼쪽, $y$좌표는 중심 높이에서 $|QC|$만큼 아래예요.
+        $$x=|OT|-|PQ|=r\theta-r\sin\theta=r(\theta-\sin\theta)$$
+        $$y=|TC|-|QC|=r-r\cos\theta=r(1-\cos\theta)$$</li>
+    </ol>
+
+    <div class="summary-box">
+      $$x=r(\theta-\sin\theta),\qquad y=r(1-\cos\theta),\qquad \theta\in\mathbb{R}$$
+      <p style="margin:0">아치 하나는 $0\le\theta\le2\pi$이고, $x$축 위에서 $0$부터 $2\pi r$까지 걸쳐 있어요. 가장 높은 점은 $\theta=\pi$일 때 $(\pi r,\ 2r)$입니다.</p>
+    </div>
+
+    <p>그림에서 $\theta$를 $\pi$보다 크게 하면 $P$가 중심보다 위로 올라가요. 이때는 $\cos\theta<0$, $\sin\theta<0$이 되어 부호가 알아서 맞춰지므로 같은 식이 모든 $\theta$에서 성립합니다.</p>
+
+    <div class="exam"><strong>시험 포인트.</strong> 이 식은 9.2절에서 접선, 넓이($3\pi r^2$), 호의 길이($8r$)를 구할 때 계속 쓰여요. <b>결과뿐 아니라 유도 과정까지</b> 직접 써 볼 수 있게 연습하세요.</div>
+
+    <!-- ===================================================== -->
+    <h2 id="history">최속강하선과 등시곡선</h2>
+    <p>사이클로이드가 답이 되는 유명한 문제 두 가지예요. 계산 문제로 나오기보다는 상식으로 알아두면 됩니다.</p>
+    <dl class="def">
+      <dt>최속강하선 문제<span class="en">brachistochrone</span></dt>
+      <dd>점 $A$에서 $B$로 미끄러져 내려갈 때 시간이 가장 짧은 곡선은 <b>뒤집힌 사이클로이드</b>이다. (요한 베르누이)</dd>
+      <dt>등시곡선 문제<span class="en">tautochrone</span></dt>
+      <dd>뒤집힌 사이클로이드 위 어디에서 출발하든 바닥까지 걸리는 시간이 같다. 그래서 하위헌스는 진자시계의 추가 사이클로이드 호를 따라 움직이도록 제안했다.</dd>
+    </dl>
+
+    <!-- ===================================================== -->
+    <h2 id="summary">한눈에 정리</h2>
+    <div class="summary-box">
+      <ul>
+        <li>매개변수곡선 $=$ 점들의 모양 $+$ <b>방향, 시작점, 반복 횟수</b>.</li>
+        <li>곡선의 정체는 <b>$t$를 소거</b>해서 확인하고, 소거한 뒤에는 <b>$x,y$의 범위 제한</b>을 확인한다.</li>
+        <li>$a\le t\le b$이면 시점 $(f(a),g(a))$, 종점 $(f(b),g(b))$.</li>
+        <li>원: $x=h+r\cos t,\ y=k+r\sin t$. 각이 $t$면 반시계 한 바퀴, 각을 바꾸면 방향과 횟수가 바뀐다.</li>
+        <li>사이클로이드: $x=r(\theta-\sin\theta),\ y=r(1-\cos\theta)$. 핵심은 $|OT|=r\theta$.</li>
+      </ul>
+    </div>
+
+    <!-- ===================================================== -->
+    <h2 id="check">자가 점검</h2>
+    <p>보기를 고르면 바로 정답과 풀이가 나와요. 곡선 문제는 답을 고른 뒤 그래프가 그려지니 직접 확인해 보세요.</p>
+    <div id="quiz"></div>
+
+    <nav class="pager" aria-label="절 이동"></nav>
+  </main>
+</div>
+
+<script src="assets/katex/katex.min.js"></script>
+<script src="assets/katex/auto-render.min.js"></script>
+<script src="assets/plot.js"></script>
+<script src="assets/quiz.js"></script>
+<script src="assets/site.js"></script>
+<script>
+(function () {
+  "use strict";
+  const { fmt, fmtPi, label, dot, hollow, arrowHead } = Plot;
+  const PI = Math.PI;
+  const i = (s) => "<i>" + s + "</i>";
+
+  Plot.heroCycloid(document.getElementById("hero"));
+
+  /* ---------- 왜 매개변수인가: 수직선 판정법 실패 ---------- */
+  (function () {
+    const X = (t) => t - 2 * Math.sin(t), Y = (t) => 2 - 2 * Math.cos(t);
+    const x0 = 2 * PI;
+    Plot.mount(document.getElementById("fig-idea"), {
+      t: { min: -1.6, max: 7.9 },
+      duration: 7,
+      panels: [{
+        x: X, y: Y,
+        view: { x: [-2.2, 9.6], y: [-0.8, 4.8] },
+        arrows: 5,
+        ticks: { y: [2, 4] },
+        alt: "고리 모양이 있는 곡선과 그 곡선을 세 번 지나는 수직선",
+        under(ctx, T, t, C) {
+          ctx.save();
+          ctx.setLineDash([6, 5]); ctx.strokeStyle = C.aux; ctx.lineWidth = 1.5;
+          ctx.beginPath(); ctx.moveTo(T.X(x0), 0); ctx.lineTo(T.X(x0), T.h); ctx.stroke();
+          ctx.restore();
+          label(ctx, "x = 2π", T.X(x0) + 6, 14, { size: 12, color: C.aux });
+        },
+        over(ctx, T, t, C) {
+          // 수직선과의 교점 (곡선 전체 기준)
+          const n = 1200, a = -1.6, b = 7.9;
+          let prev = X(a) - x0;
+          for (let k = 1; k <= n; k++) {
+            const s = a + (b - a) * k / n, cur = X(s) - x0;
+            if (prev === 0 || prev * cur < 0) {
+              const s0 = s - (b - a) / n, u = prev / (prev - cur);
+              const ts = s0 + u * (b - a) / n;
+              hollow(ctx, T.X(x0), T.Y(Y(ts)), 5, C.aux, C.surface);
+            }
+            prev = cur;
+          }
+        },
+      }],
+      readout: (t) => i("t") + " = <b>" + fmt(t) + "</b>, 입자의 위치 (" + i("x") + ", " + i("y") + ") = <b>(" + fmt(X(t)) + ", " + fmt(Y(t)) + ")</b>",
+    });
+  })();
+
+  /* ---------- 예제 1 ---------- */
+  (function () {
+    const X = (t) => t * t - 2 * t, Y = (t) => t + 1;
+    const fig = document.getElementById("fig-ex1");
+    let restricted = false;
+    const panel = {
+      x: X, y: Y,
+      view: { x: [-2.4, 9.4], y: [-2.2, 6.2] },
+      arrows: 4,
+      ticks: { x: [2, 4, 6, 8], y: [-1, 1, 2, 3, 4, 5] },
+      alt: "옆으로 누운 포물선 x = y² − 4y + 3",
+      over(ctx, T, t, C) {
+        for (let k = -2; k <= 4; k++) {
+          if (restricted && k < 0) continue;
+          if (k > t + 1e-9) continue;
+          const px = T.X(X(k)), py = T.Y(Y(k));
+          dot(ctx, px, py, 3.2, C.ink);
+          label(ctx, "t=" + k, px + (k === 1 ? -8 : 8), py - 11, { size: 11.5, color: C.muted, align: k === 1 ? "right" : "left", halo: C.surface });
+        }
+        if (restricted && t >= 4 - 1e-9) {
+          label(ctx, "종점 (8, 5)", T.X(8) - 8, T.Y(5) + 16, { size: 12, color: C.curve, align: "right", halo: C.surface });
+        }
+        if (restricted) label(ctx, "시점 (0, 1)", T.X(0) + 10, T.Y(1) + 14, { size: 12, color: C.curve, halo: C.surface });
+      },
+    };
+    const api = Plot.mount(fig, {
+      t: { min: -2, max: 4 },
+      duration: 6,
+      panels: [panel],
+      controls:
+        '<span class="seg" role="group" aria-label="t의 범위">' +
+        '<button type="button" data-r="all" aria-pressed="true">t 제한 없음</button>' +
+        '<button type="button" data-r="cut" aria-pressed="false">0 ≤ t ≤ 4</button></span>',
+      readout: (t) =>
+        i("t") + " = <b>" + fmt(t) + "</b>, " + i("x") + " = " + i("t") + "² − 2" + i("t") + " = <b>" + fmt(X(t)) + "</b>, " +
+        i("y") + " = " + i("t") + " + 1 = <b>" + fmt(Y(t)) + "</b>" +
+        (restricted ? "" : '<br><span style="font-size:.85em">제한이 없으면 곡선은 양쪽으로 끝없이 이어져요. 그림은 −2 ≤ ' + i("t") + " ≤ 4 부분만 보여 줍니다.</span>"),
+    });
+    api.bar.querySelectorAll(".seg button").forEach((b) => {
+      b.addEventListener("click", () => {
+        restricted = b.dataset.r === "cut";
+        api.bar.querySelectorAll(".seg button").forEach((o) => o.setAttribute("aria-pressed", o === b ? "true" : "false"));
+        panel.markStart = restricted;
+        panel.ghost = !restricted;
+        api.setRange(restricted ? 0 : -2, 4);
+      });
+    });
+  })();
+
+  /* ---------- 예제 2, 3 ---------- */
+  (function () {
+    function radius(fx, fy) {
+      return function (ctx, T, t, C) {
+        ctx.save();
+        ctx.strokeStyle = C.aux; ctx.lineWidth = 1.2; ctx.globalAlpha = .8;
+        ctx.beginPath(); ctx.moveTo(T.X(0), T.Y(0)); ctx.lineTo(T.X(fx(t)), T.Y(fy(t))); ctx.stroke();
+        ctx.restore();
+      };
+    }
+    const common = { view: { x: [-1.6, 1.6], y: [-1.6, 1.6] }, grid: 0.5, ticks: { x: [-1, 1], y: [-1, 1] }, markStart: true };
+    Plot.mount(document.getElementById("fig-ex23"), {
+      t: { min: 0, max: 2 * PI, value: 2 * PI, label: "t" },
+      duration: 9,
+      panels: [
+        Object.assign({}, common, {
+          title: "예제 2: x = cos t, y = sin t",
+          x: Math.cos, y: Math.sin, arrows: 4,
+          over: radius(Math.cos, Math.sin),
+          alt: "반시계 방향으로 한 바퀴 도는 단위원",
+        }),
+        Object.assign({}, common, {
+          title: "예제 3: x = sin 2t, y = cos 2t",
+          x: (t) => Math.sin(2 * t), y: (t) => Math.cos(2 * t), arrows: 8, samples: 900,
+          map: (x, y, t) => { const s = 1 + 0.075 * t / PI; return [x * s, y * s]; },
+          over: radius((t) => Math.sin(2 * t), (t) => Math.cos(2 * t)),
+          alt: "시계 방향으로 두 바퀴 도는 단위원",
+        }),
+      ],
+      readout: (t) =>
+        i("t") + " = <b>" + fmtPi(t) + "</b><br>" +
+        "예제 2: 반시계 방향 <b>" + fmt(t / (2 * PI)) + "</b>바퀴, 지금 위치 (" + fmt(Math.cos(t)) + ", " + fmt(Math.sin(t)) + ")<br>" +
+        "예제 3: 시계 방향 <b>" + fmt(t / PI) + "</b>바퀴, 지금 위치 (" + fmt(Math.sin(2 * t)) + ", " + fmt(Math.cos(2 * t)) + ")",
+    });
+  })();
+
+  /* ---------- 예제 4 ---------- */
+  (function () {
+    const P = { h: 2, k: 1, r: 1.5 };
+    const fig = document.getElementById("fig-ex4");
+    const api = Plot.mount(fig, {
+      t: { min: 0, max: 2 * PI },
+      duration: 6,
+      panels: [{
+        x: (t) => P.h + P.r * Math.cos(t), y: (t) => P.k + P.r * Math.sin(t),
+        view: { x: [-6.8, 6.8], y: [-4.6, 4.6] },
+        arrows: 4, markStart: true,
+        ticks: { x: [-6, -4, -2, 2, 4, 6], y: [-4, -2, 2, 4] },
+        alt: "중심이 (h, k)이고 반지름이 r인 원",
+        over(ctx, T, t, C) {
+          const cx = T.X(P.h), cy = T.Y(P.k);
+          const px = T.X(P.h + P.r * Math.cos(t)), py = T.Y(P.k + P.r * Math.sin(t));
+          ctx.save();
+          ctx.strokeStyle = C.aux; ctx.lineWidth = 1.4;
+          ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(px, py); ctx.stroke();
+          ctx.restore();
+          dot(ctx, cx, cy, 3.5, C.aux);
+          label(ctx, "(" + fmt(P.h, 1) + ", " + fmt(P.k, 1) + ")", cx + 6, cy + 13, { size: 12, color: C.aux, halo: C.surface });
+          label(ctx, "r", (cx + px) / 2 + 6, (cy + py) / 2 - 8, { size: 14, italic: true, math: true, color: C.aux, halo: C.surface });
+        },
+      }],
+      controls:
+        '<label>h <input type="range" data-p="h" min="-3" max="3" step="0.5" value="2"></label>' +
+        '<label>k <input type="range" data-p="k" min="-1.5" max="1.5" step="0.5" value="1"></label>' +
+        '<label>r <input type="range" data-p="r" min="0.5" max="3" step="0.25" value="1.5"></label>',
+      readout: (t) => {
+        const sg = (v) => (v < 0 ? " − " + fmt(-v, 1) : " + " + fmt(v, 1));
+        return i("x") + " = " + fmt(P.h, 1) + " + " + fmt(P.r, 2) + " cos " + i("t") + ", " +
+          i("y") + " = " + fmt(P.k, 1) + " + " + fmt(P.r, 2) + " sin " + i("t") + "<br>" +
+          "(" + i("x") + sg(-P.h) + ")² + (" + i("y") + sg(-P.k) + ")² = " + fmt(P.r * P.r, 4).replace(/\.?0+$/, "") +
+          ", 지금 " + i("t") + " = <b>" + fmtPi(t) + "</b>";
+      },
+    });
+    api.bar.querySelectorAll("input[data-p]").forEach((inp) => {
+      inp.addEventListener("input", () => { P[inp.dataset.p] = parseFloat(inp.value); api.redraw(); });
+    });
+  })();
+
+  /* ---------- 예제 5 ---------- */
+  (function () {
+    const X = Math.sin, Y = (t) => Math.sin(t) ** 2;
+    const velArrow = (ctx, T, t, C) => {
+      const e = 1e-3, p = T.pt(t), q = T.pt(t + e);
+      const L = Math.hypot(q[0] - p[0], q[1] - p[1]);
+      if (L < 1e-7) return;
+      const ux = (q[0] - p[0]) / L, uy = (q[1] - p[1]) / L;
+      ctx.save(); ctx.strokeStyle = C.aux; ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.moveTo(p[0] + ux * 9, p[1] + uy * 9); ctx.lineTo(p[0] + ux * 30, p[1] + uy * 30); ctx.stroke();
+      ctx.restore();
+      arrowHead(ctx, p[0] + ux * 32, p[1] + uy * 32, Math.atan2(uy, ux), 7, C.aux);
+    };
+    Plot.mount(document.getElementById("fig-ex5"), {
+      t: { min: 0, max: 4 * PI, value: 4 * PI },
+      duration: 12,
+      panels: [
+        {
+          title: "곡선 (x, y) = (sin t, sin² t)",
+          x: X, y: Y, ghost: false, arrows: 0,
+          view: { x: [-1.7, 1.7], y: [-0.35, 1.75] },
+          grid: 0.5, ticks: { x: [-1, 1], y: [1] },
+          alt: "포물선 y = x² 중 −1 ≤ x ≤ 1 부분",
+          under(ctx, T, t, C) {
+            ctx.save();
+            ctx.setLineDash([4, 5]); ctx.strokeStyle = C.muted; ctx.globalAlpha = .55; ctx.lineWidth = 1.4;
+            ctx.beginPath();
+            for (let k = 0; k <= 120; k++) { const x = -1.32 + 2.64 * k / 120; const P = [T.X(x), T.Y(x * x)]; k ? ctx.lineTo(P[0], P[1]) : ctx.moveTo(P[0], P[1]); }
+            ctx.stroke();
+            ctx.strokeStyle = C.aux; ctx.globalAlpha = .4;
+            [-1, 1].forEach((v) => { ctx.beginPath(); ctx.moveTo(T.X(v), 0); ctx.lineTo(T.X(v), T.h); ctx.stroke(); });
+            ctx.restore();
+          },
+          over(ctx, T, t, C) {
+            [[-1, 1], [1, 1]].forEach(([x, y]) => dot(ctx, T.X(x), T.Y(y), 3.5, C.curve));
+            label(ctx, "(−1, 1)", T.X(-1) - 6, T.Y(1) - 12, { size: 12, color: C.muted, align: "right", halo: C.surface });
+            label(ctx, "(1, 1)", T.X(1) + 6, T.Y(1) - 12, { size: 12, color: C.muted, halo: C.surface });
+            velArrow(ctx, T, t, C);
+          },
+        },
+        {
+          title: "x = sin t 의 변화",
+          x: (t) => t, y: X, arrows: 0,
+          view: { x: [-1.1, 4 * PI + 0.5], y: [-1.45, 1.45] }, height: 210,
+          grid: 0, axisLabels: ["t", "x"], origin: false,
+          ticks: { x: [{ v: PI, label: "π" }, { v: 2 * PI, label: "2π" }, { v: 3 * PI, label: "3π" }, { v: 4 * PI, label: "4π" }], y: [-1, 1] },
+          alt: "t에 대한 sin t 그래프",
+          under(ctx, T, t, C) {
+            ctx.save(); ctx.setLineDash([3, 4]); ctx.strokeStyle = C.aux; ctx.globalAlpha = .4;
+            [-1, 1].forEach((v) => { ctx.beginPath(); ctx.moveTo(0, T.Y(v)); ctx.lineTo(T.w, T.Y(v)); ctx.stroke(); });
+            ctx.restore();
+          },
+        },
+      ],
+      readout: (t) => {
+        const dir = Math.cos(t) > 1e-9 ? "오른쪽으로" : Math.cos(t) < -1e-9 ? "왼쪽으로" : "방향을 바꾸는 중";
+        return i("t") + " = <b>" + fmtPi(t) + "</b>, (" + i("x") + ", " + i("y") + ") = <b>(" + fmt(X(t)) + ", " + fmt(Y(t)) + ")</b>, 지금 " + dir + " 이동";
+      },
+    });
+  })();
+
+  /* ---------- 예제 7 사이클로이드 ---------- */
+  (function () {
+    const r = 1;
+    const X = (th) => r * (th - Math.sin(th)), Y = (th) => r * (1 - Math.cos(th));
+    Plot.mount(document.getElementById("fig-ex7"), {
+      t: { min: 0, max: 2 * PI, value: 1.15, label: "θ" },
+      duration: 9,
+      panels: [{
+        x: X, y: Y, arrows: 3,
+        view: { x: [-0.6, 7.4], y: [-0.75, 2.55] },
+        grid: 0,
+        ticks: { x: [{ v: PI, label: "πr" }, { v: 2 * PI, label: "2πr" }], y: [{ v: 1, label: "r" }, { v: 2, label: "2r" }] },
+        alt: "x축 위를 구르는 원과 원 위의 점 P가 그리는 사이클로이드",
+        under(ctx, T, th, C) {
+          // 굴러간 거리 |OT| = rθ
+          ctx.save();
+          ctx.strokeStyle = C.auxSoft; ctx.lineWidth = 9; ctx.lineCap = "butt";
+          ctx.beginPath(); ctx.moveTo(T.X(0), T.Y(0)); ctx.lineTo(T.X(r * th), T.Y(0)); ctx.stroke();
+          // 호 PT
+          ctx.beginPath();
+          const n = 80;
+          for (let k = 0; k <= n; k++) {
+            const s = th * k / n;
+            const px = T.X(r * th - r * Math.sin(s)), py = T.Y(r - r * Math.cos(s));
+            k ? ctx.lineTo(px, py) : ctx.moveTo(px, py);
+          }
+          ctx.stroke();
+          ctx.restore();
+          if (th > 0.35) label(ctx, "rθ", T.X(r * th / 2), T.Y(0) + 30, { size: 13, italic: true, math: true, color: C.aux, align: "center" });
+        },
+        over(ctx, T, th, C) {
+          const cx = r * th, cy = r;
+          const px = X(th), py = Y(th);
+          const CX = T.X(cx), CY = T.Y(cy), PX = T.X(px), PY = T.Y(py);
+          // 원
+          ctx.save();
+          ctx.strokeStyle = C.aux; ctx.lineWidth = 1.6;
+          ctx.beginPath(); ctx.arc(CX, CY, r * T.sx, 0, 2 * PI); ctx.stroke();
+          // CT, CP, PQ
+          ctx.strokeStyle = C.ink; ctx.lineWidth = 1.3;
+          ctx.beginPath(); ctx.moveTo(CX, CY); ctx.lineTo(CX, T.Y(0)); ctx.stroke();
+          ctx.beginPath(); ctx.moveTo(CX, CY); ctx.lineTo(PX, PY); ctx.stroke();
+          ctx.setLineDash([5, 4]);
+          ctx.beginPath(); ctx.moveTo(PX, PY); ctx.lineTo(CX, PY); ctx.stroke();
+          ctx.setLineDash([]);
+          // 직각 표시
+          const sgnX = PX < CX ? -1 : 1, sgnY = PY > CY ? -1 : 1;
+          if (Math.abs(PX - CX) > 12 && Math.abs(PY - CY) > 12) {
+            ctx.beginPath();
+            ctx.moveTo(CX + sgnX * 8, PY); ctx.lineTo(CX + sgnX * 8, PY + sgnY * 8); ctx.lineTo(CX, PY + sgnY * 8);
+            ctx.stroke();
+          }
+          // 각 θ (CT 방향에서 CP 방향까지)
+          const a0 = PI / 2, a1 = Math.atan2(PY - CY, PX - CX);
+          let a1n = a1; while (a1n < a0) a1n += 2 * PI;
+          if (th > 0.12 && th < 2 * PI - 0.12) {
+            ctx.strokeStyle = C.curve; ctx.lineWidth = 1.4;
+            ctx.beginPath(); ctx.arc(CX, CY, 17, a0, a0 + th, false); ctx.stroke();
+            const am = a0 + th / 2;
+            label(ctx, "θ", CX + Math.cos(am) * 28, CY + Math.sin(am) * 28, { size: 14, italic: true, math: true, color: C.curve, align: "center", halo: C.surface });
+          }
+          ctx.restore();
+          dot(ctx, CX, CY, 3.5, C.ink);
+          dot(ctx, CX, T.Y(0), 3, C.ink);
+          dot(ctx, CX, PY, 2.6, C.ink);
+          const lab = (s, x, y, al) => label(ctx, s, x, y, { size: 14, italic: true, math: true, color: C.ink, align: al || "left", halo: C.surface });
+          lab("C", CX + 8, CY - 10);
+          lab("T", CX + 7, T.Y(0) + 14);
+          lab("Q", CX + (PX < CX ? 8 : -8), PY + (PY > CY ? 13 : -13), PX < CX ? "left" : "right");
+          lab("P", PX + (PX < CX ? -10 : 10), PY - 10, PX < CX ? "right" : "left");
+          lab("O", T.X(0) - 6, T.Y(0) + 14, "right");
+        },
+      }],
+      readout: (th) =>
+        "θ = <b>" + fmtPi(th) + "</b> (" + fmt(th) + " rad), " +
+        "|OT| = 호 PT = rθ = <b>" + fmt(r * th) + "</b><br>" +
+        i("x") + " = r(θ − sin θ) = <b>" + fmt(X(th)) + "</b>, " +
+        i("y") + " = r(1 − cos θ) = <b>" + fmt(Y(th)) + "</b> " +
+        '<span style="font-size:.85em">(r = 1로 그림)</span>',
+    });
+  })();
+
+  /* ---------- 자가 점검 ---------- */
+  (function () {
+    const R = String.raw;
+    const ro = (X, Y, opt) => (t) => {
+      opt = opt || {};
+      const s = opt.sym || "t";
+      return (s === "t" ? i("t") : s) + " = <b>" + (opt.pi ? fmtPi(t) : fmt(t)) + "</b>, (" + i("x") + ", " + i("y") + ") = <b>(" + fmt(X(t)) + ", " + fmt(Y(t)) + ")</b>";
+    };
+    const unit = { view: { x: [-1.6, 1.6], y: [-1.6, 1.6] }, grid: 0.5, ticks: { x: [-1, 1], y: [-1, 1] }, markStart: true };
+    const sq = (t) => t * t;
+
+    Quiz.mount(document.getElementById("quiz"), [
+      {
+        q: R`$x=\cos t,\ y=-\sin t,\ 0\le t\le\pi$ 가 그리는 곡선으로 옳은 것은?`,
+        choices: [
+          "단위원의 위쪽 반원, $(1,0)$에서 $(-1,0)$까지 반시계 방향",
+          "단위원의 아래쪽 반원, $(1,0)$에서 $(-1,0)$까지 시계 방향",
+          "단위원의 아래쪽 반원, $(-1,0)$에서 $(1,0)$까지 반시계 방향",
+          "단위원 전체, 시계 방향으로 한 바퀴",
+        ],
+        answer: 1,
+        explain: R`<p>$x^2+y^2=1$이고 $0\le t\le\pi$에서 $y=-\sin t\le0$이므로 <b>아래쪽 반원</b>이에요. $t=0$에서 $(1,0)$, $t=\tfrac{\pi}{2}$에서 $(0,-1)$, $t=\pi$에서 $(-1,0)$을 지나므로 <b>시계 방향</b>입니다.</p>`,
+        plotWidth: "22rem",
+        plot: {
+          t: { min: 0, max: PI }, duration: 3,
+          panels: [Object.assign({}, unit, { x: Math.cos, y: (t) => -Math.sin(t), arrows: 3, view: { x: [-1.6, 1.6], y: [-1.4, 0.8] }, ticks: { x: [-1, 1], y: [-1] } })],
+          readout: ro(Math.cos, (t) => -Math.sin(t), { pi: true }),
+        },
+      },
+      {
+        q: R`$x=\sin t,\ y=\cos t,\ 0\le t\le 2\pi$ 에 대한 설명으로 옳은 것은?`,
+        choices: [
+          "$(1,0)$에서 출발해 반시계 방향으로 한 바퀴",
+          "$(1,0)$에서 출발해 시계 방향으로 한 바퀴",
+          "$(0,1)$에서 출발해 반시계 방향으로 한 바퀴",
+          "$(0,1)$에서 출발해 시계 방향으로 한 바퀴",
+        ],
+        answer: 3,
+        explain: R`<p>$t=0$이면 $(\sin 0,\cos 0)=(0,1)$에서 출발해요. $t$를 조금 키우면 $x>0$, $y<1$이 되어 오른쪽 아래로 가므로 <b>시계 방향</b>입니다. 예제 2에서 $\sin$과 $\cos$의 자리만 바꿨는데 시작점과 방향이 둘 다 바뀌었어요.</p>`,
+        plotWidth: "22rem",
+        plot: {
+          t: { min: 0, max: 2 * PI }, duration: 4,
+          panels: [Object.assign({}, unit, { x: Math.sin, y: Math.cos, arrows: 4 })],
+          readout: ro(Math.sin, Math.cos, { pi: true }),
+        },
+      },
+      {
+        q: R`$x=2\cos t,\ y=3\sin t,\ 0\le t\le 2\pi$ 가 나타내는 곡선은?`,
+        choices: [
+          R`원 $x^2+y^2=6$`,
+          R`쌍곡선 $\dfrac{x^2}{4}-\dfrac{y^2}{9}=1$`,
+          R`타원 $\dfrac{x^2}{4}+\dfrac{y^2}{9}=1$`,
+          R`타원 $\dfrac{x^2}{9}+\dfrac{y^2}{4}=1$`,
+        ],
+        answer: 2,
+        explain: R`<p>$\cos t=\tfrac{x}{2}$, $\sin t=\tfrac{y}{3}$을 $\cos^2t+\sin^2t=1$에 넣으면 $\dfrac{x^2}{4}+\dfrac{y^2}{9}=1$이에요. $x$ 방향 반지름 2, $y$ 방향 반지름 3인 세로로 긴 타원이고, $(2,0)$에서 출발해 반시계 방향으로 한 바퀴 돕니다.</p>`,
+        plotWidth: "22rem",
+        plot: {
+          t: { min: 0, max: 2 * PI }, duration: 4,
+          panels: [{ x: (t) => 2 * Math.cos(t), y: (t) => 3 * Math.sin(t), view: { x: [-3.6, 3.6], y: [-3.6, 3.6] }, ticks: { x: [-2, 2], y: [-3, 3] }, markStart: true, arrows: 4 }],
+          readout: ro((t) => 2 * Math.cos(t), (t) => 3 * Math.sin(t), { pi: true }),
+        },
+      },
+      {
+        q: R`$x=e^t,\ y=e^{2t}$ 이 나타내는 곡선으로 가장 정확한 것은?`,
+        choices: [
+          R`$y=x^2,\ x>0$`,
+          R`$y=x^2$`,
+          R`$y=x^2,\ x\ge 0$`,
+          R`$y=\sqrt{x},\ x>0$`,
+        ],
+        answer: 0,
+        explain: R`<p>$y=(e^t)^2=x^2$ 이지만 $e^t$는 항상 양수라서 $x>0$이에요. $x=0$이 되는 $t$는 없으므로 원점도 포함되지 않습니다. 소거한 식만 쓰면 틀리는 예제 5와 같은 유형이에요.</p>`,
+        plotWidth: "24rem",
+        plot: {
+          t: { min: -3.5, max: 0.7 }, duration: 3.5,
+          panels: [{
+            x: Math.exp, y: (t) => Math.exp(2 * t), arrows: 2,
+            view: { x: [-2.2, 2.5], y: [-0.6, 4.6] }, ticks: { x: [-2, -1, 1, 2], y: [1, 2, 3, 4] },
+            under(ctx, T, t, C) {
+              ctx.save(); ctx.setLineDash([4, 5]); ctx.strokeStyle = C.muted; ctx.globalAlpha = .55; ctx.lineWidth = 1.4;
+              ctx.beginPath();
+              for (let k = 0; k <= 60; k++) { const x = -2.1 + 2.1 * k / 60; k ? ctx.lineTo(T.X(x), T.Y(sq(x))) : ctx.moveTo(T.X(x), T.Y(sq(x))); }
+              ctx.stroke(); ctx.restore();
+              label(ctx, "포함 안 됨", T.X(-1.35), T.Y(sq(-1.35)) - 4, { size: 12, color: C.muted, align: "right", halo: C.surface });
+            },
+            over(ctx, T, t, C) { hollow(ctx, T.X(0), T.Y(0), 4.5, C.curve, C.surface); },
+          }],
+          readout: ro(Math.exp, (t) => Math.exp(2 * t)),
+        },
+      },
+      {
+        q: R`$x=t^2-2t,\ y=t+1,\ -1\le t\le 2$ 의 시점과 종점은?`,
+        choices: [
+          R`시점 $(-1,0)$, 종점 $(2,3)$`,
+          R`시점 $(3,0)$, 종점 $(0,3)$`,
+          R`시점 $(0,3)$, 종점 $(3,0)$`,
+          R`시점 $(3,0)$, 종점 $(8,5)$`,
+        ],
+        answer: 1,
+        explain: R`<p>시점은 $t=-1$일 때 $(1+2,\ 0)=(3,0)$, 종점은 $t=2$일 때 $(4-4,\ 3)=(0,3)$이에요. A처럼 $t$ 값을 그대로 좌표에 쓰면 안 되고, 반드시 식에 대입해야 합니다.</p>`,
+        plotWidth: "24rem",
+        plot: {
+          t: { min: -1, max: 2 }, duration: 3,
+          panels: [{
+            x: (t) => t * t - 2 * t, y: (t) => t + 1, markStart: true, arrows: 2,
+            view: { x: [-1.6, 4.2], y: [-0.8, 3.8] }, ticks: { x: [1, 2, 3], y: [1, 2, 3] },
+            over(ctx, T, t, C) {
+              label(ctx, "시점 (3, 0)", T.X(3) + 8, T.Y(0) - 14, { size: 12, color: C.curve, halo: C.surface });
+              if (t >= 2 - 1e-9) label(ctx, "종점 (0, 3)", T.X(0) + 10, T.Y(3) - 12, { size: 12, color: C.curve, halo: C.surface });
+            },
+          }],
+          readout: ro((t) => t * t - 2 * t, (t) => t + 1),
+        },
+      },
+      {
+        q: R`$x=1+2\cos t,\ y=-3+2\sin t$ 가 나타내는 원의 중심과 반지름은?`,
+        choices: [
+          R`중심 $(-1,3)$, 반지름 $2$`,
+          R`중심 $(1,-3)$, 반지름 $4$`,
+          R`중심 $(1,-3)$, 반지름 $2$`,
+          R`중심 $(2,-3)$, 반지름 $1$`,
+        ],
+        answer: 2,
+        explain: R`<p>예제 4의 꼴 $x=h+r\cos t,\ y=k+r\sin t$와 비교하면 $h=1$, $k=-3$, $r=2$예요. 원의 방정식으로 쓰면 $(x-1)^2+(y+3)^2=4$이고, 반지름은 $4$가 아니라 $\sqrt4=2$입니다.</p>`,
+        plotWidth: "22rem",
+        plot: {
+          t: { min: 0, max: 2 * PI }, duration: 4,
+          panels: [{
+            x: (t) => 1 + 2 * Math.cos(t), y: (t) => -3 + 2 * Math.sin(t), markStart: true, arrows: 4,
+            view: { x: [-2.2, 4.4], y: [-5.6, 1] }, ticks: { x: [-1, 1, 3], y: [-5, -3, -1] },
+            over(ctx, T, t, C) {
+              dot(ctx, T.X(1), T.Y(-3), 3.5, C.aux);
+              label(ctx, "(1, −3)", T.X(1) + 6, T.Y(-3) + 13, { size: 12, color: C.aux, halo: C.surface });
+            },
+          }],
+          readout: ro((t) => 1 + 2 * Math.cos(t), (t) => -3 + 2 * Math.sin(t), { pi: true }),
+        },
+      },
+      {
+        q: R`반지름 $r=2$인 원이 만드는 사이클로이드에서 $\theta=\pi$일 때 점 $P$의 좌표와, 아치 하나의 밑변 길이는?`,
+        choices: [
+          R`$P=(\pi,\,2)$, 밑변 $2\pi$`,
+          R`$P=(2\pi,\,4)$, 밑변 $2\pi$`,
+          R`$P=(\pi,\,4)$, 밑변 $4\pi$`,
+          R`$P=(2\pi,\,4)$, 밑변 $4\pi$`,
+        ],
+        answer: 3,
+        explain: R`<p>$x=2(\pi-\sin\pi)=2\pi$, $y=2(1-\cos\pi)=4$ 이므로 $P=(2\pi,4)$, 아치의 꼭대기예요. 밑변은 원이 한 바퀴 구른 거리라서 $2\pi r=4\pi$입니다. 높이 $2r$과 밑변 $2\pi r$ 모두 $r$에 비례해요.</p>`,
+        plot: {
+          t: { min: 0, max: 2 * PI, label: "θ" }, duration: 4,
+          panels: [{
+            x: (th) => 2 * (th - Math.sin(th)), y: (th) => 2 * (1 - Math.cos(th)), arrows: 2, grid: 0,
+            view: { x: [-0.8, 13.6], y: [-0.8, 4.9] },
+            ticks: { x: [{ v: 2 * PI, label: "2π" }, { v: 4 * PI, label: "4π" }], y: [2, 4] },
+            over(ctx, T, th, C) {
+              ctx.save(); ctx.strokeStyle = C.aux; ctx.globalAlpha = .7; ctx.lineWidth = 1.4;
+              ctx.beginPath(); ctx.arc(T.X(2 * th), T.Y(2), 2 * T.sx, 0, 2 * PI); ctx.stroke(); ctx.restore();
+              dot(ctx, T.X(2 * PI), T.Y(4), 3, C.ink);
+              label(ctx, "(2π, 4)", T.X(2 * PI) + 8, T.Y(4) - 10, { size: 12, color: C.muted, halo: C.surface });
+            },
+          }],
+          readout: ro((th) => 2 * (th - Math.sin(th)), (th) => 2 * (1 - Math.cos(th)), { sym: "θ", pi: true }),
+        },
+      },
+    ]);
+  })();
+})();
+</script>
+</body>
+</html>

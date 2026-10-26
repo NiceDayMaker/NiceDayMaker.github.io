@@ -1,0 +1,402 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>12.2 벡터함수의 도함수와 적분</title>
+<script>try{var t=localStorage.getItem("theme");if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
+<link rel="stylesheet" href="assets/katex/katex.min.css">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body data-section="12.2">
+<div class="shell">
+  <nav class="side" aria-label="이 절의 목차">
+    <a class="home" href="index.html">전체 목차로</a>
+    <ol>
+      <li><a href="#deriv">도함수의 정의</a></li>
+      <li><a href="#comp">성분별 미분과 단위접선벡터</a></li>
+      <li><a href="#ex12">예제 1, 2</a></li>
+      <li><a href="#ex3">예제 3 · 접선</a></li>
+      <li><a href="#rules">미분법칙</a></li>
+      <li><a href="#thm4">정리 4 · 길이가 일정하면</a></li>
+      <li><a href="#int">적분 · 예제 4</a></li>
+      <li><a href="#summary">한눈에 정리</a></li>
+      <li><a href="#check">자가 점검</a></li>
+    </ol>
+  </nav>
+
+  <main>
+    <header class="hero">
+      <p class="chapter">12장 벡터함수</p>
+      <h1><span class="num">12.2</span>벡터함수의 도함수와 적분</h1>
+      <canvas id="hero" aria-hidden="true"></canvas>
+    </header>
+
+    <p class="lede">12.1에서 벡터함수는 실수함수 세 개를 묶은 것이라고 했어요. 그래서 미분과 적분도 <b>성분마다 따로</b> 하면 끝이에요. 계산은 쉬운 대신 의미가 중요해요. 벡터함수의 도함수는 곡선의 <b>접선 방향을 가리키는 벡터</b>예요.</p>
+
+    <!-- ===================================================== -->
+    <h2 id="deriv">도함수의 정의</h2>
+    <div class="summary-box">
+      <p style="margin:0 0 .3rem"><b>1</b> 벡터함수 $\mathbf r$의 도함수 $\mathbf r'$은</p>
+      $$\frac{d\mathbf r}{dt}=\mathbf r'(t)=\lim_{h\to0}\frac{\mathbf r(t+h)-\mathbf r(t)}{h}$$
+      <p style="margin:0">이 극한이 존재할 때 정의해요. 실수함수의 도함수와 모양이 똑같아요.</p>
+    </div>
+    <p>기하학적 의미를 봐요. 점 $P$, $Q$의 위치벡터가 $\mathbf r(t)$, $\mathbf r(t+h)$이면 $\overrightarrow{PQ}=\mathbf r(t+h)-\mathbf r(t)$는 곡선 위의 두 점을 잇는 <b>할선벡터</b>예요. 이것을 $h$로 나눠도 방향은 그대로이고($h>0$일 때) 길이만 바뀌어요. $h\to0$이면 $Q$가 $P$에 다가가면서 이 벡터가 접선 위에 놓인 벡터에 가까워져요.</p>
+    <figure class="plot" id="fig-secant">
+      <figcaption>$h$를 줄여 보세요(재생). 연한 화살표가 할선벡터 $\mathbf r(t+h)-\mathbf r(t)$, 빨간 화살표가 그것을 $h$로 나눈 벡터예요. $h$가 작아지면 할선벡터는 0으로 줄어들지만, $h$로 나눈 벡터는 길이가 유한한 접선벡터 $\mathbf r'(t)$(초록)로 수렴해요.</figcaption>
+    </figure>
+    <div class="def"><b>접선벡터.</b> $\mathbf r'(t)$가 존재하고 $\mathbf r'(t)\ne\mathbf 0$이면, $\mathbf r'(t)$를 곡선 위의 점 $P$에서의 <b>접선벡터</b>(tangent vector)라 해요. $P$에서의 <b>접선</b>(tangent line)은 $P$를 지나고 접선벡터 $\mathbf r'(t)$에 평행한 직선이에요.</div>
+    <p>“$\mathbf r'(t)\ne\mathbf 0$” 조건이 중요해요. $\mathbf r'(t)=\mathbf 0$이면 방향이 없으니 접선벡터라 부르지 않아요(자가 점검 마지막 문제).</p>
+
+    <!-- ===================================================== -->
+    <h2 id="comp">성분별 미분과 단위접선벡터</h2>
+    <div class="summary-box">
+      <p style="margin:0 0 .3rem"><b>2 정리</b> $\mathbf r(t)=\langle f(t),g(t),h(t)\rangle=f(t)\,\mathbf i+g(t)\,\mathbf j+h(t)\,\mathbf k$이면</p>
+      $$\mathbf r'(t)=\langle f'(t),\,g'(t),\,h'(t)\rangle=f'(t)\,\mathbf i+g'(t)\,\mathbf j+h'(t)\,\mathbf k$$
+    </div>
+    <p>정의의 극한이 성분별로 계산되니(12.1 극한) 당연한 결과예요. 두 번 미분한 $\mathbf r''=(\mathbf r')'$도 성분별이에요.</p>
+    <div class="summary-box">
+      <p style="margin:0 0 .3rem"><b>단위접선벡터</b>(unit tangent vector): 접선벡터와 방향이 같고 길이가 1인 벡터</p>
+      $$\mathbf T(t)=\frac{\mathbf r'(t)}{|\mathbf r'(t)|}$$
+    </div>
+    <p>접선벡터의 길이는 매개변수를 어떻게 잡느냐(입자가 얼마나 빨리 움직이느냐)에 따라 달라지지만, $\mathbf T$는 방향만 남긴 거라 곡선 자체의 성질이에요. 12.3의 곡률은 이 $\mathbf T$로 정의해요.</p>
+
+    <!-- ===================================================== -->
+    <h2 id="ex12">예제 1, 2</h2>
+    <div class="problem"><span class="tag">예제 1</span>(a) $\mathbf r(t)=(1+t^3)\,\mathbf i+te^{-t}\,\mathbf j+\sin2t\,\mathbf k$의 도함수를 구하라.<br>(b) $t=0$인 점에서의 단위접선벡터를 구하라.</div>
+    <h3>(a)</h3>
+    <p>성분마다 미분해요. 둘째 성분은 곱의 미분, 셋째는 연쇄법칙이에요.</p>
+    $$\mathbf r'(t)=3t^2\,\mathbf i+(1-t)e^{-t}\,\mathbf j+2\cos2t\,\mathbf k$$
+    <h3>(b)</h3>
+    <ol class="steps">
+      <li>$t=0$이면 $\mathbf r(0)=\mathbf i$이니 점 $(1,0,0)$이고, $\mathbf r'(0)=0\,\mathbf i+1\,\mathbf j+2\,\mathbf k=\mathbf j+2\mathbf k$예요.</li>
+      <li>길이로 나누면
+        $$\mathbf T(0)=\frac{\mathbf r'(0)}{|\mathbf r'(0)|}=\frac{\mathbf j+2\mathbf k}{\sqrt{1+4}}=\frac{1}{\sqrt5}\,\mathbf j+\frac{2}{\sqrt5}\,\mathbf k$$</li>
+    </ol>
+
+    <div class="problem"><span class="tag">예제 2</span>곡선 $\mathbf r(t)=\sqrt t\,\mathbf i+(2-t)\,\mathbf j$에 대해 $\mathbf r'(t)$를 구하고, 위치벡터 $\mathbf r(1)$과 접선벡터 $\mathbf r'(1)$을 그려라.</div>
+    <ol class="steps">
+      <li>$\mathbf r'(t)=\dfrac{1}{2\sqrt t}\,\mathbf i-\mathbf j$, 따라서 $\mathbf r(1)=\mathbf i+\mathbf j$, $\mathbf r'(1)=\frac12\,\mathbf i-\mathbf j$예요.</li>
+      <li>곡선 모양: $x=\sqrt t$, $y=2-t$에서 $t=x^2$를 넣으면 $y=2-x^2$ ($x\ge0$). 포물선의 오른쪽 절반이에요.</li>
+      <li>위치벡터 $\mathbf r(1)$은 원점에서 점 $(1,1)$까지 그리고, 접선벡터 $\mathbf r'(1)$은 <b>점 $(1,1)$에서 시작</b>하도록 그려요. 접선벡터는 그 점에서의 방향을 나타내니까요.</li>
+    </ol>
+    <figure class="plot" id="fig-ex2">
+      <figcaption>파란 화살표가 위치벡터 $\mathbf r(t)$, 빨간 화살표가 접선벡터 $\mathbf r'(t)$예요. 재생하면 $t$가 커지며 점이 아래로 내려가요. $t$가 0에 가까우면 $\frac{1}{2\sqrt t}$이 커져서 접선벡터가 아주 길어지고 거의 수평이 돼요.</figcaption>
+    </figure>
+
+    <!-- ===================================================== -->
+    <h2 id="ex3">예제 3 · 접선</h2>
+    <div class="problem"><span class="tag">예제 3</span>매개변수방정식이 $x=2\cos t$, $y=\sin t$, $z=t$인 나선에 대해 점 $\left(0,1,\frac\pi2\right)$에서 접선의 매개변수방정식을 구하라.</div>
+    <ol class="steps">
+      <li>$\mathbf r(t)=\langle2\cos t,\,\sin t,\,t\rangle$이므로 $\mathbf r'(t)=\langle-2\sin t,\,\cos t,\,1\rangle$이에요.</li>
+      <li>점 $\left(0,1,\frac\pi2\right)$은 $t=\frac\pi2$일 때예요($2\cos\frac\pi2=0$, $\sin\frac\pi2=1$). 그때 접선벡터는
+        $$\mathbf r'\left(\tfrac\pi2\right)=\langle-2,\,0,\,1\rangle$$</li>
+      <li>접선은 점 $\left(0,1,\frac\pi2\right)$을 지나고 $\langle-2,0,1\rangle$에 평행한 직선이니(11.5), 매개변수를 $s$라 하면
+        $$x=-2s,\qquad y=1,\qquad z=\frac\pi2+s$$</li>
+    </ol>
+    <div class="exam"><strong>주의.</strong> 접선의 매개변수에는 곡선의 $t$와 다른 문자를 쓰는 게 안전해요. 곡선의 $t$는 이미 $\frac\pi2$로 고정됐고, 접선 위를 움직이는 건 새 매개변수예요.</div>
+    <figure class="plot" id="fig-ex3">
+      <figcaption>타원기둥 $\frac{x^2}{4}+y^2=1$ 위의 나선이에요. 슬라이더로 점을 옮기면 그 점의 접선(초록 직선)과 접선벡터 $\mathbf r'(t)$(빨강)가 따라 움직여요. $t=\frac\pi2$가 예제의 점이에요.</figcaption>
+    </figure>
+
+    <!-- ===================================================== -->
+    <h2 id="rules">미분법칙</h2>
+    <div class="summary-box">
+      <p style="margin:0 0 .4rem"><b>3 정리</b> $\mathbf u$와 $\mathbf v$를 미분가능한 벡터함수, $c$를 스칼라, $f$를 실숫값 함수라 하면</p>
+      <ol style="margin:0">
+        <li>$\dfrac{d}{dt}\big[\mathbf u(t)+\mathbf v(t)\big]=\mathbf u'(t)+\mathbf v'(t)$</li>
+        <li>$\dfrac{d}{dt}\big[c\,\mathbf u(t)\big]=c\,\mathbf u'(t)$</li>
+        <li>$\dfrac{d}{dt}\big[f(t)\,\mathbf u(t)\big]=f'(t)\,\mathbf u(t)+f(t)\,\mathbf u'(t)$</li>
+        <li>$\dfrac{d}{dt}\big[\mathbf u(t)\cdot\mathbf v(t)\big]=\mathbf u'(t)\cdot\mathbf v(t)+\mathbf u(t)\cdot\mathbf v'(t)$</li>
+        <li>$\dfrac{d}{dt}\big[\mathbf u(t)\times\mathbf v(t)\big]=\mathbf u'(t)\times\mathbf v(t)+\mathbf u(t)\times\mathbf v'(t)$</li>
+        <li>$\dfrac{d}{dt}\big[\mathbf u(f(t))\big]=f'(t)\,\mathbf u'(f(t))$ (연쇄법칙)</li>
+      </ol>
+    </div>
+    <p class="note">슬라이드의 1번 끝에 붙은 $\frac12$은 오타예요. 합의 미분은 그냥 $\mathbf u'+\mathbf v'$예요.</p>
+    <p>3, 4, 5는 모두 실수함수의 곱의 미분 $(fg)'=f'g+fg'$와 같은 꼴이에요. 4를 성분으로 확인하면</p>
+    $$\frac{d}{dt}\big[\mathbf u\cdot\mathbf v\big]=\frac{d}{dt}\sum_{i=1}^3u_iv_i=\sum_{i=1}^3\big(u_i'v_i+u_iv_i'\big)=\mathbf u'\cdot\mathbf v+\mathbf u\cdot\mathbf v'$$
+    <div class="exam"><strong>시험 포인트.</strong> 5번(외적)은 <b>순서를 바꾸면 안 돼요.</b> 외적은 교환법칙이 성립하지 않으니 $\mathbf u'\times\mathbf v+\mathbf u\times\mathbf v'$에서 $\mathbf u$가 항상 왼쪽에 있어야 해요. $\mathbf v\times\mathbf u'$처럼 쓰면 부호가 바뀌어요(11.4 성질 1).</div>
+
+    <!-- ===================================================== -->
+    <h2 id="thm4">정리 4 · 길이가 일정하면</h2>
+    <div class="summary-box">
+      <p style="margin:0"><b>4 정리</b> $|\mathbf r(t)|=c$ (상수)이면 $\mathbf r'(t)$는 모든 $t$에 대해 $\mathbf r(t)$와 직교한다.</p>
+    </div>
+    <h3>증명</h3>
+    <ol class="steps">
+      <li>$\mathbf r(t)\cdot\mathbf r(t)=|\mathbf r(t)|^2=c^2$은 상수예요.</li>
+      <li>양변을 미분하면 정리 3의 4번에 의해
+        $$0=\frac{d}{dt}\big[\mathbf r(t)\cdot\mathbf r(t)\big]=\mathbf r'(t)\cdot\mathbf r(t)+\mathbf r(t)\cdot\mathbf r'(t)=2\,\mathbf r'(t)\cdot\mathbf r(t)$$</li>
+      <li>따라서 $\mathbf r'(t)\cdot\mathbf r(t)=0$, 즉 두 벡터는 직교해요.</li>
+    </ol>
+    <p>기하학적으로는, 위치벡터의 길이가 일정하면 곡선이 <b>원점이 중심인 구 위</b>에 있다는 뜻이에요. 구 위에서 움직이는 점의 속도(접선벡터)는 언제나 구에 접하니까 반지름 방향과 수직이죠. 12.3의 곡률 공식에서 $\mathbf T$와 $\mathbf T'$이 수직인 것도 이 정리 덕분이에요($|\mathbf T|=1$이니까).</p>
+    <figure class="plot" id="fig-sphere">
+      <figcaption>반지름 2인 구 위를 도는 곡선이에요. 초록 화살표가 $\mathbf r(t)$, 빨간 화살표가 $\mathbf r'(t)$이고, 어느 $t$에서든 두 화살표 사이가 직각이에요. 아래에 실제 내적 값이 나와요.</figcaption>
+    </figure>
+
+    <!-- ===================================================== -->
+    <h2 id="int">적분</h2>
+    <p>연속인 벡터함수의 정적분은 결과가 벡터라는 것만 빼면 실숫값 함수와 같은 방법(리만 합의 극한)으로 정의해요. 그래서 역시 성분별로 계산돼요.</p>
+    <div class="summary-box">
+      $$\int_a^b\mathbf r(t)\,dt=\left(\int_a^bf(t)\,dt\right)\mathbf i+\left(\int_a^bg(t)\,dt\right)\mathbf j+\left(\int_a^bh(t)\,dt\right)\mathbf k$$
+    </div>
+    <p>미적분학의 기본정리도 그대로 성립해요. $\mathbf R'(t)=\mathbf r(t)$인 $\mathbf R$(역도함수)이 있으면 $\displaystyle\int_a^b\mathbf r(t)\,dt=\mathbf R(b)-\mathbf R(a)$이고, 부정적분에는 <b>상수벡터</b> $\mathbf C$가 붙어요.</p>
+
+    <div class="problem"><span class="tag">예제 4</span>$\mathbf r(t)=2\cos t\,\mathbf i+\sin t\,\mathbf j+2t\,\mathbf k$일 때 $\displaystyle\int\mathbf r(t)\,dt$와 $\displaystyle\int_0^{\pi/2}\mathbf r(t)\,dt$를 구하라.</div>
+    $$\int\mathbf r(t)\,dt=\left(\int2\cos t\,dt\right)\mathbf i+\left(\int\sin t\,dt\right)\mathbf j+\left(\int2t\,dt\right)\mathbf k=2\sin t\,\mathbf i-\cos t\,\mathbf j+t^2\,\mathbf k+\mathbf C$$
+    <p>여기서 $\mathbf C$는 적분의 상수벡터예요. 정적분은</p>
+    $$\int_0^{\pi/2}\mathbf r(t)\,dt=\Big[2\sin t\,\mathbf i-\cos t\,\mathbf j+t^2\,\mathbf k\Big]_0^{\pi/2}=\left(2\,\mathbf i-0\,\mathbf j+\frac{\pi^2}{4}\,\mathbf k\right)-\big(0\,\mathbf i-1\,\mathbf j+0\,\mathbf k\big)=2\,\mathbf i+\mathbf j+\frac{\pi^2}{4}\,\mathbf k$$
+    <div class="exam"><strong>실수하기 쉬운 곳.</strong> 아래끝을 넣을 때 $-\cos0=-1$이라 빼면 $+1$이 돼요. 그래서 $\mathbf j$ 성분이 0이 아니라 1이에요. 또 초기조건이 주어진 문제(예: $\mathbf r'(t)$와 $\mathbf r(0)$을 주고 $\mathbf r(t)$를 구하라)에서는 $\mathbf C$를 성분마다 정해야 해요(자가 점검 7번).</div>
+
+    <!-- ===================================================== -->
+    <h2 id="summary">한눈에 정리</h2>
+    <div class="summary-box">
+      <ul>
+        <li>$\mathbf r'(t)=\displaystyle\lim_{h\to0}\frac{\mathbf r(t+h)-\mathbf r(t)}{h}$ = 성분별 미분 $\langle f',g',h'\rangle$.</li>
+        <li>$\mathbf r'(t)\ne\mathbf 0$이면 접선벡터, 단위접선벡터 $\mathbf T=\dfrac{\mathbf r'}{|\mathbf r'|}$.</li>
+        <li>접선: 점 $\mathbf r(t_0)$을 지나고 방향 $\mathbf r'(t_0)$인 직선. 먼저 그 점에 해당하는 $t_0$를 찾기.</li>
+        <li>미분법칙은 실수함수와 같은 꼴. 외적의 미분은 순서 유지.</li>
+        <li>$|\mathbf r(t)|$가 일정 → $\mathbf r\cdot\mathbf r'=0$ (구 위의 곡선은 접선이 반지름에 수직).</li>
+        <li>적분도 성분별. 부정적분에는 상수벡터 $\mathbf C$.</li>
+      </ul>
+    </div>
+
+    <!-- ===================================================== -->
+    <h2 id="check">자가 점검</h2>
+    <p>보기를 고르면 바로 정답과 풀이가 나와요.</p>
+    <div id="quiz"></div>
+
+    <nav class="pager" aria-label="절 이동"></nav>
+  </main>
+</div>
+
+<script src="assets/katex/katex.min.js"></script>
+<script src="assets/katex/auto-render.min.js"></script>
+<script src="assets/plot.js"></script>
+<script src="assets/space.js"></script>
+<script src="assets/quiz.js"></script>
+<script src="assets/site.js"></script>
+<script>
+(function () {
+  "use strict";
+  const { fmt, label, arrowHead } = Plot;
+  const V = Space.V;
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const num = (v, d) => fmt(v, d == null ? 2 : d);
+  const trim = (v) => String(+v.toFixed(3)).replace("-", "−");
+  const vec = (a) => "⟨" + a.map(trim).join(", ") + "⟩";
+  const TAU = 2 * Math.PI;
+  const samples = (f, a, b, n) => { const out = []; for (let i = 0; i <= n; i++) out.push(f(a + (b - a) * i / n)); return out; };
+  function arrow2(ctx, A, B, color, w, head, alpha) {
+    const ang = Math.atan2(B[1] - A[1], B[0] - A[0]), L = Math.hypot(B[0] - A[0], B[1] - A[1]);
+    if (L < 1) return;
+    const h = Math.min(head || 11, L * 0.5);
+    ctx.save(); ctx.globalAlpha = alpha == null ? 1 : alpha; ctx.strokeStyle = color; ctx.lineWidth = w || 2.6; ctx.lineCap = "round";
+    ctx.beginPath(); ctx.moveTo(A[0], A[1]); ctx.lineTo(B[0] - Math.cos(ang) * h * 0.7, B[1] - Math.sin(ang) * h * 0.7); ctx.stroke();
+    arrowHead(ctx, B[0], B[1], ang, h, color); ctx.restore();
+  }
+  function path2(ctx, T, f, a, b, n, color, w, alpha, dash) {
+    ctx.save(); ctx.strokeStyle = color; ctx.lineWidth = w || 2.2; ctx.globalAlpha = alpha == null ? 1 : alpha; if (dash) ctx.setLineDash(dash);
+    ctx.beginPath();
+    for (let i = 0; i <= n; i++) { const p = f(a + (b - a) * i / n); i ? ctx.lineTo(T.X(p[0]), T.Y(p[1])) : ctx.moveTo(T.X(p[0]), T.Y(p[1])); }
+    ctx.stroke(); ctx.restore();
+  }
+
+  /* ---------- 절 머리: 곡선을 따라가는 접선벡터 ---------- */
+  (function () {
+    const cv = document.getElementById("hero"), ctx = cv.getContext("2d");
+    let W, H, k = reduce ? 1 : 0, start = 0;
+    function size() { const d = window.devicePixelRatio || 1; W = cv.clientWidth; H = cv.clientHeight; cv.width = W * d; cv.height = H * d; ctx.setTransform(d, 0, 0, d, 0, 0); }
+    function draw() {
+      const C = Plot.palette(); ctx.clearRect(0, 0, W, H);
+      const amp = H * 0.28, f = (u) => [u * W, H * 0.55 - amp * Math.sin(u * 3.2 * Math.PI) * (0.6 + 0.4 * Math.cos(u * 2 * Math.PI))];
+      ctx.save(); ctx.strokeStyle = C.curve; ctx.lineWidth = 2.2; ctx.globalAlpha = .9; ctx.beginPath();
+      for (let i = 0; i <= 300; i++) { const p = f(i / 300); i ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1]); }
+      ctx.stroke(); ctx.restore();
+      const n = 9;
+      for (let j = 0; j < n; j++) {
+        const u = (j + 0.5) / n * Math.min(1, k * 1.15);
+        if (u > k) continue;
+        const p = f(u), q = f(u + 0.002), d = [q[0] - p[0], q[1] - p[1]], L = Math.hypot(d[0], d[1]);
+        arrow2(ctx, p, [p[0] + d[0] / L * 42, p[1] + d[1] / L * 42], C.ok, 2.2, 9, 0.35 + 0.65 * (j + 1) / n);
+        ctx.save(); ctx.fillStyle = C.ink; ctx.beginPath(); ctx.arc(p[0], p[1], 3, 0, TAU); ctx.fill(); ctx.restore();
+      }
+    }
+    function tick(now) { if (!start) start = now; k = Math.min(1, (now - start) / 3500); draw(); if (k < 1) requestAnimationFrame(tick); }
+    size(); reduce ? draw() : requestAnimationFrame(tick);
+    if ("ResizeObserver" in window) new ResizeObserver(() => { size(); draw(); }).observe(cv);
+  })();
+
+  /* ---------- 할선벡터 → 접선벡터 ---------- */
+  (function () {
+    const f = (t) => [t, 0.35 * t * t - 0.08 * t * t * t + 0.4], df = (t) => [1, 0.7 * t - 0.24 * t * t];
+    const t0 = 1, hMax = 2.4, hOf = (s) => hMax * Math.pow(1 - s, 1.6) + 0.02;
+    const p = {
+      curve: false, x: () => 0, y: () => 0, grid: 0, origin: false, height: 300,
+      view: { x: [-0.6, 4.4], y: [-0.4, 2.6] }, ticks: { x: [1, 2, 3, 4], y: [1, 2] }, alt: "할선벡터가 접선벡터로 다가가는 그림",
+      over(ctx, T, s, C) {
+        const h = hOf(s), P = f(t0), Q = f(t0 + h), d = df(t0);
+        path2(ctx, T, f, -0.5, 4.4, 200, C.ink, 2, .8);
+        const sec = [Q[0] - P[0], Q[1] - P[1]], q = [sec[0] / h, sec[1] / h];
+        arrow2(ctx, [T.X(P[0]), T.Y(P[1])], [T.X(P[0] + d[0]), T.Y(P[1] + d[1])], C.ok, 3, 12, .9);
+        arrow2(ctx, [T.X(P[0]), T.Y(P[1])], [T.X(Q[0]), T.Y(Q[1])], C.aux, 2.2, 10, .45);
+        arrow2(ctx, [T.X(P[0]), T.Y(P[1])], [T.X(P[0] + q[0]), T.Y(P[1] + q[1])], C.curve, 2.6, 11);
+        Plot.dot(ctx, T.X(P[0]), T.Y(P[1]), 4.5, C.ink, C.surface);
+        Plot.dot(ctx, T.X(Q[0]), T.Y(Q[1]), 4.5, C.aux, C.surface);
+        label(ctx, "P", T.X(P[0]) - 6, T.Y(P[1]) + 16, { bold: true, size: 14, align: "right", halo: C.surface });
+        label(ctx, "Q", T.X(Q[0]) + 8, T.Y(Q[1]) - 12, { bold: true, size: 14, color: C.aux, halo: C.surface });
+        label(ctx, "C", T.X(4.2), T.Y(f(4.2)[1]) - 14, { italic: true, math: true, size: 16, color: C.muted, halo: C.surface });
+      },
+    };
+    Plot.mount(document.getElementById("fig-secant"), {
+      t: { min: 0, max: 1, value: 0.25, label: "h↓" }, duration: 6, panels: [p],
+      readout: (s) => {
+        const h = hOf(s), P = f(t0), Q = f(t0 + h), q = [(Q[0] - P[0]) / h, (Q[1] - P[1]) / h], d = df(t0);
+        return "h = <b>" + num(h, 3) + "</b> · 할선벡터 = ⟨" + num(Q[0] - P[0], 3) + ", " + num(Q[1] - P[1], 3) + "⟩ · 할선벡터 / h = <b>⟨" + num(q[0], 3) + ", " + num(q[1], 3) + "⟩</b>" +
+          "<br>접선벡터 r′(t) = ⟨" + num(d[0], 3) + ", " + num(d[1], 3) + "⟩와의 차이 " + num(Math.hypot(q[0] - d[0], q[1] - d[1]), 3);
+      },
+    });
+  })();
+
+  /* ---------- 예제 2 ---------- */
+  (function () {
+    const r = (t) => [Math.sqrt(t), 2 - t], dr = (t) => [1 / (2 * Math.sqrt(t)), -1];
+    const p = {
+      curve: false, x: () => 0, y: () => 0, grid: 1, origin: true, height: 320,
+      view: { x: [-0.6, 3.4], y: [-1.4, 2.6] }, ticks: { x: [1, 2, 3], y: [-1, 1, 2] }, alt: "위치벡터와 접선벡터",
+      over(ctx, T, t, C) {
+        path2(ctx, T, r, 0, 3.4, 200, C.ink, 2.2, .85);
+        label(ctx, "y = 2 − x² (x ≥ 0)", T.X(1.6), T.Y(-1.1), { size: 12.5, color: C.muted, halo: C.surface });
+        const P = r(t), d = dr(t);
+        arrow2(ctx, [T.X(0), T.Y(0)], [T.X(P[0]), T.Y(P[1])], C.aux, 2.6, 11);
+        arrow2(ctx, [T.X(P[0]), T.Y(P[1])], [T.X(P[0] + d[0]), T.Y(P[1] + d[1])], C.curve, 2.8, 12);
+        Plot.dot(ctx, T.X(P[0]), T.Y(P[1]), 4.5, C.ink, C.surface);
+        label(ctx, "r(t)", T.X(P[0] / 2) - 8, T.Y(P[1] / 2) - 8, { bold: true, size: 13, color: C.aux, align: "right", halo: C.surface });
+        label(ctx, "r′(t)", T.X(P[0] + d[0]) + 8, T.Y(P[1] + d[1]) + 4, { bold: true, size: 13, color: C.curve, halo: C.surface });
+      },
+    };
+    Plot.mount(document.getElementById("fig-ex2"), {
+      t: { min: 0.15, max: 3, value: 1, step: 0.05, label: "t" }, duration: 6, panels: [p],
+      readout: (t) => {
+        const P = r(t), d = dr(t);
+        return "t = <b>" + num(t) + "</b> · r(t) = ⟨" + num(P[0], 3) + ", " + num(P[1], 3) + "⟩ · r′(t) = ⟨1/(2√t), −1⟩ = <b>⟨" + num(d[0], 3) + ", −1⟩</b>" +
+          (Math.abs(t - 1) < 1e-9 ? "<br>t = 1: r(1) = i + j, r′(1) = ½ i − j" : "");
+      },
+    });
+  })();
+
+  /* ---------- 예제 3: 나선의 접선 ---------- */
+  (function () {
+    const T1 = 2.2 * Math.PI, r = (t) => [2 * Math.cos(t), Math.sin(t), t], dr = (t) => [-2 * Math.sin(t), Math.cos(t), 1];
+    Space.mount(document.getElementById("fig-ex3"), {
+      range: 4.5, center: [0, 0, 3.3], height: 440, axes: [2.8, 2, 7.4], view: { az: 34, el: 22 }, negAxes: .5,
+      t: { min: 0, max: T1, value: Math.PI / 2, step: Math.PI / 24, label: "t", duration: 9 },
+      alt: "나선과 접선",
+      draw(S, C, api) {
+        const t = api.t, P = r(t), d = dr(t);
+        for (const z of [0, T1]) S.path(samples((u) => [2 * Math.cos(u), Math.sin(u), z], 0, TAU, 72), { color: "--axis", width: 1, alpha: .5 });
+        S.path(samples(r, 0, T1, 300), { color: "--curve", width: 2.2, alpha: .8 });
+        S.line(V.add(P, V.mul(d, -1.6)), V.add(P, V.mul(d, 1.6)), { color: "--ok", width: 2, alpha: .85 });
+        S.arrow(P, V.add(P, d), { color: "--curve", width: 3, label: "r′(t)", math: false, size: 13, labelT: 1, dx: 8, dy: -6 });
+        S.arrow([0, 0, 0], P, { color: "--aux", width: 2, alpha: .7 });
+        S.point(P, { color: "--ink", r: 5 });
+        if (Math.abs(t - Math.PI / 2) < 1e-6) S.text(P, "(0, 1, π/2)", { dx: 10, dy: 14, size: 12 });
+      },
+      readout: (api) => {
+        const t = api.t, P = r(t), d = dr(t), atEx = Math.abs(t - Math.PI / 2) < 1e-6;
+        return "t = <b>" + num(t) + "</b>" + (atEx ? " (= π/2)" : "") + " · 점 (" + P.map((v) => num(v)).join(", ") + ") · r′(t) = ⟨−2sin t, cos t, 1⟩ = <b>" + "⟨" + d.map((v) => num(v)).join(", ") + "⟩</b>" +
+          (atEx ? "<br>접선: x = −2s, y = 1, z = π/2 + s" : "");
+      },
+    });
+  })();
+
+  /* ---------- 정리 4: 구 위의 곡선 ---------- */
+  (function () {
+    const R0 = 2;
+    const r = (t) => { const ph = 0.6 * Math.sin(3 * t); return [R0 * Math.cos(ph) * Math.cos(t), R0 * Math.cos(ph) * Math.sin(t), R0 * Math.sin(ph)]; };
+    const dr = (t) => { const h = 1e-5; return V.mul(V.sub(r(t + h), r(t - h)), 1 / (2 * h)); };
+    Space.mount(document.getElementById("fig-sphere"), {
+      range: 2.7, center: [0, 0, 0], height: 400, axes: [3, 3, 2.9], view: { az: 30, el: 20 },
+      t: { min: 0, max: TAU, value: 2.6, label: "t", duration: 9 },
+      alt: "구 위의 곡선에서 위치벡터와 접선벡터",
+      draw(S, C, api) {
+        for (let k = -2; k <= 2; k++) {
+          const ph = k * Math.PI / 6, z = R0 * Math.sin(ph), rr = R0 * Math.cos(ph);
+          S.path(samples((u) => [rr * Math.cos(u), rr * Math.sin(u), z], 0, TAU, 72), { color: "--axis", width: 1, alpha: k ? .25 : .45 });
+        }
+        for (let k = 0; k < 6; k++) {
+          const u = Math.PI * k / 6;
+          S.path(samples((v) => [R0 * Math.cos(v) * Math.cos(u), R0 * Math.cos(v) * Math.sin(u), R0 * Math.sin(v)], 0, TAU, 72), { color: "--axis", width: 1, alpha: .2 });
+        }
+        S.path(samples(r, 0, TAU, 300), { color: "--curve", width: 2, alpha: .55 });
+        const t = api.t, P = r(t), d = V.mul(V.unit(dr(t)), 1.4);
+        S.arrow([0, 0, 0], P, { color: "--ok", width: 2.8, label: "r(t)", math: false, size: 13, labelT: .55, dx: -30, dy: 0 });
+        S.arrow(P, V.add(P, d), { color: "--curve", width: 3, label: "r′(t)", math: false, size: 13, labelT: 1, dx: 8, dy: -6 });
+        S.rightAngle(P, V.mul(P, -1), d, 0.25, { color: "--ink" });
+        S.point(P, { color: "--ink", r: 4 });
+      },
+      readout: (api) => {
+        const t = api.t, P = r(t), d = dr(t);
+        return "t = <b>" + num(t) + "</b> · |r(t)| = " + num(V.len(P), 3) + " (항상 2) · r(t) · r′(t) = <b>" + num(V.dot(P, d), 4) + "</b>";
+      },
+    });
+  })();
+
+  /* ---------- 자가 점검 ---------- */
+  (function () {
+    const R = String.raw;
+    Quiz.mount(document.getElementById("quiz"), [
+      {
+        q: R`$\mathbf r(t)=\langle t^2,\ e^{2t},\ \ln t\rangle$의 도함수는?`,
+        choices: [R`$\langle2t,\ e^{2t},\ \frac1t\rangle$`, R`$\langle2t,\ 2e^{2t},\ \frac1t\rangle$`, R`$\langle2t,\ 2e^{2t},\ \ln t\rangle$`, R`$2t+2e^{2t}+\frac1t$`],
+        answer: 1,
+        explain: R`<p>성분마다 미분해요. $e^{2t}$는 연쇄법칙으로 $2e^{2t}$. D처럼 더해 버리면 벡터가 아니라 수가 돼요.</p>`,
+      },
+      {
+        q: R`$\mathbf r(t)=\langle t,\ t^2,\ t^3\rangle$의 $t=1$에서의 단위접선벡터는?`,
+        choices: [R`$\langle1,2,3\rangle$`, R`$\frac{1}{\sqrt{14}}\langle1,2,3\rangle$`, R`$\frac{1}{\sqrt3}\langle1,1,1\rangle$`, R`$\frac{1}{14}\langle1,2,3\rangle$`],
+        answer: 1,
+        explain: R`<p>$\mathbf r'(1)=\langle1,2,3\rangle$이고 길이 $\sqrt{14}$로 나눠요. C는 $\mathbf r(1)$을 정규화한 거예요(위치벡터와 접선벡터는 달라요).</p>`,
+      },
+      {
+        q: R`곡선 $\mathbf r(t)=\langle e^t,\ t,\ \cos t\rangle$의 $t=0$에서의 접선은?`,
+        choices: [R`$x=1+s,\ y=s,\ z=1$`, R`$x=s,\ y=s,\ z=1+s$`, R`$x=1+s,\ y=s,\ z=1-s$`, R`$x=1,\ y=s,\ z=1$`],
+        answer: 0,
+        explain: R`<p>점 $\mathbf r(0)=(1,0,1)$, 방향 $\mathbf r'(0)=\langle e^0,1,-\sin0\rangle=\langle1,1,0\rangle$. 그래서 $x=1+s$, $y=s$, $z=1$이에요.</p>`,
+      },
+      {
+        q: R`$\displaystyle\int_0^1\langle2t,\ 3t^2,\ 1\rangle\,dt$는?`,
+        choices: [R`$\langle1,1,1\rangle$`, R`$\langle2,3,1\rangle$`, R`$3$`, R`$\langle1,1,0\rangle$`],
+        answer: 0,
+        explain: R`<p>성분별로 $\int_0^12t\,dt=1$, $\int_0^13t^2\,dt=1$, $\int_0^11\,dt=1$이에요.</p>`,
+      },
+      {
+        q: R`$\dfrac{d}{dt}\big[\mathbf u(t)\times\mathbf v(t)\big]$로 옳은 것은?`,
+        choices: [R`$\mathbf u'\times\mathbf v'$`, R`$\mathbf u'\times\mathbf v+\mathbf u\times\mathbf v'$`, R`$\mathbf v\times\mathbf u'+\mathbf u\times\mathbf v'$`, R`$\mathbf u'\cdot\mathbf v+\mathbf u\cdot\mathbf v'$`],
+        answer: 1,
+        explain: R`<p>곱의 미분 꼴이고, 외적은 순서를 유지해야 해요. C는 첫 항의 순서가 바뀌어 부호가 틀려요.</p>`,
+      },
+      {
+        q: R`모든 $t$에서 $|\mathbf r(t)|=3$이면 항상 성립하는 것은?`,
+        choices: [R`$\mathbf r'(t)=\mathbf 0$`, R`$|\mathbf r'(t)|=3$`, R`$\mathbf r(t)\cdot\mathbf r'(t)=0$`, R`$\mathbf r(t)\times\mathbf r'(t)=\mathbf 0$`],
+        answer: 2,
+        explain: R`<p>정리 4예요. $\mathbf r\cdot\mathbf r=9$를 미분하면 $2\mathbf r\cdot\mathbf r'=0$. 길이가 일정하다고 방향까지 고정된 건 아니니 A는 틀려요.</p>`,
+      },
+      {
+        q: R`$\mathbf r'(t)=\langle\cos t,\ -\sin t,\ 1\rangle$이고 $\mathbf r(0)=\langle0,1,0\rangle$일 때 $\mathbf r(t)$는?`,
+        choices: [R`$\langle\sin t,\ \cos t,\ t\rangle$`, R`$\langle\sin t,\ \cos t+1,\ t\rangle$`, R`$\langle-\sin t,\ \cos t,\ t\rangle$`, R`$\langle\sin t,\ \cos t,\ t+1\rangle$`],
+        answer: 0,
+        explain: R`<p>적분하면 $\langle\sin t,\cos t,t\rangle+\mathbf C$이고, $t=0$에서 $\langle0,1,0\rangle+\mathbf C=\langle0,1,0\rangle$이라 $\mathbf C=\mathbf 0$이에요.</p>`,
+      },
+      {
+        q: R`평면곡선 $\mathbf r(t)=\langle t^2,\ t^3\rangle$에서 $t=0$일 때 옳은 것은?`,
+        choices: [R`접선벡터는 $\langle0,0\rangle$이다`, R`$\mathbf r'(0)=\mathbf 0$이라 접선벡터가 정의되지 않는다`, R`접선벡터는 $\langle1,0\rangle$이다`, R`$\mathbf r'(0)$이 존재하지 않는다`],
+        answer: 1,
+        explain: R`<p>$\mathbf r'(t)=\langle2t,3t^2\rangle$이라 $\mathbf r'(0)=\mathbf 0$이에요. 도함수는 존재하지만 영벡터라 방향이 없어서 접선벡터라 하지 않아요. 실제로 이 곡선은 원점에서 뾰족하게 꺾여요(첨점).</p>`,
+      },
+    ]);
+  })();
+})();
+</script>
+</body>
+</html>

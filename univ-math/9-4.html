@@ -1,0 +1,529 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>9.4 극좌표의 넓이와 길이</title>
+<script>try{var t=localStorage.getItem("theme");if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
+<link rel="stylesheet" href="assets/katex/katex.min.css">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body data-section="9.4">
+<div class="shell">
+  <nav class="side" aria-label="이 절의 목차">
+    <a class="home" href="index.html">전체 목차로</a>
+    <ol>
+      <li><a href="#area">넓이 공식</a></li>
+      <li><a href="#ex1">예제 1 · 장미 고리 하나</a></li>
+      <li><a href="#ex2">예제 2 · 두 곡선 사이</a></li>
+      <li><a href="#ex3">예제 3 · 교점 찾기</a></li>
+      <li><a href="#arc">호의 길이</a></li>
+      <li><a href="#ex4">예제 4 · 심장형의 길이</a></li>
+      <li><a href="#tangent">접선</a></li>
+      <li><a href="#ex5">예제 5 · 심장형의 접선</a></li>
+      <li><a href="#summary">한눈에 정리</a></li>
+      <li><a href="#check">자가 점검</a></li>
+    </ol>
+  </nav>
+
+  <main>
+    <header class="hero">
+      <p class="chapter">9장 매개변수방정식과 극좌표</p>
+      <h1><span class="num">9.4</span>극좌표에서 넓이와 길이</h1>
+      <canvas id="hero" aria-hidden="true"></canvas>
+    </header>
+
+    <p class="lede">9.3에서 그린 극곡선으로 둘러싸인 넓이, 곡선의 길이, 접선의 기울기를 구해요. 직교좌표에서 직사각형 띠를 더했다면, 극좌표에서는 <b>얇은 부채꼴</b>을 더한다는 것이 핵심입니다.</p>
+
+    <!-- ===================================================== -->
+    <h2 id="area">넓이 공식</h2>
+    <p>출발점은 부채꼴의 넓이예요. 반지름 $r$, 중심각 $\theta$(라디안)인 부채꼴의 넓이는</p>
+    $$A=\frac12r^2\theta$$
+    <p>이제 곡선 $r=f(\theta)$와 두 반직선 $\theta=a$, $\theta=b$로 둘러싸인 영역 $\mathcal R$을 생각해요. ($f\ge0$ 연속, $0\lt b-a\le2\pi$)</p>
+    <ol class="steps">
+      <li>$[a,b]$를 폭 $\Delta\theta$인 $n$개의 구간으로 나누면 영역도 $n$개의 얇은 조각으로 나뉘어요.</li>
+      <li>$i$번째 조각은 반지름 $f(\theta_i^*)$, 중심각 $\Delta\theta$인 부채꼴과 거의 같아요: $\Delta A_i\approx\frac12[f(\theta_i^*)]^2\Delta\theta$.</li>
+      <li>모두 더하면 리만 합이고, $n\to\infty$이면 적분이 됩니다.
+        $$A\approx\sum_{i=1}^n\frac12[f(\theta_i^*)]^2\Delta\theta\ \longrightarrow\ A=\int_a^b\frac12[f(\theta)]^2\,d\theta$$</li>
+    </ol>
+    <figure class="plot" id="fig-riemann">
+      <figcaption>파란 부채꼴 $n$개의 넓이 합이 곡선 아래 실제 넓이에 다가가는 모습이에요. 재생하거나 슬라이더로 $n$을 키워 보세요. ($r=1.6+0.4\sin4\theta$, $\tfrac\pi8\le\theta\le\tfrac{5\pi}8$)</figcaption>
+    </figure>
+    <div class="summary-box">
+      $$A=\int_a^b\frac12r^2\,d\theta$$
+    </div>
+
+    <div class="exam"><strong>시험 포인트.</strong> 앞에 붙는 $\frac12$을 빠뜨리는 실수가 제일 많아요. 그리고 적분 구간은 영역을 <b>정확히 한 번</b> 쓸고 지나가는 $\theta$ 범위로 잡아야 해요. 범위를 너무 넓게 잡으면 같은 부분을 두 번 더하게 됩니다(자가 점검 Q1).</div>
+
+    <!-- ===================================================== -->
+    <h2 id="ex1">예제 1 · 장미 고리 하나</h2>
+    <div class="problem"><span class="tag">예제 1</span>4엽장미 $r=\cos2\theta$의 한 고리로 둘러싸인 넓이를 구하라.</div>
+    <p>오른쪽 고리는 반직선이 $\theta=-\frac\pi4$에서 $\theta=\frac\pi4$까지 돌면서 쓸고 지나가는 영역이에요. 이 범위에서 $r=\cos2\theta\ge0$이고, 양 끝에서 $r=0$이라 고리가 닫혀요.</p>
+    <figure class="plot" id="fig-ex1">
+      <figcaption>진한 파란 조각이 지금 더하는 얇은 부채꼴 $\frac12r^2\,d\theta$, 연한 파란 부분이 지금까지 쌓인 넓이예요.</figcaption>
+    </figure>
+    <ol class="steps">
+      <li>공식에 넣어요.
+        $$A=\int_{-\pi/4}^{\pi/4}\frac12\cos^22\theta\,d\theta$$</li>
+      <li>피적분함수가 우함수이므로 $0$부터 $\frac\pi4$까지의 두 배로 바꾸고, $\cos^22\theta=\frac12(1+\cos4\theta)$를 써요.
+        $$=\int_0^{\pi/4}\cos^22\theta\,d\theta=\frac12\int_0^{\pi/4}(1+\cos4\theta)\,d\theta=\frac12\Big[\theta+\tfrac14\sin4\theta\Big]_0^{\pi/4}=\frac\pi8$$</li>
+    </ol>
+
+    <!-- ===================================================== -->
+    <h2 id="ex2">예제 2 · 두 곡선 사이</h2>
+    <p>$f(\theta)\ge g(\theta)\ge0$이고 $0\lt b-a\le2\pi$일 때, $r=f(\theta)$, $r=g(\theta)$, $\theta=a$, $\theta=b$로 둘러싸인 영역의 넓이는 <b>바깥 곡선의 넓이에서 안쪽 곡선의 넓이를 빼서</b> 구해요.</p>
+    <div class="summary-box">
+      $$A=\int_a^b\frac12[f(\theta)]^2\,d\theta-\int_a^b\frac12[g(\theta)]^2\,d\theta=\frac12\int_a^b\Big([f(\theta)]^2-[g(\theta)]^2\Big)\,d\theta$$
+    </div>
+    <p>$\frac12(f^2-g^2)$이지 $\frac12(f-g)^2$이 <b>아니에요.</b> 부채꼴 두 개의 넓이를 빼는 거라서 제곱을 먼저 하고 빼야 합니다.</p>
+
+    <div class="problem"><span class="tag">예제 2</span>원 $r=3\sin\theta$의 내부와 심장형 $r=1+\sin\theta$의 외부에 놓인 영역의 넓이를 구하라.</div>
+    <figure class="plot" id="fig-ex2">
+      <figcaption>빨간 원이 바깥 곡선 $f=3\sin\theta$, 검은 심장형이 안쪽 곡선 $g=1+\sin\theta$예요. 반직선이 $\frac\pi6$에서 $\frac{5\pi}6$까지 돌면서 두 곡선 사이를 쓸고 지나가요.</figcaption>
+    </figure>
+    <ol class="steps">
+      <li><b>교점의 $\theta$.</b> $3\sin\theta=1+\sin\theta$에서 $\sin\theta=\frac12$, 즉 $\theta=\frac\pi6,\ \frac{5\pi}6$.</li>
+      <li><b>넓이.</b> 영역이 직선 $\theta=\frac\pi2$에 대해 대칭이라 절반의 두 배로 계산해요.
+        $$A=2\cdot\frac12\int_{\pi/6}^{\pi/2}\Big(9\sin^2\theta-(1+\sin\theta)^2\Big)d\theta=\int_{\pi/6}^{\pi/2}\left(8\sin^2\theta-1-2\sin\theta\right)d\theta$$</li>
+      <li>$8\sin^2\theta=4-4\cos2\theta$로 바꾸면
+        $$=\int_{\pi/6}^{\pi/2}(3-4\cos2\theta-2\sin\theta)\,d\theta=\Big[3\theta-2\sin2\theta+2\cos\theta\Big]_{\pi/6}^{\pi/2}=\frac{3\pi}2-\frac\pi2=\pi$$</li>
+    </ol>
+
+    <!-- ===================================================== -->
+    <h2 id="ex3">예제 3 · 교점 찾기</h2>
+    <p>두 극곡선의 교점은 방정식을 연립하는 것만으로는 <b>다 안 나올 수 있어요.</b> 한 점의 극좌표 표현이 여러 개라서, 두 곡선이 같은 점을 서로 다른 $(r,\theta)$로 지날 수 있기 때문이에요. 그래서 꼭 그림을 그려서 확인해야 합니다.</p>
+    <div class="problem"><span class="tag">예제 3</span>$r=\cos2\theta$와 $r=\frac12$의 교점을 모두 구하라.</div>
+    <figure class="plot" id="fig-ex3">
+      <figcaption>빨간 점은 $\cos2\theta=\frac12$을 풀어서 나온 교점, 파란 테두리 점은 연립해서는 안 나오고 $r=-\frac12$로 풀어야 나오는 교점이에요. 장미가 지나갈 때 어느 쪽 부호로 원을 지나는지 확인해 보세요.</figcaption>
+    </figure>
+    <ol class="steps">
+      <li><b>연립.</b> $\cos2\theta=\frac12$에서 $2\theta=\frac\pi3,\frac{5\pi}3,\frac{7\pi}3,\frac{11\pi}3$, 즉 $\theta=\frac\pi6,\frac{5\pi}6,\frac{7\pi}6,\frac{11\pi}6$. 교점 네 개는
+        $$\left(\tfrac12,\tfrac\pi6\right),\ \left(\tfrac12,\tfrac{5\pi}6\right),\ \left(\tfrac12,\tfrac{7\pi}6\right),\ \left(\tfrac12,\tfrac{11\pi}6\right)$$</li>
+      <li><b>숨은 교점.</b> 원 $r=\frac12$은 $r=-\frac12$로도 쓸 수 있어요(같은 원). $\cos2\theta=-\frac12$을 풀면 나머지 네 개가 나와요.
+        $$\left(\tfrac12,\tfrac\pi3\right),\ \left(\tfrac12,\tfrac{2\pi}3\right),\ \left(\tfrac12,\tfrac{4\pi}3\right),\ \left(\tfrac12,\tfrac{5\pi}3\right)$$
+        대칭을 이용해 그림에서 찾아도 됩니다.</li>
+    </ol>
+    <div class="exam"><strong>시험 포인트.</strong> 교점 개수를 묻는 문제는 <b>(1) 그대로 연립</b>, <b>(2) 한쪽을 $-r$, $\theta+\pi$ 표현으로 바꿔서 연립</b>, <b>(3) 두 곡선이 모두 원점을 지나는지</b>(원점은 $\theta$ 값이 달라도 같은 점) 세 가지를 모두 확인하세요.</div>
+
+    <!-- ===================================================== -->
+    <h2 id="arc">호의 길이</h2>
+    <p>$\theta$를 매개변수로 보면 극곡선은 $x=f(\theta)\cos\theta$, $y=f(\theta)\sin\theta$인 매개변수곡선이에요. 곱의 미분법으로</p>
+    $$\frac{dx}{d\theta}=\frac{dr}{d\theta}\cos\theta-r\sin\theta,\qquad\frac{dy}{d\theta}=\frac{dr}{d\theta}\sin\theta+r\cos\theta$$
+    <p>제곱해서 더하면 가운데 교차항 $\mp2r\frac{dr}{d\theta}\sin\theta\cos\theta$가 지워지고, $\cos^2\theta+\sin^2\theta=1$로 정리돼요.</p>
+    $$\left(\frac{dx}{d\theta}\right)^2+\left(\frac{dy}{d\theta}\right)^2=\left(\frac{dr}{d\theta}\right)^2+r^2$$
+    <p>9.2절의 호의 길이 공식에 넣으면 극곡선의 길이 공식이 나와요.</p>
+    <div class="summary-box">
+      $$L=\int_a^b\sqrt{r^2+\left(\frac{dr}{d\theta}\right)^2}\,d\theta$$
+    </div>
+
+    <!-- ===================================================== -->
+    <h2 id="ex4">예제 4 · 심장형의 길이</h2>
+    <div class="problem"><span class="tag">예제 4</span>심장형 $r=1+\sin\theta$의 길이를 구하라.</div>
+    <figure class="plot" id="fig-ex4">
+      <figcaption>아래 막대는 지금까지 그린 곡선을 곧게 편 길이예요. 한 바퀴를 다 그리면 정확히 8이 됩니다.</figcaption>
+    </figure>
+    <ol class="steps">
+      <li>곡선 전체는 $0\le\theta\le2\pi$이고, $\frac{dr}{d\theta}=\cos\theta$예요.
+        $$L=\int_0^{2\pi}\sqrt{(1+\sin\theta)^2+\cos^2\theta}\,d\theta=\int_0^{2\pi}\sqrt{2+2\sin\theta}\,d\theta$$</li>
+      <li>루트를 벗기려면 완전제곱이 필요해요. $\sin\theta=\cos\left(\theta-\frac\pi2\right)$와 반각 공식 $1+\cos u=2\cos^2\frac u2$를 쓰면
+        $$2+2\sin\theta=4\cos^2\left(\frac\theta2-\frac\pi4\right),\qquad \sqrt{2+2\sin\theta}=2\left|\cos\left(\frac\theta2-\frac\pi4\right)\right|$$</li>
+      <li>$u=\frac\theta2-\frac\pi4$로 치환하면 $d\theta=2\,du$, $u$는 $-\frac\pi4$부터 $\frac{3\pi}4$까지예요. $\cos u$는 $u=\frac\pi2$에서 부호가 바뀌니 나눠서 적분합니다.
+        $$\begin{aligned}L&=4\int_{-\pi/4}^{3\pi/4}|\cos u|\,du=4\left[\int_{-\pi/4}^{\pi/2}\cos u\,du-\int_{\pi/2}^{3\pi/4}\cos u\,du\right]\\&=4\left[\left(1+\tfrac{\sqrt2}2\right)+\left(1-\tfrac{\sqrt2}2\right)\right]=8\end{aligned}$$</li>
+    </ol>
+    <p>교재는 피적분함수에 $\sqrt{2-2\sin\theta}$를 곱하고 나누는 방법을 소개해요. 어느 방법이든 결과는 $L=8$입니다. (슬라이드의 적분 구간 $0$~$\pi$는 오타이고, 곡선 전체는 $0$~$2\pi$예요.)</p>
+
+    <div class="exam"><strong>시험 포인트.</strong> 루트를 벗길 때 <b>절댓값</b>을 잊지 마세요. $\sqrt{4\cos^2u}=2|\cos u|$이고, $\cos u$가 음수인 구간에서 그대로 적분하면 길이가 줄어들어 틀린 답이 나와요.</div>
+
+    <!-- ===================================================== -->
+    <h2 id="tangent">접선</h2>
+    <p>극곡선도 $\theta$를 매개변수로 하는 매개변수곡선이니, 9.2의 기울기 공식을 그대로 써요.</p>
+    $$\frac{dy}{dx}=\frac{dy/d\theta}{dx/d\theta}$$
+    <p>여기에 위에서 구한 $\frac{dx}{d\theta}$, $\frac{dy}{d\theta}$를 넣으면 다음 공식이 됩니다.</p>
+    <div class="summary-box">
+      $$\frac{dy}{dx}=\frac{\dfrac{dr}{d\theta}\sin\theta+r\cos\theta}{\dfrac{dr}{d\theta}\cos\theta-r\sin\theta}$$
+    </div>
+    <ul>
+      <li>분자 $=0$ (분모 $\neq0$): <b>수평</b>접선.</li>
+      <li>분모 $=0$ (분자 $\neq0$): <b>수직</b>접선.</li>
+      <li>둘 다 $0$: 극한(로피탈)으로 확인.</li>
+      <li>원점($r=0$)을 지날 때 $\frac{dr}{d\theta}\neq0$이면 $\frac{dy}{dx}=\tan\theta$. 즉 원점에서의 접선은 <b>그 순간의 방향 $\theta$ 직선</b>이에요.</li>
+    </ul>
+
+    <!-- ===================================================== -->
+    <h2 id="ex5">예제 5 · 심장형의 접선</h2>
+    <div class="problem"><span class="tag">예제 5</span>심장형 $r=1+\sin\theta$에서 (a) $\theta=\frac\pi3$에서 접선의 기울기를 구하라. (b) 접선이 수평, 수직이 되는 점들을 구하라.</div>
+
+    <figure class="plot" id="fig-ex5">
+      <figcaption>파란 직선이 현재 점의 접선이에요. 짧은 검은 가로 막대는 수평접선, 세로 막대는 수직접선의 위치입니다. 버튼으로 각 점에 바로 가 보세요.</figcaption>
+    </figure>
+
+    <p>$\frac{dr}{d\theta}=\cos\theta$를 공식에 넣고 정리하면</p>
+    $$\frac{dy}{dx}=\frac{\cos\theta\sin\theta+(1+\sin\theta)\cos\theta}{\cos^2\theta-(1+\sin\theta)\sin\theta}=\frac{\cos\theta\,(1+2\sin\theta)}{1-\sin\theta-2\sin^2\theta}=\frac{\cos\theta\,(1+2\sin\theta)}{(1+\sin\theta)(1-2\sin\theta)}$$
+
+    <h3>(a) $\theta=\frac\pi3$</h3>
+    <p>$\cos\frac\pi3=\frac12$, $\sin\frac\pi3=\frac{\sqrt3}2$를 넣으면</p>
+    $$\frac{dy}{dx}=\frac{\frac12(1+\sqrt3)}{\left(1+\frac{\sqrt3}2\right)(1-\sqrt3)}=\frac{1+\sqrt3}{(2+\sqrt3)(1-\sqrt3)}=\frac{1+\sqrt3}{-1-\sqrt3}=-1$$
+
+    <h3>(b) 수평접선과 수직접선</h3>
+    <dl class="def">
+      <dt>수평접선 (분자 $=0$)</dt>
+      <dd>$\cos\theta=0$ 또는 $\sin\theta=-\frac12$, 즉 $\theta=\frac\pi2,\frac{3\pi}2,\frac{7\pi}6,\frac{11\pi}6$. 그런데 $\theta=\frac{3\pi}2$에서는 분모도 0이라 따로 봐야 해요. 수평접선을 갖는 점은 $\left(2,\frac\pi2\right)$, $\left(\frac12,\frac{7\pi}6\right)$, $\left(\frac12,\frac{11\pi}6\right)$.</dd>
+      <dt>수직접선 (분모 $=0$)</dt>
+      <dd>$\sin\theta=-1$ 또는 $\sin\theta=\frac12$, 즉 $\theta=\frac{3\pi}2,\frac\pi6,\frac{5\pi}6$. 수직접선을 갖는 점은 $\left(\frac32,\frac\pi6\right)$, $\left(\frac32,\frac{5\pi}6\right)$.</dd>
+      <dt>$\theta=\frac{3\pi}2$ (원점, 분자 분모 모두 0)</dt>
+      <dd>로피탈 법칙으로 극한을 봐요.
+        $$\lim_{\theta\to(3\pi/2)^-}\frac{dy}{dx}=\left(\lim\frac{1+2\sin\theta}{1-2\sin\theta}\right)\left(\lim\frac{\cos\theta}{1+\sin\theta}\right)=-\frac13\lim_{\theta\to(3\pi/2)^-}\frac{-\sin\theta}{\cos\theta}=\infty$$
+        오른쪽 극한은 $-\infty$라서, 원점(첨점)에서는 <b>수직</b>접선을 가져요.</dd>
+    </dl>
+
+    <!-- ===================================================== -->
+    <h2 id="summary">한눈에 정리</h2>
+    <div class="summary-box">
+      <ul>
+        <li>넓이: $A=\displaystyle\int_a^b\frac12r^2\,d\theta$. 기본 단위는 부채꼴 $\frac12r^2\Delta\theta$.</li>
+        <li>두 곡선 사이: $A=\frac12\displaystyle\int_a^b(f^2-g^2)\,d\theta$. $(f-g)^2$가 아니다.</li>
+        <li>적분 구간: 영역을 정확히 한 번 쓸고 지나가는 $\theta$ 범위. 대칭을 쓰면 계산이 쉬워진다.</li>
+        <li>교점: 연립 + $(-r,\theta+\pi)$ 표현으로 다시 연립 + 원점 확인. 그림으로 검산.</li>
+        <li>길이: $L=\displaystyle\int_a^b\sqrt{r^2+\left(\dfrac{dr}{d\theta}\right)^2}\,d\theta$. 루트는 반각 공식으로, 절댓값 주의.</li>
+        <li>접선: $\dfrac{dy}{dx}=\dfrac{r'\sin\theta+r\cos\theta}{r'\cos\theta-r\sin\theta}$. 원점에서는 기울기 $\tan\theta$.</li>
+        <li>외워 둘 결과: 장미 $\cos2\theta$ 고리 하나 $\frac\pi8$, 심장형 $1+\sin\theta$ 길이 8, 넓이 $\frac{3\pi}2$.</li>
+      </ul>
+    </div>
+
+    <!-- ===================================================== -->
+    <h2 id="check">자가 점검</h2>
+    <p>보기를 고르면 바로 정답과 풀이가 나와요. 그래프가 있는 문제는 답을 고른 뒤 직접 확인해 보세요.</p>
+    <div id="quiz"></div>
+
+    <nav class="pager" aria-label="절 이동"></nav>
+  </main>
+</div>
+
+<script src="assets/katex/katex.min.js"></script>
+<script src="assets/katex/auto-render.min.js"></script>
+<script src="assets/plot.js"></script>
+<script src="assets/quiz.js"></script>
+<script src="assets/site.js"></script>
+<script>
+(function () {
+  "use strict";
+  const { fmt, fmtPi, label, dot, hollow, polarGrid, polarRay, tangent } = Plot;
+  const PI = Math.PI, SQ3 = Math.sqrt(3);
+  const i = (s) => "<i>" + s + "</i>";
+  const segHtml = (labels, aria, cls) =>
+    '<span class="seg ' + (cls || "") + '" role="group" aria-label="' + aria + '">' +
+    labels.map((l, k) => '<button type="button" data-k="' + k + '" aria-pressed="false">' + l + "</button>").join("") + "</span>";
+  const slopeText = (num, den) => {
+    if (Math.abs(den) < 1e-6) return Math.abs(num) < 1e-6 ? "0/0 (극한으로 확인)" : "수직 (±∞)";
+    return fmt(num / den);
+  };
+
+  // 극곡선 그리기 도우미
+  function polarPath(ctx, T, f, a, b, n, fromO) {
+    n = n || 300;
+    ctx.beginPath();
+    if (fromO) ctx.moveTo(T.X(0), T.Y(0));
+    for (let k = 0; k <= n; k++) {
+      const s = a + (b - a) * k / n, rr = f(s), X = T.X(rr * Math.cos(s)), Y = T.Y(rr * Math.sin(s));
+      (k || fromO) ? ctx.lineTo(X, Y) : ctx.moveTo(X, Y);
+    }
+    if (fromO) ctx.closePath();
+  }
+  // 두 곡선 사이 영역 (a ≤ θ ≤ b), g가 안쪽
+  function bandPath(ctx, T, f, g, a, b, n) {
+    n = n || 200;
+    ctx.beginPath();
+    for (let k = 0; k <= n; k++) { const s = a + (b - a) * k / n; const X = T.X(f(s) * Math.cos(s)), Y = T.Y(f(s) * Math.sin(s)); k ? ctx.lineTo(X, Y) : ctx.moveTo(X, Y); }
+    for (let k = n; k >= 0; k--) { const s = a + (b - a) * k / n; ctx.lineTo(T.X(g(s) * Math.cos(s)), T.Y(g(s) * Math.sin(s))); }
+    ctx.closePath();
+  }
+  function rayLine(ctx, T, C, th, len, dash) {
+    ctx.save(); ctx.strokeStyle = C.muted; ctx.globalAlpha = .7; ctx.setLineDash(dash || [5, 5]);
+    ctx.beginPath(); ctx.moveTo(T.X(0), T.Y(0)); ctx.lineTo(T.X(len * Math.cos(th)), T.Y(len * Math.sin(th))); ctx.stroke(); ctx.restore();
+  }
+  // 심프슨 적분
+  function simpson(g, a, b, n) {
+    n = n || 400; const h = (b - a) / n; let s = g(a) + g(b);
+    for (let k = 1; k < n; k++) s += (k % 2 ? 4 : 2) * g(a + k * h);
+    return s * h / 3;
+  }
+
+  Plot.heroPolar(document.getElementById("hero"), [
+    { f: (t) => Math.cos(2 * t), range: [-PI / 4, PI / 4], R: 1.05, fill: true },
+    { f: (t) => 1 + Math.sin(t), range: [0, 2 * PI], R: 2.05, fill: true },
+    { f: (t) => 1.5 + 0.5 * Math.cos(5 * t), range: [0, 2 * PI], R: 2.05, fill: true },
+    { f: (t) => Math.abs(Math.cos(2 * t)), range: [0, 2 * PI], R: 1.05, fill: true },
+    { f: (t) => 3 * Math.sin(t), range: [0, PI], R: 3.05, fill: true },
+  ]);
+
+  /* ---------- 리만 합 ---------- */
+  (function () {
+    const f = (t) => 1.6 + 0.4 * Math.sin(4 * t);
+    const a = PI / 8, b = 5 * PI / 8;
+    const exact = simpson((t) => 0.5 * f(t) ** 2, a, b, 600);
+    const N = (v) => Math.max(1, Math.round(v));
+    Plot.mount(document.getElementById("fig-riemann"), {
+      t: { min: 1, max: 40, value: 6, label: "n" },
+      duration: 7,
+      panels: [{
+        curve: false, x: () => 0, y: () => 0, grid: 0, origin: false, maxWidth: "26rem",
+        view: { x: [-1.5, 2.3], y: [-0.4, 2.4] },
+        alt: "부채꼴로 극곡선 아래 넓이를 근사",
+        under(ctx, T, v, C) {
+          polarGrid(ctx, T, C, { rings: [1, 2], maxR: 3 });
+          const n = N(v), d = (b - a) / n;
+          for (let k = 0; k < n; k++) {
+            const t0 = a + k * d, rr = f(t0 + d / 2);
+            ctx.save(); ctx.fillStyle = C.auxSoft; ctx.strokeStyle = C.aux; ctx.lineWidth = 1; ctx.globalAlpha = 1;
+            ctx.beginPath(); ctx.moveTo(T.X(0), T.Y(0));
+            ctx.arc(T.X(0), T.Y(0), rr * T.sx, -t0, -(t0 + d), true);
+            ctx.closePath(); ctx.fill(); ctx.globalAlpha = .7; ctx.stroke(); ctx.restore();
+          }
+          ctx.save(); ctx.strokeStyle = C.curve; ctx.lineWidth = 2.4; polarPath(ctx, T, f, a, b, 300); ctx.stroke(); ctx.restore();
+          rayLine(ctx, T, C, a, 2.4); rayLine(ctx, T, C, b, 2.4);
+          label(ctx, "θ = a", T.X(2.25 * Math.cos(a)), T.Y(2.25 * Math.sin(a)) + 14, { size: 12, color: C.muted, align: "right" });
+          label(ctx, "θ = b", T.X(2.3 * Math.cos(b)) - 6, T.Y(2.3 * Math.sin(b)), { size: 12, color: C.muted, align: "right" });
+          label(ctx, "O", T.X(0) - 6, T.Y(0) + 12, { size: 13, italic: true, math: true, color: C.ink, align: "right" });
+        },
+      }],
+      readout: (v) => {
+        const n = N(v), d = (b - a) / n;
+        let s = 0; for (let k = 0; k < n; k++) s += 0.5 * f(a + (k + 0.5) * d) ** 2 * d;
+        return i("n") + " = <b>" + n + "</b>, 부채꼴 넓이의 합 = <b>" + fmt(s, 4) + "</b>, 실제 넓이 ∫ ½" + i("r") + "² dθ = " + fmt(exact, 4) +
+          ", 오차 " + fmt(Math.abs(s - exact), 4);
+      },
+    });
+  })();
+
+  /* ---------- 예제 1 ---------- */
+  (function () {
+    const f = (t) => Math.cos(2 * t);
+    const A = (t) => 0.5 * (t / 2 + Math.sin(4 * t) / 8 + PI / 8);
+    const D = 0.09;
+    Plot.polar(document.getElementById("fig-ex1"), {
+      f, range: [-PI / 4, PI / 4], value: 0.15, R: 1.15, rings: [0.5, 1], side: false, arrows: 0, angle: false, duration: 6,
+      maxWidth: "26rem", negColor: false,
+      alt: "장미 고리 하나의 넓이가 채워지는 그림",
+      under(ctx, T, t, C, rg) {
+        ctx.save(); ctx.strokeStyle = C.muted; ctx.globalAlpha = .45; ctx.setLineDash([3, 4]); ctx.lineWidth = 1.3;
+        polarPath(ctx, T, (s) => Math.cos(2 * s), 0, 2 * PI, 600); ctx.stroke(); ctx.restore();
+        ctx.save(); ctx.fillStyle = C.auxSoft; polarPath(ctx, T, f, rg.min, t, 200, true); ctx.fill(); ctx.restore();
+        if (t < rg.max - 0.01) {
+          ctx.save(); ctx.fillStyle = C.aux; ctx.globalAlpha = .55;
+          polarPath(ctx, T, f, t, Math.min(rg.max, t + D), 20, true); ctx.fill(); ctx.restore();
+        }
+        rayLine(ctx, T, C, PI / 4, 1.3); rayLine(ctx, T, C, -PI / 4, 1.3);
+        label(ctx, "θ = π/4", T.X(1.05 * Math.cos(PI / 4)) + 6, T.Y(1.05 * Math.sin(PI / 4)), { size: 12, color: C.muted });
+        label(ctx, "θ = −π/4", T.X(1.05 * Math.cos(PI / 4)) + 6, T.Y(-1.05 * Math.sin(PI / 4)), { size: 12, color: C.muted });
+      },
+      readout: (t) => "θ = <b>" + fmtPi(t) + "</b>, " + i("r") + " = " + fmt(f(t)) + ", 지금까지의 넓이 = <b>" + fmt(A(t), 4) + "</b> (전체 π/8 ≈ 0.3927)",
+    });
+  })();
+
+  /* ---------- 예제 2 ---------- */
+  (function () {
+    const f = (t) => 3 * Math.sin(t), g = (t) => 1 + Math.sin(t);
+    const a = PI / 6, b = 5 * PI / 6;
+    const A = (t) => 0.5 * (3 * t - 2 * Math.sin(2 * t) + 2 * Math.cos(t) - PI / 2);
+    Plot.mount(document.getElementById("fig-ex2"), {
+      t: { min: a, max: b, value: 1.25, label: "θ" },
+      duration: 7,
+      panels: [{
+        curve: false, x: () => 0, y: () => 0, grid: 0, origin: false, maxWidth: "26rem",
+        view: { x: [-1.9, 1.9], y: [-0.5, 3.3] },
+        alt: "원 r = 3sin θ 안쪽, 심장형 r = 1 + sin θ 바깥쪽 영역",
+        under(ctx, T, t, C) {
+          polarGrid(ctx, T, C, { rings: [1, 2, 3], maxR: 4 });
+          ctx.save(); ctx.fillStyle = C.auxSoft; ctx.globalAlpha = .45; bandPath(ctx, T, f, g, a, b); ctx.fill(); ctx.restore();
+          ctx.save(); ctx.fillStyle = C.auxSoft; bandPath(ctx, T, f, g, a, t); ctx.fill(); ctx.restore();
+          ctx.save(); ctx.strokeStyle = C.ink; ctx.lineWidth = 1.8; polarPath(ctx, T, g, 0, 2 * PI, 400); ctx.stroke(); ctx.restore();
+          ctx.save(); ctx.strokeStyle = C.curve; ctx.lineWidth = 2.4; polarPath(ctx, T, f, 0, PI, 300); ctx.stroke(); ctx.restore();
+          rayLine(ctx, T, C, a, 3.4); rayLine(ctx, T, C, b, 3.4);
+        },
+        over(ctx, T, t, C) {
+          // 현재 반직선: 안쪽 곡선에서 바깥 곡선까지
+          const gi = g(t), fo = f(t);
+          ctx.save(); ctx.strokeStyle = C.aux; ctx.lineWidth = 3;
+          ctx.beginPath(); ctx.moveTo(T.X(gi * Math.cos(t)), T.Y(gi * Math.sin(t))); ctx.lineTo(T.X(fo * Math.cos(t)), T.Y(fo * Math.sin(t))); ctx.stroke(); ctx.restore();
+          rayLine(ctx, T, C, t, gi, [2, 3]);
+          dot(ctx, T.X(fo * Math.cos(t)), T.Y(fo * Math.sin(t)), 4.5, C.curve, C.surface);
+          dot(ctx, T.X(gi * Math.cos(t)), T.Y(gi * Math.sin(t)), 4.5, C.ink, C.surface);
+          [a, b].forEach((s) => dot(ctx, T.X(1.5 * Math.cos(s)), T.Y(1.5 * Math.sin(s)), 3.5, C.ink));
+          label(ctx, "θ = π/6", T.X(3.1 * Math.cos(a)) + 4, T.Y(3.1 * Math.sin(a)) + 12, { size: 12, color: C.muted, align: "right" });
+          label(ctx, "θ = 5π/6", T.X(3.1 * Math.cos(b)) - 4, T.Y(3.1 * Math.sin(b)) + 12, { size: 12, color: C.muted });
+        },
+      }],
+      readout: (t) => "θ = <b>" + fmtPi(t) + "</b>, 바깥 " + i("f") + " = " + fmt(f(t)) + ", 안쪽 " + i("g") + " = " + fmt(g(t)) +
+        "<br>지금까지의 넓이 ½∫(" + i("f") + "² − " + i("g") + "²)dθ = <b>" + fmt(A(t), 4) + "</b> (전체 π ≈ 3.1416)",
+    });
+  })();
+
+  /* ---------- 예제 3 ---------- */
+  (function () {
+    const f = (t) => Math.cos(2 * t);
+    const solved = [PI / 6, 5 * PI / 6, 7 * PI / 6, 11 * PI / 6];
+    const hidden = [PI / 3, 2 * PI / 3, 4 * PI / 3, 5 * PI / 3];
+    Plot.polar(document.getElementById("fig-ex3"), {
+      f, range: [0, 2 * PI], value: 1.2, R: 1.15, rings: [0.5, 1], rview: [-1.15, 1.15], rticks: [-1, 1], arrows: 8, duration: 12,
+      alt: "장미 r = cos 2θ와 원 r = 1/2의 교점",
+      under(ctx, T, t, C) {
+        ctx.save(); ctx.strokeStyle = C.aux; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(T.X(0), T.Y(0), 0.5 * T.sx, 0, 2 * PI); ctx.stroke(); ctx.restore();
+      },
+      over(ctx, T, t, C) {
+        solved.forEach((s) => dot(ctx, T.X(0.5 * Math.cos(s)), T.Y(0.5 * Math.sin(s)), 5, C.curve, C.surface));
+        hidden.forEach((s) => hollow(ctx, T.X(0.5 * Math.cos(s)), T.Y(0.5 * Math.sin(s)), 5, C.aux, C.surface));
+      },
+      note: (t) => {
+        const rr = f(t);
+        if (Math.abs(rr - 0.5) < 0.04) return "지금 <b>r = 1/2</b>로 원을 지나는 중 (연립으로 찾는 교점)";
+        if (Math.abs(rr + 0.5) < 0.04) return "지금 <b>r = −1/2</b>로 원을 지나는 중 (숨은 교점)";
+        return "교점: 연립으로 4개 + " + i("r") + " = −1/2로 4개, 모두 8개";
+      },
+    });
+  })();
+
+  /* ---------- 예제 4 호의 길이 ---------- */
+  (function () {
+    const f = (t) => 1 + Math.sin(t);
+    const F = (U) => (U <= PI / 2 ? Math.sin(U) + Math.SQRT1_2 : 1 + Math.SQRT1_2 + 1 - Math.sin(U));
+    const L = (t) => 4 * F(t / 2 - PI / 4);
+    Plot.polar(document.getElementById("fig-ex4"), {
+      f, range: [0, 2 * PI], R: 2.3, rings: [1, 2], side: false, duration: 8, maxWidth: "26rem",
+      view: { x: [-1.8, 1.8], y: [-1.75, 2.3] },
+      alt: "심장형의 길이를 곧게 편 막대",
+      over(ctx, T, t, C) {
+        const y = T.Y(-1.3), x0 = T.X(-1.6), w = T.X(1.6) - x0;
+        ctx.save(); ctx.lineCap = "butt"; ctx.lineWidth = 8;
+        ctx.strokeStyle = C.rule; ctx.beginPath(); ctx.moveTo(x0, y); ctx.lineTo(x0 + w, y); ctx.stroke();
+        ctx.strokeStyle = C.curve; ctx.beginPath(); ctx.moveTo(x0, y); ctx.lineTo(x0 + w * L(t) / 8, y); ctx.stroke(); ctx.restore();
+        [0, 2, 4, 6, 8].forEach((v) => label(ctx, String(v), x0 + w * v / 8, y + 15, { size: 11, color: C.muted, align: "center" }));
+        label(ctx, "펼친 길이", x0, y - 13, { size: 11.5, color: C.muted });
+      },
+      readout: (t) => "θ = <b>" + fmtPi(t) + "</b>, √(" + i("r") + "² + " + i("r") + "′²) = √(2 + 2 sin θ) = " + fmt(Math.sqrt(2 + 2 * Math.sin(t))) +
+        "<br>지금까지의 길이 = <b>" + fmt(L(t), 3) + "</b> (전체 8)",
+    });
+  })();
+
+  /* ---------- 예제 5 접선 ---------- */
+  (function () {
+    const f = (t) => 1 + Math.sin(t);
+    const X = (t) => f(t) * Math.cos(t), Y = (t) => f(t) * Math.sin(t);
+    const jumps = [[PI / 3, "π/3"], [PI / 2, "π/2"], [7 * PI / 6, "7π/6"], [11 * PI / 6, "11π/6"], [PI / 6, "π/6"], [5 * PI / 6, "5π/6"], [3 * PI / 2 - 1e-4, "3π/2"]];
+    const api = Plot.polar(document.getElementById("fig-ex5"), {
+      f, range: [0, 2 * PI], value: PI / 3, R: 2.3, rings: [1, 2], side: false, duration: 10, arrows: 4, maxWidth: "26rem",
+      view: { x: [-1.8, 1.8], y: [-0.85, 2.35] }, angle: false,
+      alt: "심장형과 접선",
+      over(ctx, T, t, C) {
+        tangent(ctx, T, X, Y, t, C.aux, { width: 1.8 });
+        ctx.save(); ctx.strokeStyle = C.ink; ctx.lineWidth = 2.2;
+        [PI / 2, 7 * PI / 6, 11 * PI / 6].forEach((s) => { const px = T.X(X(s)), py = T.Y(Y(s)); ctx.beginPath(); ctx.moveTo(px - 12, py); ctx.lineTo(px + 12, py); ctx.stroke(); });
+        [PI / 6, 5 * PI / 6, 3 * PI / 2].forEach((s) => { const px = T.X(X(s)), py = T.Y(Y(s)); ctx.beginPath(); ctx.moveTo(px, py - 12); ctx.lineTo(px, py + 12); ctx.stroke(); });
+        ctx.restore();
+      },
+      controls: segHtml(jumps.map((j) => "θ = " + j[1]), "중요한 θ 값으로 이동", "ex5-jumps"),
+      readout: (t) => {
+        const num = Math.cos(t) * (1 + 2 * Math.sin(t)), den = (1 + Math.sin(t)) * (1 - 2 * Math.sin(t));
+        return "θ = <b>" + fmtPi(t) + "</b>, " + i("r") + " = " + fmt(f(t)) + ", (" + i("x") + ", " + i("y") + ") = (" + fmt(X(t)) + ", " + fmt(Y(t)) + ")<br>" +
+          "분자 cos θ(1 + 2sin θ) = " + fmt(num) + ", 분모 (1 + sin θ)(1 − 2sin θ) = " + fmt(den) + ", 기울기 <b>" +
+          (Math.abs(t - 3 * PI / 2) < 1e-3 ? "0/0 → 극한으로 수직" : slopeText(num, den)) + "</b>";
+      },
+    });
+    api.bar.querySelectorAll(".ex5-jumps button").forEach((b, k) => b.addEventListener("click", () => { api.pause(); api.setT(jumps[k][0]); }));
+  })();
+
+  /* ---------- 자가 점검 ---------- */
+  (function () {
+    const R = String.raw;
+    const qpolar = (f, range, o) => {
+      o = o || {};
+      return {
+        t: { min: range[0], max: range[1], label: "θ" }, duration: o.duration || 4,
+        panels: [{
+          x: (t) => f(t) * Math.cos(t), y: (t) => f(t) * Math.sin(t), grid: 0, origin: false, arrows: o.arrows || 0, markStart: true, samples: 900,
+          view: o.view || { x: [-2.4, 2.4], y: [-2.4, 2.4] },
+          under(ctx, T, t, C, rg) {
+            polarGrid(ctx, T, C, { rings: o.rings || [1, 2], maxR: 6 });
+            if (o.fill) { ctx.save(); ctx.fillStyle = C.auxSoft; polarPath(ctx, T, f, rg.min, t, 300, true); ctx.fill(); ctx.restore(); }
+            if (o.under) o.under(ctx, T, t, C);
+          },
+          over(ctx, T, t, C, rg) { Plot.negParts(f)(ctx, T, t, C, rg); if (o.over) o.over(ctx, T, t, C); },
+        }],
+        readout: o.readout || ((t) => "θ = <b>" + fmtPi(t) + "</b>, " + i("r") + " = <b>" + fmt(f(t)) + "</b>"),
+      };
+    };
+
+    Quiz.mount(document.getElementById("quiz"), [
+      {
+        q: R`원 $r=2\cos\theta$의 내부 넓이를 $\displaystyle\int\frac12r^2\,d\theta$로 구할 때 옳은 값은?`,
+        choices: [R`$2\pi$`, R`$\pi$`, R`$\dfrac\pi2$`, R`$4\pi$`],
+        answer: 1,
+        explain: R`<p>이 원은 $0\le\theta\le\pi$에서 <b>한 번</b> 그려져요(9.3 예제 6). 그래서 $A=\displaystyle\int_0^\pi\frac12\cdot4\cos^2\theta\,d\theta=\pi$이고, 반지름 1인 원의 넓이와 같아요. $0$부터 $2\pi$까지 적분하면 원을 두 번 쓸어서 $2\pi$(A)라는 틀린 답이 나옵니다.</p>`,
+        plotWidth: "20rem",
+        plot: qpolar((t) => 2 * Math.cos(t), [0, PI], { fill: true, view: { x: [-0.6, 2.4], y: [-1.5, 1.5] }, readout: (t) => "θ = <b>" + fmtPi(t) + "</b>, 넓이 = <b>" + fmt(t + Math.sin(2 * t) / 2, 3) + "</b>" }),
+      },
+      {
+        q: R`장미 $r=\sin3\theta$의 꽃잎 <b>한 장</b>의 넓이는?`,
+        choices: [R`$\dfrac{\pi}{12}$`, R`$\dfrac\pi6$`, R`$\dfrac\pi4$`, R`$\dfrac\pi3$`],
+        answer: 0,
+        explain: R`<p>첫 꽃잎은 $\sin3\theta\ge0$인 $0\le\theta\le\frac\pi3$에서 그려져요.</p>$$A=\int_0^{\pi/3}\frac12\sin^23\theta\,d\theta=\frac14\int_0^{\pi/3}(1-\cos6\theta)\,d\theta=\frac14\cdot\frac\pi3=\frac{\pi}{12}$$`,
+        plotWidth: "20rem",
+        plot: qpolar((t) => 2 * Math.sin(3 * t), [0, PI / 3], { fill: true, readout: (t) => "θ = <b>" + fmtPi(t) + "</b> (그림은 2배 크기)" }),
+      },
+      {
+        q: R`심장형 $r=1+\cos\theta$로 둘러싸인 넓이는?`,
+        choices: [R`$\pi$`, R`$2\pi$`, R`$\dfrac{3\pi}2$`, R`$3\pi$`],
+        answer: 2,
+        explain: R`<p>$A=\displaystyle\int_0^{2\pi}\frac12(1+\cos\theta)^2d\theta=\frac12\int_0^{2\pi}\left(1+2\cos\theta+\cos^2\theta\right)d\theta=\frac12(2\pi+0+\pi)=\frac{3\pi}2$.</p>`,
+        plotWidth: "20rem",
+        plot: qpolar((t) => 1 + Math.cos(t), [0, 2 * PI], { fill: true, view: { x: [-0.6, 2.4], y: [-1.5, 1.5] } }),
+      },
+      {
+        q: R`$r=1+\cos\theta$와 $r=3\cos\theta$의 교점은 모두 몇 개인가?`,
+        choices: ["1개", "2개", "4개", "3개"],
+        answer: 3,
+        explain: R`<p>연립하면 $1+\cos\theta=3\cos\theta$에서 $\cos\theta=\frac12$, 즉 $\theta=\pm\frac\pi3$이고 점 $\left(\frac32,\pm\frac\pi3\right)$ 두 개가 나와요. 그런데 두 곡선 모두 <b>원점</b>을 지나요($3\cos\theta$는 $\theta=\frac\pi2$, $1+\cos\theta$는 $\theta=\pi$에서). $\theta$ 값이 달라서 연립으로는 안 나오지만 같은 점이므로 교점은 3개예요.</p>`,
+        plotWidth: "20rem",
+        plot: qpolar((t) => 1 + Math.cos(t), [0, 2 * PI], {
+          view: { x: [-0.6, 3.3], y: [-1.95, 1.95] }, rings: [1, 2, 3],
+          under(ctx, T, t, C) { ctx.save(); ctx.strokeStyle = C.aux; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(T.X(1.5), T.Y(0), 1.5 * T.sx, 0, 2 * PI); ctx.stroke(); ctx.restore(); },
+          over(ctx, T, t, C) {
+            [PI / 3, -PI / 3].forEach((s) => dot(ctx, T.X(1.5 * Math.cos(s)), T.Y(1.5 * Math.sin(s)), 5, C.ok, C.surface));
+            dot(ctx, T.X(0), T.Y(0), 5, C.ok, C.surface);
+          },
+        }),
+      },
+      {
+        q: R`곡선 $r=e^\theta,\ 0\le\theta\le1$의 길이는?`,
+        choices: [R`$e-1$`, R`$\sqrt2\,(e-1)$`, R`$\sqrt2\,e$`, R`$2(e-1)$`],
+        answer: 1,
+        explain: R`<p>$\frac{dr}{d\theta}=e^\theta$이므로 $\sqrt{r^2+(\frac{dr}{d\theta})^2}=\sqrt{2e^{2\theta}}=\sqrt2\,e^\theta$. 따라서 $L=\displaystyle\int_0^1\sqrt2\,e^\theta d\theta=\sqrt2\,(e-1)$이에요.</p>`,
+      },
+      {
+        q: R`원 $r=2\sin\theta$의 둘레를 극좌표 길이 공식으로 구하면?`,
+        choices: [R`$\pi$`, R`$4\pi$`, R`$2\pi$`, "$2$"],
+        answer: 2,
+        explain: R`<p>$\sqrt{r^2+r'^2}=\sqrt{4\sin^2\theta+4\cos^2\theta}=2$이고, 원은 $0\le\theta\le\pi$에서 한 번 그려져요. $L=\displaystyle\int_0^\pi2\,d\theta=2\pi$로 반지름 1인 원의 둘레와 같습니다. $2\pi$까지 적분하면 $4\pi$(B)가 되는 함정이에요.</p>`,
+      },
+      {
+        q: R`나선 $r=\theta$ 위의 $\theta=\frac\pi2$인 점에서 접선의 기울기는?`,
+        choices: [R`$-\dfrac2\pi$`, R`$\dfrac2\pi$`, R`$-\dfrac\pi2$`, "$0$"],
+        answer: 0,
+        explain: R`<p>$r'=1$. 분자 $r'\sin\theta+r\cos\theta=1\cdot1+\frac\pi2\cdot0=1$, 분모 $r'\cos\theta-r\sin\theta=0-\frac\pi2=-\frac\pi2$. 따라서 $\frac{dy}{dx}=-\dfrac2\pi$예요.</p>`,
+        plotWidth: "20rem",
+        plot: qpolar((t) => t, [0, 2.2], {
+          view: { x: [-2.4, 2.4], y: [-1.2, 2.6] }, arrows: 2,
+          over(ctx, T, t, C) { tangent(ctx, T, (s) => s * Math.cos(s), (s) => s * Math.sin(s), PI / 2, C.aux, { width: 1.8 }); dot(ctx, T.X(0), T.Y(PI / 2), 4, C.aux); },
+        }),
+      },
+      {
+        q: R`곡선 $r=\cos2\theta$가 $\theta=\frac\pi4$에서 원점을 지날 때, 그 점에서 접선의 기울기는?`,
+        choices: ["$0$", "$1$", "$-1$", "수직 (정의되지 않음)"],
+        answer: 1,
+        explain: R`<p>원점에서는 $r=0$이므로 공식이 $\dfrac{r'\sin\theta}{r'\cos\theta}=\tan\theta$가 돼요($r'=-2\sin2\theta=-2\neq0$). $\tan\frac\pi4=1$이므로 접선은 직선 $\theta=\frac\pi4$, 즉 $y=x$예요. 9.3 예제 8 그림에서 꽃잎이 점선 $\theta=\frac\pi4$에 접하며 원점으로 들어가던 것과 같아요.</p>`,
+      },
+    ]);
+  })();
+})();
+</script>
+</body>
+</html>

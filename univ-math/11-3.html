@@ -1,0 +1,594 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>11.3 내적</title>
+<script>try{var t=localStorage.getItem("theme");if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
+<link rel="stylesheet" href="assets/katex/katex.min.css">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body data-section="11.3">
+<div class="shell">
+  <nav class="side" aria-label="이 절의 목차">
+    <a class="home" href="index.html">전체 목차로</a>
+    <ol>
+      <li><a href="#def">내적의 정의</a></li>
+      <li><a href="#prop">내적의 성질</a></li>
+      <li><a href="#angle">내적과 사이각</a></li>
+      <li><a href="#sign">부호로 각 판단하기</a></li>
+      <li><a href="#cos">사이각 구하기 · 예제 3</a></li>
+      <li><a href="#orth">직교 조건 · 예제 4</a></li>
+      <li><a href="#dir">방향각과 방향코사인</a></li>
+      <li><a href="#proj">사영</a></li>
+      <li><a href="#work">응용: 일</a></li>
+      <li><a href="#summary">한눈에 정리</a></li>
+      <li><a href="#check">자가 점검</a></li>
+    </ol>
+  </nav>
+
+  <main>
+    <header class="hero">
+      <p class="chapter">11장 벡터와 공간기하학</p>
+      <h1><span class="num">11.3</span>내적</h1>
+      <canvas id="hero" aria-hidden="true"></canvas>
+    </header>
+
+    <p class="lede">두 벡터를 곱하는 방법은 두 가지예요. 결과가 <b>수(스칼라)</b>로 나오는 내적과, 결과가 <b>벡터</b>로 나오는 외적(11.4)이에요. 내적은 계산은 성분끼리 곱해서 더하면 끝일 만큼 쉽고, 기하학적으로는 <b>두 벡터가 얼마나 같은 방향을 향하는지</b>를 재는 도구예요. 사이각, 수직 판정, 사영, 일까지 모두 이 하나로 해결돼요.</p>
+
+    <!-- ===================================================== -->
+    <h2 id="def">내적의 정의</h2>
+    <div class="summary-box">
+      <p style="margin:0 0 .3rem"><b>1 정의</b> $\mathbf a=\langle a_1,a_2,a_3\rangle$, $\mathbf b=\langle b_1,b_2,b_3\rangle$일 때 $\mathbf a$와 $\mathbf b$의 <b>내적</b>은</p>
+      $$\mathbf a\cdot\mathbf b=a_1b_1+a_2b_2+a_3b_3$$
+    </div>
+    <p>같은 자리 성분끼리 곱해서 모두 더해요. 결과는 벡터가 아니라 <b>수</b>예요. 그래서 스칼라곱(scalar product), 점곱(dot product)이라고도 불러요. 2차원 벡터는 $\langle a_1,a_2\rangle\cdot\langle b_1,b_2\rangle=a_1b_1+a_2b_2$로 똑같이 정의해요.</p>
+
+    <div class="problem"><span class="tag">예제 1</span>다음 내적을 계산하라.</div>
+    $$\langle2,4\rangle\cdot\langle3,-1\rangle=2(3)+4(-1)=2$$
+    $$\langle-1,7,4\rangle\cdot\left\langle6,2,-\tfrac12\right\rangle=(-1)(6)+7(2)+4\left(-\tfrac12\right)=-6+14-2=6$$
+    $$(\mathbf i+2\mathbf j-3\mathbf k)\cdot(2\mathbf j-\mathbf k)=1(0)+2(2)+(-3)(-1)=7$$
+    <p>마지막 식은 $\mathbf i$, $\mathbf j$, $\mathbf k$로 쓴 벡터를 $\langle1,2,-3\rangle$, $\langle0,2,-1\rangle$로 바꿔 계산한 거예요. 없는 성분은 0이에요. (슬라이드에는 $1(0)=2(2)+\cdots$로 적혀 있는데, 가운데 등호는 $+$가 맞아요.)</p>
+
+    <!-- ===================================================== -->
+    <h2 id="prop">내적의 성질</h2>
+    <div class="summary-box">
+      <p style="margin:0 0 .4rem"><b>2 내적의 성질</b> $\mathbf a$, $\mathbf b$, $\mathbf c$가 $V_3$의 벡터이고 $c$가 스칼라일 때</p>
+      <ol style="margin:0">
+        <li>$\mathbf a\cdot\mathbf a=|\mathbf a|^2$</li>
+        <li>$\mathbf a\cdot\mathbf b=\mathbf b\cdot\mathbf a$ (교환법칙)</li>
+        <li>$\mathbf a\cdot(\mathbf b+\mathbf c)=\mathbf a\cdot\mathbf b+\mathbf a\cdot\mathbf c$ (분배법칙)</li>
+        <li>$(c\mathbf a)\cdot\mathbf b=c(\mathbf a\cdot\mathbf b)=\mathbf a\cdot(c\mathbf b)$</li>
+        <li>$\mathbf 0\cdot\mathbf a=0$</li>
+      </ol>
+    </div>
+    <p>모두 성분으로 쓰면 바로 증명돼요. 1과 3을 보면</p>
+    $$\mathbf a\cdot\mathbf a=a_1^2+a_2^2+a_3^2=|\mathbf a|^2$$
+    $$\begin{aligned}\mathbf a\cdot(\mathbf b+\mathbf c)&=\langle a_1,a_2,a_3\rangle\cdot\langle b_1+c_1,\,b_2+c_2,\,b_3+c_3\rangle\\&=a_1(b_1+c_1)+a_2(b_2+c_2)+a_3(b_3+c_3)\\&=(a_1b_1+a_2b_2+a_3b_3)+(a_1c_1+a_2c_2+a_3c_3)=\mathbf a\cdot\mathbf b+\mathbf a\cdot\mathbf c\end{aligned}$$
+    <p>(슬라이드 증명 첫 줄의 $\langle a_1,a_2,a_2\rangle$는 $\langle a_1,a_2,a_3\rangle$의 오타예요.)</p>
+    <div class="exam"><strong>시험 포인트.</strong> 성질 1은 <b>길이를 내적으로 바꾸는 열쇠</b>예요. $|\mathbf a-\mathbf b|^2=(\mathbf a-\mathbf b)\cdot(\mathbf a-\mathbf b)=|\mathbf a|^2-2\,\mathbf a\cdot\mathbf b+|\mathbf b|^2$처럼 다항식 전개하듯 풀 수 있어요. 바로 아래 정리 3의 증명이 이 계산이에요.</div>
+
+    <!-- ===================================================== -->
+    <h2 id="angle">내적과 사이각</h2>
+    <p>두 벡터의 시점을 맞췄을 때 이루는 각 $\theta$($0\le\theta\le\pi$)를 <b>사이각</b>이라 해요.</p>
+    <div class="summary-box">
+      <p style="margin:0 0 .3rem"><b>3 정리</b> $\mathbf a$와 $\mathbf b$ 사이의 각을 $\theta$라 하면</p>
+      $$\mathbf a\cdot\mathbf b=|\mathbf a|\,|\mathbf b|\cos\theta$$
+    </div>
+    <h3>증명 (코사인 법칙)</h3>
+    <ol class="steps">
+      <li>$\mathbf a$, $\mathbf b$, $\mathbf a-\mathbf b$는 삼각형을 이뤄요. 코사인 법칙으로
+        $$|\mathbf a-\mathbf b|^2=|\mathbf a|^2+|\mathbf b|^2-2|\mathbf a|\,|\mathbf b|\cos\theta$$</li>
+      <li>같은 길이를 성질 1, 2, 3으로 전개하면
+        $$|\mathbf a-\mathbf b|^2=(\mathbf a-\mathbf b)\cdot(\mathbf a-\mathbf b)=|\mathbf a|^2-2\,\mathbf a\cdot\mathbf b+|\mathbf b|^2$$</li>
+      <li>두 식을 비교하면 $-2\,\mathbf a\cdot\mathbf b=-2|\mathbf a|\,|\mathbf b|\cos\theta$, 즉 $\mathbf a\cdot\mathbf b=|\mathbf a|\,|\mathbf b|\cos\theta$예요.</li>
+    </ol>
+    <p>그러니까 내적에는 얼굴이 둘 있어요. <b>성분으로 계산하는 식</b>(정의 1)과 <b>길이와 각으로 쓰는 식</b>(정리 3). 문제를 풀 때는 이 둘을 등호로 이어 놓고 모르는 쪽을 구하면 돼요.</p>
+    $$a_1b_1+a_2b_2+a_3b_3=\mathbf a\cdot\mathbf b=|\mathbf a|\,|\mathbf b|\cos\theta$$
+
+    <div class="problem"><span class="tag">예제 2</span>벡터 $\mathbf a$와 $\mathbf b$의 길이가 각각 4와 6이고 그들 사이의 각이 $\frac\pi3$일 때, $\mathbf a\cdot\mathbf b$를 구하라.</div>
+    <p>성분은 모르고 길이와 각을 아니까 정리 3을 써요.</p>
+    $$\mathbf a\cdot\mathbf b=|\mathbf a|\,|\mathbf b|\cos\frac\pi3=4\cdot6\cdot\frac12=12$$
+
+    <!-- ===================================================== -->
+    <h2 id="sign">부호로 각 판단하기</h2>
+    <p>$|\mathbf a|$, $|\mathbf b|$는 양수이므로 $\mathbf a\cdot\mathbf b$의 부호는 $\cos\theta$의 부호와 같아요.</p>
+    <table class="vals" aria-label="사이각에 따른 내적의 부호">
+      <thead><tr><th>사이각 $\theta$</th><th>$\cos\theta$</th><th>$\mathbf a\cdot\mathbf b$</th><th>뜻</th></tr></thead>
+      <tbody>
+        <tr><td>$\theta=0$</td><td>$1$</td><td>$|\mathbf a|\,|\mathbf b|$ (최대)</td><td>정확히 같은 방향</td></tr>
+        <tr><td>$0\le\theta\lt\frac\pi2$</td><td>양수</td><td>양수</td><td>예각, 대체로 같은 방향</td></tr>
+        <tr><td>$\theta=\frac\pi2$</td><td>$0$</td><td>$0$</td><td>수직</td></tr>
+        <tr><td>$\frac\pi2\lt\theta\le\pi$</td><td>음수</td><td>음수</td><td>둔각, 대체로 반대 방향</td></tr>
+        <tr><td>$\theta=\pi$</td><td>$-1$</td><td>$-|\mathbf a|\,|\mathbf b|$ (최소)</td><td>정확히 반대 방향</td></tr>
+      </tbody>
+    </table>
+    <p class="note">슬라이드에는 “$0\le\theta\le\frac\pi2$이면 $\cos\theta>0$”로 적혀 있는데, $\theta=\frac\pi2$에서는 $\cos\theta=0$이라 끝점은 빼야 해요.</p>
+    <p>아래 그림에서 $\mathbf b$를 돌려 보세요. $\mathbf b$의 끝에서 $\mathbf a$를 품은 직선에 수선을 내리면 그 발까지의 <b>그림자</b>가 생겨요. 그림자 길이가 $|\mathbf b|\cos\theta$이고, 여기에 $|\mathbf a|$를 곱한 것이 내적이에요. 그림자가 $\mathbf a$와 같은 쪽이면 양수(초록), 반대쪽이면 음수(빨강)예요.</p>
+    <figure class="plot" id="fig-sign">
+      <figcaption>$|\mathbf a|=3$, $|\mathbf b|=2.4$로 고정했어요. $\theta=90^\circ$에서 그림자 길이가 0이 되어 내적이 0이에요. 이 그림자는 뒤에 나올 <b>사영</b>과 같은 거예요.</figcaption>
+    </figure>
+
+    <!-- ===================================================== -->
+    <h2 id="cos">사이각 구하기</h2>
+    <div class="summary-box">
+      <p style="margin:0 0 .3rem"><b>6 따름정리</b> $\mathbf a$, $\mathbf b$가 영벡터가 아니고 사이각이 $\theta$이면</p>
+      $$\cos\theta=\frac{\mathbf a\cdot\mathbf b}{|\mathbf a|\,|\mathbf b|}$$
+    </div>
+    <p>정리 3의 양변을 $|\mathbf a|\,|\mathbf b|$로 나눈 거예요. 나누려면 $|\mathbf a|\,|\mathbf b|\ne0$이어야 하니 조건은 “두 벡터가 영벡터가 아님”이에요. (슬라이드의 “$\theta$가 0이 아닌”은 이 조건을 잘못 옮긴 거예요. $\theta=0$이어도 공식은 성립해요.)</p>
+
+    <div class="problem"><span class="tag">예제 3</span>벡터 $\mathbf a=\langle2,2,-1\rangle$, $\mathbf b=\langle5,-3,2\rangle$ 사이의 각을 구하라.</div>
+    <ol class="steps">
+      <li>길이와 내적을 각각 구해요.
+        $$|\mathbf a|=\sqrt{2^2+2^2+(-1)^2}=3,\qquad|\mathbf b|=\sqrt{5^2+(-3)^2+2^2}=\sqrt{38}$$
+        $$\mathbf a\cdot\mathbf b=2(5)+2(-3)+(-1)(2)=2$$</li>
+      <li>따름정리 6에 넣으면
+        $$\cos\theta=\frac{\mathbf a\cdot\mathbf b}{|\mathbf a|\,|\mathbf b|}=\frac{2}{3\sqrt{38}},\qquad\theta=\cos^{-1}\left(\frac{2}{3\sqrt{38}}\right)\approx1.46\ (\approx84^\circ)$$</li>
+    </ol>
+    <p>내적이 양수지만 작아서 거의 수직에 가까운 예각이에요.</p>
+
+    <!-- ===================================================== -->
+    <h2 id="orth">직교 조건</h2>
+    <p>두 벡터 사이의 각이 $\frac\pi2$이면 <b>직교</b>(수직)한다고 해요. $\cos\frac\pi2=0$이므로 내적이 0이고, 거꾸로 영벡터가 아닌 두 벡터의 내적이 0이면 $\cos\theta=0$이라 $\theta=\frac\pi2$예요. 영벡터는 모든 벡터와 직교한다고 약속하면 다음이 성립해요.</p>
+    <div class="summary-box">
+      <p style="margin:0"><b>7</b> 두 벡터 $\mathbf a$와 $\mathbf b$가 직교하기 위한 필요충분조건은 $\mathbf a\cdot\mathbf b=0$이다.</p>
+    </div>
+
+    <div class="problem"><span class="tag">예제 4</span>$2\mathbf i+2\mathbf j-\mathbf k$가 $5\mathbf i-4\mathbf j+2\mathbf k$에 수직임을 보여라.</div>
+    $$(2\mathbf i+2\mathbf j-\mathbf k)\cdot(5\mathbf i-4\mathbf j+2\mathbf k)=2(5)+2(-4)+(-1)(2)=10-8-2=0$$
+    <p>내적이 0이므로 두 벡터는 수직이에요. 예제 3의 $\mathbf b$에서 $y$성분만 $-3$에서 $-4$로 바뀌었을 뿐인데, 84°였던 각이 정확히 90°가 됐어요.</p>
+    <figure class="plot" id="fig-3d">
+      <figcaption>예제 3과 예제 4를 공간에서 본 그림이에요. 끌어서 돌려 보면 평면 그림으로는 안 보이던 사이각이 보여요. 점선 상자는 벡터 끝점의 좌표를 읽기 쉽게 그린 거예요.</figcaption>
+    </figure>
+
+    <!-- ===================================================== -->
+    <h2 id="dir">방향각과 방향코사인</h2>
+    <p>영이 아닌 벡터 $\mathbf a$가 $x$축, $y$축, $z$축의 양의 방향과 이루는 각 $\alpha$, $\beta$, $\gamma$(각각 $[0,\pi]$의 값)를 $\mathbf a$의 <b>방향각</b>, 그 코사인 $\cos\alpha$, $\cos\beta$, $\cos\gamma$를 <b>방향코사인</b>이라 해요.</p>
+    <p>$x$축 방향 단위벡터 $\mathbf i$와의 사이각이 $\alpha$이니 따름정리 6으로</p>
+    $$\cos\alpha=\frac{\mathbf a\cdot\mathbf i}{|\mathbf a|\,|\mathbf i|}=\frac{a_1}{|\mathbf a|}$$
+    <div class="summary-box">
+      $$\cos\alpha=\frac{a_1}{|\mathbf a|},\qquad\cos\beta=\frac{a_2}{|\mathbf a|},\qquad\cos\gamma=\frac{a_3}{|\mathbf a|} \tag{8}$$
+      $$\cos^2\alpha+\cos^2\beta+\cos^2\gamma=1$$
+    </div>
+    <p>두 번째 식은 세 식을 제곱해서 더하면 $\frac{a_1^2+a_2^2+a_3^2}{|\mathbf a|^2}=1$이라 나와요. 같은 이야기를 벡터로 쓰면</p>
+    $$\frac{\mathbf a}{|\mathbf a|}=\langle\cos\alpha,\,\cos\beta,\,\cos\gamma\rangle$$
+    <p>즉 <b>방향코사인은 $\mathbf a$ 방향 단위벡터의 성분</b>이에요. 길이가 1이니 제곱의 합이 1인 거죠.</p>
+    <p class="note">슬라이드의 식 8 $\cos\alpha=\frac{a_1}{|a_1|}$은 $\frac{a_1}{|\mathbf a|}$의 오타예요. $\frac{a_1}{|a_1|}$이면 항상 $\pm1$이 돼 버려요. 또 슬라이드 제목에 “2차원”이라고 되어 있지만 내용은 3차원($\gamma$까지)이에요.</p>
+
+    <div class="problem"><span class="tag">예제 5</span>벡터 $\mathbf a=\langle1,2,3\rangle$의 방향각을 구하라.</div>
+    <ol class="steps">
+      <li>$|\mathbf a|=\sqrt{1^2+2^2+3^2}=\sqrt{14}$이므로
+        $$\cos\alpha=\frac{1}{\sqrt{14}},\qquad\cos\beta=\frac{2}{\sqrt{14}},\qquad\cos\gamma=\frac{3}{\sqrt{14}}$$</li>
+      <li>역코사인을 취하면
+        $$\alpha=\cos^{-1}\left(\frac{1}{\sqrt{14}}\right)\approx74^\circ,\qquad\beta=\cos^{-1}\left(\frac{2}{\sqrt{14}}\right)\approx58^\circ,\qquad\gamma=\cos^{-1}\left(\frac{3}{\sqrt{14}}\right)\approx37^\circ$$</li>
+    </ol>
+    <p>$z$성분이 가장 크니 $z$축과 가장 가깝고($\gamma$가 가장 작고), $x$성분이 가장 작으니 $x$축과 가장 멀어요.</p>
+    <figure class="plot" id="fig-dir">
+      <figcaption>세 호가 각각 $x$축, $y$축, $z$축과 벡터 사이의 방향각이에요. 성분이 음수이면 그 축과의 방향각은 둔각이 돼요(두 번째 보기의 $\beta$). $\cos^2$의 합은 언제나 1이에요.</figcaption>
+    </figure>
+
+    <!-- ===================================================== -->
+    <h2 id="proj">사영</h2>
+    <p>같은 시점 $P$에서 그린 $\mathbf a=\overrightarrow{PQ}$, $\mathbf b=\overrightarrow{PR}$이 있을 때, $R$에서 직선 $PQ$에 내린 수선의 발을 $S$라 하면 $\overrightarrow{PS}$를 <b>$\mathbf a$ 위로 $\mathbf b$의 벡터 사영</b>이라 해요. 위에서 본 그림자가 바로 이거예요.</p>
+    <div class="summary-box">
+      <p style="margin:0 0 .2rem"><b>$\mathbf a$ 위로 $\mathbf b$의 스칼라 사영</b> (그림자의 부호 있는 길이)</p>
+      $$\operatorname{comp}_{\mathbf a}\mathbf b=|\mathbf b|\cos\theta=\frac{\mathbf a\cdot\mathbf b}{|\mathbf a|}$$
+      <p style="margin:0 0 .2rem"><b>$\mathbf a$ 위로 $\mathbf b$의 벡터 사영</b> (스칼라 사영 × $\mathbf a$ 방향 단위벡터)</p>
+      $$\operatorname{proj}_{\mathbf a}\mathbf b=\left(\frac{\mathbf a\cdot\mathbf b}{|\mathbf a|}\right)\frac{\mathbf a}{|\mathbf a|}=\frac{\mathbf a\cdot\mathbf b}{|\mathbf a|^2}\,\mathbf a$$
+    </div>
+    <p>스칼라 사영은 직각삼각형 $PSR$에서 $|PS|=|\mathbf b|\cos\theta$이고, 정리 3의 $\cos\theta=\frac{\mathbf a\cdot\mathbf b}{|\mathbf a|\,|\mathbf b|}$를 넣으면 $\frac{\mathbf a\cdot\mathbf b}{|\mathbf a|}$가 돼요. $\theta$가 둔각이면 음수가 되고, 이때 벡터 사영은 $\mathbf a$와 반대 방향이에요.</p>
+    <figure class="plot" id="fig-projdef">
+      <figcaption>$\mathbf b$의 끝 $R$에서 $\mathbf a$를 품은 직선(점선)에 수선을 내린 발이 $S$이고, 굵은 화살표 $\overrightarrow{PS}$가 벡터 사영이에요. 그 부호 있는 길이 $|\mathbf b|\cos\theta$가 스칼라 사영이에요. $\theta$를 $90^\circ$ 넘게 돌리면 $S$가 $P$ 뒤쪽으로 넘어가고 스칼라 사영이 음수(빨강)가 돼요. 버튼으로 “$\mathbf b$ 위로 $\mathbf a$”로 바꾸면 이번엔 $\mathbf a$의 그림자를 $\mathbf b$ 위에 떨어뜨려서, 길이가 $|\mathbf a|\cos\theta$로 달라져요.</figcaption>
+    </figure>
+    <div class="exam"><strong>헷갈리기 쉬운 점.</strong> “$\mathbf a$ 위로 $\mathbf b$의 사영”은 <b>$\mathbf b$의 그림자를 $\mathbf a$ 위에</b> 떨어뜨리는 거예요. 그래서 분모에는 그림자가 떨어지는 쪽 $\mathbf a$의 길이가 들어가요. $\operatorname{comp}_{\mathbf a}\mathbf b$와 $\operatorname{comp}_{\mathbf b}\mathbf a$는 보통 다른 값이에요(위 그림의 버튼으로 비교해 보세요). 둘 다 분자는 $\mathbf a\cdot\mathbf b$로 같고 분모만 달라요.</div>
+
+    <div class="problem"><span class="tag">예제 6</span>$\mathbf a=\langle-2,3,1\rangle$ 위로 $\mathbf b=\langle1,1,2\rangle$의 스칼라 사영과 벡터 사영을 구하라.</div>
+    <ol class="steps">
+      <li>필요한 값부터 구해요.
+        $$\mathbf a\cdot\mathbf b=(-2)(1)+3(1)+1(2)=3,\qquad|\mathbf a|=\sqrt{(-2)^2+3^2+1^2}=\sqrt{14}$$</li>
+      <li>스칼라 사영:
+        $$\operatorname{comp}_{\mathbf a}\mathbf b=\frac{\mathbf a\cdot\mathbf b}{|\mathbf a|}=\frac{3}{\sqrt{14}}$$</li>
+      <li>벡터 사영:
+        $$\operatorname{proj}_{\mathbf a}\mathbf b=\frac{\mathbf a\cdot\mathbf b}{|\mathbf a|^2}\,\mathbf a=\frac{3}{14}\langle-2,3,1\rangle=\left\langle-\frac37,\,\frac{9}{14},\,\frac{3}{14}\right\rangle$$</li>
+    </ol>
+    <p>검산: $\mathbf b-\operatorname{proj}_{\mathbf a}\mathbf b=\left\langle\frac{10}{7},\frac{5}{14},\frac{25}{14}\right\rangle$를 $\mathbf a$와 내적하면 $-\frac{20}{7}+\frac{15}{14}+\frac{25}{14}=0$이라 수직이에요. 수선이 제대로 내려졌다는 뜻이에요.</p>
+    <figure class="plot" id="fig-proj">
+      <figcaption>파란 벡터 $\mathbf a$가 놓인 직선(점선) 위로 $\mathbf b$의 끝에서 수선을 내렸어요. 초록(또는 빨강) 화살표가 $\operatorname{proj}_{\mathbf a}\mathbf b$예요. 돌려 보면 수선이 직선과 직각으로 만나는 게 보여요.</figcaption>
+    </figure>
+
+    <!-- ===================================================== -->
+    <h2 id="work">응용: 일</h2>
+    <p>물리에서 힘 $F$가 물체를 힘의 방향으로 거리 $d$만큼 움직이면 한 일은 $W=Fd$예요. 그런데 힘의 방향과 움직이는 방향이 다르면, <b>움직이는 방향의 힘 성분</b>만 일을 해요.</p>
+    <p>일정한 힘 $\mathbf F=\overrightarrow{PR}$이 물체를 $P$에서 $Q$로 옮길 때 변위벡터를 $\mathbf D=\overrightarrow{PQ}$라 하면, 한 일은 $\mathbf D$ 방향의 힘 성분($\mathbf D$ 위로 $\mathbf F$의 스칼라 사영)과 움직인 거리의 곱이에요.</p>
+    <div class="summary-box">
+      $$W=\big(|\mathbf F|\cos\theta\big)|\mathbf D|=|\mathbf F|\,|\mathbf D|\cos\theta=\mathbf F\cdot\mathbf D \tag{12}$$
+    </div>
+
+    <div class="problem"><span class="tag">예제 7</span>70 N의 일정한 힘으로 짐수레를 수평인 길을 따라서 100 m를 끌고 있다. 짐수레의 손잡이가 수평 위로 35° 각도로 달려 있다. 이 힘이 한 일을 구하라.</div>
+    <p>성분은 모르고 크기와 각을 아니까 정리 3 형태로 계산해요.</p>
+    $$W=|\mathbf F|\,|\mathbf D|\cos35^\circ=(70)(100)\cos35^\circ\approx5734\ \text{N}\cdot\text{m}=5734\ \text{J}$$
+    <figure class="plot" id="fig-work">
+      <figcaption>손잡이 각도 $\theta$를 바꿔 보세요. 일을 하는 건 수평 성분(초록)뿐이고, 위로 당기는 성분은 수레를 앞으로 보내지 못해요. $\theta=0^\circ$이면 $W=7000$ J로 최대, $90^\circ$이면 0이에요.</figcaption>
+    </figure>
+
+    <div class="problem"><span class="tag">예제 8</span>벡터 $\mathbf F=3\mathbf i+4\mathbf j+5\mathbf k$로 주어진 힘이 입자를 점 $P(2,1,0)$에서 $Q(4,6,2)$로 이동시킬 때 한 일을 구하라.</div>
+    <p>이번엔 성분을 아니까 정의 1로 계산해요. 변위벡터는 끝점에서 시점을 빼서</p>
+    $$\mathbf D=\overrightarrow{PQ}=\langle4-2,\,6-1,\,2-0\rangle=\langle2,5,2\rangle$$
+    $$W=\mathbf F\cdot\mathbf D=\langle3,4,5\rangle\cdot\langle2,5,2\rangle=6+20+10=36\ \text{J}$$
+    <div class="exam"><strong>시험 포인트.</strong> 일 문제는 주어진 정보로 공식을 고르면 돼요. 크기와 각이 주어지면 $|\mathbf F|\,|\mathbf D|\cos\theta$, 성분이나 좌표가 주어지면 $\mathbf F\cdot\mathbf D$를 성분으로. 변위는 두 점이 주어지면 <b>끝점 − 시점</b>이에요.</div>
+
+    <!-- ===================================================== -->
+    <h2 id="summary">한눈에 정리</h2>
+    <div class="summary-box">
+      <ul>
+        <li>정의: $\mathbf a\cdot\mathbf b=a_1b_1+a_2b_2+a_3b_3$ (결과는 수). $\mathbf a\cdot\mathbf a=|\mathbf a|^2$.</li>
+        <li>기하: $\mathbf a\cdot\mathbf b=|\mathbf a|\,|\mathbf b|\cos\theta$, 그래서 $\cos\theta=\dfrac{\mathbf a\cdot\mathbf b}{|\mathbf a|\,|\mathbf b|}$.</li>
+        <li>부호: 양수면 예각, 0이면 직교, 음수면 둔각. 직교 $\iff\mathbf a\cdot\mathbf b=0$.</li>
+        <li>방향코사인: $\cos\alpha=\dfrac{a_1}{|\mathbf a|}$ 등, $\cos^2\alpha+\cos^2\beta+\cos^2\gamma=1$, $\dfrac{\mathbf a}{|\mathbf a|}=\langle\cos\alpha,\cos\beta,\cos\gamma\rangle$.</li>
+        <li>사영: $\operatorname{comp}_{\mathbf a}\mathbf b=\dfrac{\mathbf a\cdot\mathbf b}{|\mathbf a|}$, $\operatorname{proj}_{\mathbf a}\mathbf b=\dfrac{\mathbf a\cdot\mathbf b}{|\mathbf a|^2}\mathbf a$. 분모는 그림자가 떨어지는 쪽.</li>
+        <li>일: $W=\mathbf F\cdot\mathbf D=|\mathbf F|\,|\mathbf D|\cos\theta$, $\mathbf D$는 끝점 − 시점.</li>
+      </ul>
+    </div>
+
+    <!-- ===================================================== -->
+    <h2 id="check">자가 점검</h2>
+    <p>보기를 고르면 바로 정답과 풀이가 나와요.</p>
+    <div id="quiz"></div>
+
+    <nav class="pager" aria-label="절 이동"></nav>
+  </main>
+</div>
+
+<script src="assets/katex/katex.min.js"></script>
+<script src="assets/katex/auto-render.min.js"></script>
+<script src="assets/plot.js"></script>
+<script src="assets/space.js"></script>
+<script src="assets/quiz.js"></script>
+<script src="assets/site.js"></script>
+<script>
+(function () {
+  "use strict";
+  const { fmt, label, arrowHead } = Plot;
+  const V = Space.V;
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const segHtml = (labels, aria, cls) =>
+    '<span class="seg ' + (cls || "") + '" role="group" aria-label="' + aria + '">' +
+    labels.map((l, k) => '<button type="button" data-k="' + k + '" aria-pressed="false">' + l + "</button>").join("") + "</span>";
+  function pressOne(group, btn) { group.querySelectorAll("button").forEach((b) => b.setAttribute("aria-pressed", b === btn ? "true" : "false")); }
+  function wireSeg(api, cls, fn, first) {
+    const g = api.bar.querySelector("." + cls);
+    const bs = [...g.querySelectorAll("button")];
+    bs.forEach((b, k) => b.addEventListener("click", () => { pressOne(g, b); fn(k); }));
+    pressOne(g, bs[first || 0]);
+  }
+  const num = (v, d) => fmt(v, d == null ? 2 : d);
+  const trim = (v) => String(+v.toFixed(3));
+  const vec = (a) => "⟨" + a.map((x) => String(+x.toFixed(3)).replace("-", "−")).join(", ") + "⟩";
+  const degOf = (rad) => rad * 180 / Math.PI;
+  const angle = (a, b) => Math.acos(Math.max(-1, Math.min(1, V.dot(a, b) / (V.len(a) * V.len(b)))));
+  const dotStr = (a, b) => a.map((x, k) => "(" + String(x).replace("-", "−") + ")(" + String(b[k]).replace("-", "−") + ")").join(" + ");
+
+  function arrow2(ctx, A, B, color, w, head) {
+    const ang = Math.atan2(B[1] - A[1], B[0] - A[0]), L = Math.hypot(B[0] - A[0], B[1] - A[1]);
+    const h = Math.min(head || 11, L * 0.5);
+    ctx.save(); ctx.strokeStyle = color; ctx.lineWidth = w || 2.6; ctx.lineCap = "round";
+    ctx.beginPath(); ctx.moveTo(A[0], A[1]); ctx.lineTo(B[0] - Math.cos(ang) * h * 0.7, B[1] - Math.sin(ang) * h * 0.7); ctx.stroke(); ctx.restore();
+    if (L > 2) arrowHead(ctx, B[0], B[1], ang, h, color);
+  }
+
+  /* ---------- 절 머리: b를 돌리면 a 위의 그림자가 늘었다 줄었다 ---------- */
+  (function () {
+    const cv = document.getElementById("hero"), ctx = cv.getContext("2d");
+    let W, H, k = reduce ? 1 : 0, start = 0;
+    function size() { const d = window.devicePixelRatio || 1; W = cv.clientWidth; H = cv.clientHeight; cv.width = W * d; cv.height = H * d; ctx.setTransform(d, 0, 0, d, 0, 0); }
+    function draw() {
+      const C = Plot.palette(); ctx.clearRect(0, 0, W, H);
+      const N = Math.max(4, Math.min(9, Math.floor(W / 95))), gap = W / N, L = Math.min(gap * 0.62, H * 0.62), y0 = H * 0.8;
+      // a 방향 직선
+      ctx.save(); ctx.strokeStyle = C.aux; ctx.globalAlpha = .45; ctx.lineWidth = 1.4; ctx.beginPath(); ctx.moveTo(0, y0); ctx.lineTo(W - 4, y0); ctx.stroke(); ctx.restore();
+      arrowHead(ctx, W - 2, y0, 0, 9, C.aux);
+      for (let i = 0; i < N; i++) {
+        const th = k * Math.PI * i / (N - 1), ox = gap * (i + 0.5);
+        const B = [ox + L * Math.cos(th), y0 - L * Math.sin(th)], cs = Math.cos(th);
+        ctx.save(); ctx.strokeStyle = C.muted; ctx.globalAlpha = .5; ctx.setLineDash([3, 4]); ctx.beginPath(); ctx.moveTo(B[0], B[1]); ctx.lineTo(B[0], y0); ctx.stroke(); ctx.restore();
+        ctx.save(); ctx.strokeStyle = Math.abs(cs) < 1e-6 ? C.muted : cs > 0 ? C.ok : C.curve; ctx.lineWidth = 6; ctx.globalAlpha = .6;
+        ctx.beginPath(); ctx.moveTo(ox, y0); ctx.lineTo(B[0], y0); ctx.stroke(); ctx.restore();
+        arrow2(ctx, [ox, y0], B, C.ink, 2.4, 9);
+      }
+    }
+    function tick(now) { if (!start) start = now; k = Math.min(1, (now - start) / 3000); draw(); if (k < 1) requestAnimationFrame(tick); }
+    size(); reduce ? draw() : requestAnimationFrame(tick);
+    if ("ResizeObserver" in window) new ResizeObserver(() => { size(); draw(); }).observe(cv);
+  })();
+
+  /* ---------- 부호로 각 판단하기 (2차원) ---------- */
+  (function () {
+    const LA = 3, LB = 2.4;
+    const p = {
+      curve: false, x: () => 0, y: () => 0, grid: 0, origin: false, yAxis: false, axisLabels: ["", ""],
+      view: { x: [-3, 3.7], y: [-0.55, 2.75] }, height: 270, ticks: { x: [], y: [] },
+      alt: "벡터 b를 돌릴 때 a 방향 그림자",
+      over(ctx, T, deg, C) {
+        const th = deg * Math.PI / 180, bx = LB * Math.cos(th), by = LB * Math.sin(th), cs = Math.cos(th);
+        const shadowCol = Math.abs(cs) < 1e-9 ? C.muted : cs > 0 ? C.ok : C.curve;
+        // 수선
+        ctx.save(); ctx.strokeStyle = C.muted; ctx.globalAlpha = .7; ctx.setLineDash([4, 4]);
+        ctx.beginPath(); ctx.moveTo(T.X(bx), T.Y(by)); ctx.lineTo(T.X(bx), T.Y(0)); ctx.stroke(); ctx.restore();
+        if (Math.abs(bx) > 0.12) {
+          const sgn = bx > 0 ? -1 : 1, q = 0.16;
+          ctx.save(); ctx.strokeStyle = C.muted; ctx.lineWidth = 1.2; ctx.beginPath();
+          ctx.moveTo(T.X(bx + sgn * q), T.Y(0)); ctx.lineTo(T.X(bx + sgn * q), T.Y(q)); ctx.lineTo(T.X(bx), T.Y(q)); ctx.stroke(); ctx.restore();
+        }
+        // 그림자
+        ctx.save(); ctx.strokeStyle = shadowCol; ctx.lineWidth = 8; ctx.globalAlpha = .5; ctx.lineCap = "butt";
+        ctx.beginPath(); ctx.moveTo(T.X(0), T.Y(0)); ctx.lineTo(T.X(bx), T.Y(0)); ctx.stroke(); ctx.restore();
+        // 각
+        ctx.save(); ctx.strokeStyle = C.muted; ctx.lineWidth = 1.4; ctx.beginPath();
+        ctx.arc(T.X(0), T.Y(0), 0.55 * T.sx, -th, 0); ctx.stroke(); ctx.restore();
+        label(ctx, "θ", T.X(0.82 * Math.cos(th / 2)), T.Y(0.82 * Math.sin(th / 2)), { italic: true, math: true, size: 16, color: C.muted, align: "center", halo: C.surface });
+        arrow2(ctx, [T.X(0), T.Y(0)], [T.X(LA), T.Y(0)], C.aux, 3);
+        arrow2(ctx, [T.X(0), T.Y(0)], [T.X(bx), T.Y(by)], C.ink, 3);
+        label(ctx, "a", T.X(LA) - 4, T.Y(0) + 16, { bold: true, size: 17, color: C.aux, align: "right", halo: C.surface });
+        label(ctx, "b", T.X(bx) + (bx >= 0 ? 10 : -10), T.Y(by) - 6, { bold: true, size: 17, color: C.ink, align: bx >= 0 ? "left" : "right", halo: C.surface });
+        label(ctx, "그림자 " + fmt(LB * cs, 2), T.X(bx / 2), T.Y(0) + 20, { size: 12.5, bold: true, color: shadowCol, align: "center", halo: C.surface });
+      },
+    };
+    Plot.mount(document.getElementById("fig-sign"), {
+      t: { min: 0, max: 180, value: 60, step: 1, label: "θ" },
+      duration: 7, panels: [p],
+      readout: (deg) => {
+        const cs = Math.cos(deg * Math.PI / 180), d = LA * LB * cs;
+        const kind = deg === 0 ? "같은 방향" : deg === 180 ? "반대 방향" : deg === 90 ? "직각 (수직)" : deg < 90 ? "예각" : "둔각";
+        return "θ = <b>" + deg + "°</b> (" + kind + ") · cos θ = " + num(cs, 3) + "<br>" +
+          "a · b = |a||b| cos θ = 3 × 2.4 × " + num(cs, 3) + " = <b>" + num(d, 2) + "</b>" +
+          (Math.abs(d) < 1e-9 ? " → 0" : d > 0 ? " → 양수" : " → 음수");
+      },
+    });
+  })();
+
+  /* ---------- 예제 3, 4를 공간에서 ---------- */
+  (function () {
+    const SETS = [
+      { name: "예제 3", a: [2, 2, -1], b: [5, -3, 2] },
+      { name: "예제 4", a: [2, 2, -1], b: [5, -4, 2] },
+      { name: "둔각 예", a: [1, 2, 2], b: [-2, 1, -3] },
+    ];
+    let cur = SETS[0];
+    const api = Space.mount(document.getElementById("fig-3d"), {
+      range: 3.3, center: [1.2, 0, 0.3], height: 360, axes: [5.4, 4, 3], view: { az: 28, el: 20 },
+      alt: "공간에서 두 벡터와 사이각",
+      controls: segHtml(SETS.map((s) => s.name), "보기 고르기", "set3d"),
+      draw(S, C) {
+        const a = cur.a, b = cur.b, th = angle(a, b);
+        S.box(a, { alpha: .6 }); S.box(b, { alpha: .6 });
+        if (Math.abs(th - Math.PI / 2) < 1e-6) S.rightAngle([0, 0, 0], a, b, 0.55, { color: "--ok", width: 1.8 });
+        else S.arc([0, 0, 0], a, b, 1.1, { color: "--muted", fill: "--muted", alpha: .12, label: "θ" });
+        S.arrow([0, 0, 0], a, { color: "--aux", label: "a", labelT: 1, dx: 8, dy: -12 });
+        S.arrow([0, 0, 0], b, { color: "--ink", label: "b", labelT: 1, dx: 8, dy: -12 });
+        S.text(a, vec(a), { dx: 8, dy: 10, size: 12, color: "--aux" });
+        S.text(b, vec(b), { dx: 8, dy: 10, size: 12, color: "--muted" });
+      },
+      readout: () => {
+        const a = cur.a, b = cur.b, d = V.dot(a, b), la = V.len(a), lb = V.len(b), th = angle(a, b);
+        return "a · b = " + dotStr(a, b) + " = <b>" + String(d).replace("-", "−") + "</b><br>" +
+          "|a| = " + trim(la) + ", |b| = " + trim(lb) + ", cos θ = " + num(d / (la * lb), 4) + " → θ ≈ <b>" + num(degOf(th), 1) + "°</b>" +
+          (d === 0 ? " (직교)" : "");
+      },
+    });
+    wireSeg(api, "set3d", (k) => { cur = SETS[k]; api.redraw(); });
+  })();
+
+  /* ---------- 방향각 ---------- */
+  (function () {
+    const SETS = [[1, 2, 3], [2, -2, 1], [0, 3, 4]];
+    let a = SETS[0];
+    const api = Space.mount(document.getElementById("fig-dir"), {
+      range: 2.6, center: [0.6, 0.6, 1.5], height: 360, axes: [3.2, 3.2, 3.6], view: { az: 32, el: 20 },
+      alt: "벡터의 방향각",
+      controls: segHtml(SETS.map((s) => "a = " + vec(s)), "벡터 고르기", "setdir"),
+      draw(S, C) {
+        S.box(a, { alpha: .7 });
+        const cols = ["--curve", "--ok", "--aux"], names = ["α", "β", "γ"], rr = [0.75, 1.0, 1.25];
+        for (let k = 0; k < 3; k++) {
+          const e = [0, 0, 0]; e[k] = 1;
+          S.arc([0, 0, 0], e, a, rr[k], { color: cols[k], width: 2.2, label: names[k], labelR: 1.3 });
+        }
+        S.arrow([0, 0, 0], a, { color: "--ink", label: "a", labelT: 1, dx: 8, dy: -12 });
+      },
+      readout: () => {
+        const L = V.len(a), cs = a.map((x) => x / L), ang = cs.map((c) => degOf(Math.acos(c)));
+        return "|a| = " + trim(L) + " · cos α = " + num(cs[0], 3) + ", cos β = " + num(cs[1], 3) + ", cos γ = " + num(cs[2], 3) + "<br>" +
+          "α ≈ <b>" + num(ang[0], 1) + "°</b>, β ≈ <b>" + num(ang[1], 1) + "°</b>, γ ≈ <b>" + num(ang[2], 1) + "°</b> · cos²α + cos²β + cos²γ = " + num(cs.reduce((s, c) => s + c * c, 0), 3);
+      },
+    });
+    wireSeg(api, "setdir", (k) => { a = SETS[k]; api.redraw(); });
+  })();
+
+  /* ---------- 사영의 정의 그림 (2차원) ---------- */
+  (function () {
+    const LA = 3.6, LB = 2.6, O = [0, 1.25];
+    const st = { mode: 0 };   // 0: a 위로 b, 1: b 위로 a
+    const p = {
+      curve: false, x: () => 0, y: () => 0, grid: 0, origin: false, yAxis: false, axisLabels: ["", ""],
+      view: { x: [-3.4, 4.6], y: [0.1, 4.3] }, height: 320, ticks: { x: [], y: [] },
+      alt: "벡터 사영의 정의 그림",
+      over(ctx, T, deg, C) {
+        const th = deg * Math.PI / 180;
+        const A = [LA, 0], B = [LB * Math.cos(th), LB * Math.sin(th)];
+        const base = st.mode === 0 ? A : B, mover = st.mode === 0 ? B : A;      // mover의 그림자를 base 위에
+        const bl = Math.hypot(base[0], base[1]), u = [base[0] / bl, base[1] / bl];
+        const c = mover[0] * u[0] + mover[1] * u[1];                            // 스칼라 사영
+        const F = [u[0] * c, u[1] * c];                                         // 수선의 발 S
+        const W = (q) => [T.X(O[0] + q[0]), T.Y(O[1] + q[1])];
+        const col = Math.abs(c) < 1e-9 ? C.muted : c > 0 ? C.ok : C.curve;
+        // base를 품은 직선
+        ctx.save(); ctx.strokeStyle = st.mode === 0 ? C.aux : C.ink; ctx.globalAlpha = .45; ctx.setLineDash([6, 5]); ctx.lineWidth = 1.3;
+        const L1 = W([-u[0] * 6, -u[1] * 6]), L2 = W([u[0] * 6, u[1] * 6]);
+        ctx.beginPath(); ctx.moveTo(L1[0], L1[1]); ctx.lineTo(L2[0], L2[1]); ctx.stroke(); ctx.restore();
+        // 수선 RS와 직각 표시
+        const Mt = W(mover), Fs = W(F);
+        ctx.save(); ctx.strokeStyle = C.muted; ctx.setLineDash([4, 4]); ctx.lineWidth = 1.4; ctx.beginPath(); ctx.moveTo(Mt[0], Mt[1]); ctx.lineTo(Fs[0], Fs[1]); ctx.stroke(); ctx.restore();
+        const perp = [mover[0] - F[0], mover[1] - F[1]], pl = Math.hypot(perp[0], perp[1]);
+        if (pl > 0.2 && Math.abs(c) > 0.2) {
+          const q = 0.2, pu = [perp[0] / pl * q, perp[1] / pl * q], bu = [-Math.sign(c) * u[0] * q, -Math.sign(c) * u[1] * q];
+          const a1 = W([F[0] + bu[0], F[1] + bu[1]]), a2 = W([F[0] + bu[0] + pu[0], F[1] + bu[1] + pu[1]]), a3 = W([F[0] + pu[0], F[1] + pu[1]]);
+          ctx.save(); ctx.strokeStyle = C.muted; ctx.lineWidth = 1.2; ctx.beginPath(); ctx.moveTo(a1[0], a1[1]); ctx.lineTo(a2[0], a2[1]); ctx.lineTo(a3[0], a3[1]); ctx.stroke(); ctx.restore();
+        }
+        // 각
+        const P0 = W([0, 0]);
+        ctx.save(); ctx.strokeStyle = C.muted; ctx.lineWidth = 1.4; ctx.beginPath(); ctx.arc(P0[0], P0[1], 0.55 * T.sx, -th, 0); ctx.stroke(); ctx.restore();
+        Plot.label(ctx, "θ", T.X(O[0] + 0.8 * Math.cos(th / 2)), T.Y(O[1] + 0.8 * Math.sin(th / 2)), { italic: true, math: true, size: 16, color: C.muted, align: "center", halo: C.surface });
+        // 두 벡터
+        arrow2(ctx, P0, W(A), C.aux, 2.6);
+        arrow2(ctx, P0, W(B), C.ink, 2.6);
+        // 벡터 사영 (굵게)
+        if (Math.abs(c) > 0.03) arrow2(ctx, P0, Fs, col, 5, 13);
+        // 그림자 길이 표시 (base 아래쪽으로 띄워서)
+        const nrm = pl > 1e-6 ? [-perp[0] / pl, -perp[1] / pl] : [u[1], -u[0]], off = 0.42, mid = [F[0] / 2 + nrm[0] * off, F[1] / 2 + nrm[1] * off], Mw = W(mid);
+        const txt = (st.mode === 0 ? "|b| cos θ = " : "|a| cos θ = ") + fmt(c, 2);
+        Plot.label(ctx, txt, Mw[0], Mw[1], { size: 13, bold: true, color: col, align: "center", halo: C.surface });
+        // 점 이름
+        const pts = [["P", [0, 0], -14, 14], ["Q", A, 6, 16], ["R", B, B[0] >= 0 ? 8 : -16, -8], ["S", F, 6, -12]];
+        pts.forEach(([n, q, dx, dy]) => { const w = W(q); Plot.label(ctx, n, w[0] + dx, w[1] + dy, { size: 14, bold: true, color: C.ink, halo: C.surface }); });
+        Plot.dot(ctx, Fs[0], Fs[1], 3.5, col, C.surface);
+        Plot.label(ctx, "a", W(A)[0] - 6, W(A)[1] + 16, { size: 16, bold: true, color: C.aux, align: "right", halo: C.surface });
+        const bm = W([B[0] * 0.55, B[1] * 0.55]), right = st.mode === 1;
+        Plot.label(ctx, "b", bm[0] + (right ? 12 : -12), bm[1] + (right ? 8 : -6), { size: 16, bold: true, color: C.ink, align: right ? "left" : "right", halo: C.surface });
+      },
+    };
+    const api = Plot.mount(document.getElementById("fig-projdef"), {
+      t: { min: 0, max: 180, value: 50, step: 1, label: "θ" },
+      duration: 7, panels: [p],
+      controls: segHtml(["a 위로 b의 사영", "b 위로 a의 사영"], "사영 방향", "pj-mode"),
+      readout: (deg) => {
+        const c = Math.cos(deg * Math.PI / 180), ab = LA * LB * c;
+        if (st.mode === 0) return "θ = <b>" + deg + "°</b> · |a| = 3.6, |b| = 2.6, a · b = " + num(ab, 2) + "<br>comp<sub>a</sub>b = a·b / |a| = |b| cos θ = <b>" + num(LB * c, 2) + "</b> · proj<sub>a</sub>b = (comp<sub>a</sub>b) × (a/|a|), 길이 " + num(Math.abs(LB * c), 2) + (c < -1e-9 ? ", a와 반대 방향" : "");
+        return "θ = <b>" + deg + "°</b> · |a| = 3.6, |b| = 2.6, a · b = " + num(ab, 2) + "<br>comp<sub>b</sub>a = a·b / |b| = |a| cos θ = <b>" + num(LA * c, 2) + "</b> (같은 θ에서 comp<sub>a</sub>b = " + num(LB * c, 2) + "와 다름)";
+      },
+    });
+    wireSeg(api, "pj-mode", (k) => { st.mode = k; api.redraw(); });
+  })();
+
+  /* ---------- 사영 ---------- */
+  (function () {
+    const SETS = [
+      { name: "예제 6", a: [-2, 3, 1], b: [1, 1, 2] },
+      { name: "둔각인 경우", a: [-2, 3, 1], b: [2, -1, 1] },
+    ];
+    let cur = SETS[0];
+    const api = Space.mount(document.getElementById("fig-proj"), {
+      range: 2.2, center: [-0.4, 0.8, 0.6], height: 360, axes: [2.8, 3.6, 2.8], view: { az: 22, el: 24 },
+      alt: "a 위로 b의 벡터 사영",
+      controls: segHtml(SETS.map((s) => s.name), "보기 고르기", "setproj"),
+      draw(S, C) {
+        const a = cur.a, b = cur.b, k = V.dot(a, b) / V.dot(a, a), pr = V.mul(a, k), col = k >= 0 ? "--ok" : "--curve";
+        S.line(V.mul(a, -0.9), V.mul(a, 1.25), { color: "--aux", width: 1.2, dash: [5, 5], alpha: .7 });
+        S.line(b, pr, { color: "--muted", width: 1.4, dash: [4, 4] });
+        S.rightAngle(pr, V.sub([0, 0, 0], V.mul(a, Math.sign(k) || 1)), V.sub(b, pr), 0.22, { color: "--muted" });
+        S.arrow([0, 0, 0], a, { color: "--aux", label: "a", labelT: 1, dx: 8, dy: -12 });
+        S.arrow([0, 0, 0], b, { color: "--ink", label: "b", labelT: 1, dx: 8, dy: -12 });
+        S.arrow([0, 0, 0], pr, { color: col, width: 4, head: 12 });
+        S.text(pr, "proj", { dx: k >= 0 ? -10 : 8, dy: 16, size: 12.5, bold: true, color: col, align: k >= 0 ? "right" : "left" });
+        S.point([0, 0, 0], { r: 3.5, color: "--ink", label: "P", dx: -14, dy: 12 });
+      },
+      readout: () => {
+        const a = cur.a, b = cur.b, d = V.dot(a, b), L = V.len(a), pr = V.mul(a, d / (L * L));
+        return "a = " + vec(a) + ", b = " + vec(b) + " · a · b = <b>" + String(d).replace("-", "−") + "</b>, |a| = √" + V.dot(a, a) + "<br>" +
+          "comp<sub>a</sub>b = " + String(d).replace("-", "−") + "/√" + V.dot(a, a) + " ≈ <b>" + num(d / L, 3) + "</b> · proj<sub>a</sub>b = (" + String(d).replace("-", "−") + "/" + V.dot(a, a) + ")a ≈ <b>" + vec(pr) + "</b>";
+      },
+    });
+    wireSeg(api, "setproj", (k) => { cur = SETS[k]; api.redraw(); });
+  })();
+
+  /* ---------- 일: 짐수레 ---------- */
+  (function () {
+    const p = {
+      curve: false, x: () => 0, y: () => 0, grid: 0, origin: false, yAxis: false, axisLabels: ["", ""],
+      view: { x: [-0.4, 4.4], y: [-0.55, 2.6] }, height: 250, ticks: { x: [], y: [] },
+      alt: "손잡이 각도에 따른 힘의 수평 성분",
+      over(ctx, T, deg, C) {
+        const th = deg * Math.PI / 180, F = 2.4, fx = F * Math.cos(th), fy = F * Math.sin(th);
+        arrow2(ctx, [T.X(0), T.Y(0)], [T.X(4), T.Y(0)], C.curve, 2.4);
+        label(ctx, "D (100 m)", T.X(4) - 2, T.Y(0) + 18, { bold: true, size: 13, color: C.curve, align: "right", halo: C.surface });
+        ctx.save(); ctx.strokeStyle = C.muted; ctx.setLineDash([4, 4]); ctx.globalAlpha = .7;
+        ctx.beginPath(); ctx.moveTo(T.X(fx), T.Y(fy)); ctx.lineTo(T.X(fx), T.Y(0)); ctx.stroke(); ctx.restore();
+        ctx.save(); ctx.strokeStyle = C.ok; ctx.lineWidth = 8; ctx.globalAlpha = .55;
+        ctx.beginPath(); ctx.moveTo(T.X(0), T.Y(0)); ctx.lineTo(T.X(fx), T.Y(0)); ctx.stroke(); ctx.restore();
+        if (deg > 2) {
+          ctx.save(); ctx.strokeStyle = C.muted; ctx.lineWidth = 1.4; ctx.beginPath(); ctx.arc(T.X(0), T.Y(0), 0.6 * T.sx, -th, 0); ctx.stroke(); ctx.restore();
+          label(ctx, deg + "°", T.X(0.85 * Math.cos(th / 2)), T.Y(0.85 * Math.sin(th / 2)), { size: 12.5, color: C.muted, align: "center", halo: C.surface });
+        }
+        arrow2(ctx, [T.X(0), T.Y(0)], [T.X(fx), T.Y(fy)], C.aux, 3);
+        label(ctx, "F (70 N)", T.X(fx) + 8, T.Y(fy) - 8, { bold: true, size: 13, color: C.aux, halo: C.surface });
+        label(ctx, "수평 성분 " + fmt(70 * Math.cos(th), 1) + " N", T.X(Math.max(fx, 0.9) / 2), T.Y(0) + 20, { bold: true, size: 12.5, color: C.ok, align: "center", halo: C.surface });
+      },
+    };
+    Plot.mount(document.getElementById("fig-work"), {
+      t: { min: 0, max: 90, value: 35, step: 1, label: "θ" },
+      duration: 6, panels: [p],
+      readout: (deg) => {
+        const c = Math.cos(deg * Math.PI / 180);
+        return "θ = <b>" + deg + "°</b> · 수평 성분 |F| cos θ = 70 × " + num(c, 4) + " = " + num(70 * c, 2) + " N<br>" +
+          "W = (70)(100) cos " + deg + "° ≈ <b>" + num(7000 * c, 0) + " J</b>";
+      },
+    });
+  })();
+
+  /* ---------- 자가 점검 ---------- */
+  (function () {
+    const R = String.raw;
+    Quiz.mount(document.getElementById("quiz"), [
+      {
+        q: R`$\langle3,-2,1\rangle\cdot\langle4,5,-2\rangle$의 값은?`,
+        choices: [R`$0$`, R`$-1$`, R`$\langle12,-10,-2\rangle$`, R`$24$`],
+        answer: 0,
+        explain: R`<p>$3(4)+(-2)(5)+1(-2)=12-10-2=0$. 내적은 수예요. C처럼 벡터로 쓰면 틀려요. 결과가 0이니 두 벡터는 수직이에요.</p>`,
+      },
+      {
+        q: R`$|\mathbf a|=2$, $|\mathbf b|=5$, 사이각이 $\frac{2\pi}{3}$일 때 $\mathbf a\cdot\mathbf b$는?`,
+        choices: [R`$5$`, R`$-5$`, R`$5\sqrt3$`, R`$-10$`],
+        answer: 1,
+        explain: R`<p>$2\cdot5\cdot\cos\frac{2\pi}3=10\cdot\left(-\frac12\right)=-5$. 둔각이니 음수예요.</p>`,
+      },
+      {
+        q: R`$\mathbf a=\langle1,1,0\rangle$, $\mathbf b=\langle0,1,1\rangle$ 사이의 각은?`,
+        choices: [R`$\frac\pi6$`, R`$\frac\pi4$`, R`$\frac\pi3$`, R`$\frac\pi2$`],
+        answer: 2,
+        explain: R`<p>$\mathbf a\cdot\mathbf b=1$, $|\mathbf a|=|\mathbf b|=\sqrt2$이라 $\cos\theta=\frac1{\sqrt2\sqrt2}=\frac12$, $\theta=\frac\pi3$이에요.</p>`,
+      },
+      {
+        q: R`$\langle2,c,1\rangle$과 $\langle3,4,-2\rangle$가 수직이 되는 $c$는?`,
+        choices: [R`$-1$`, R`$1$`, R`$-2$`, R`$\frac12$`],
+        answer: 0,
+        explain: R`<p>$2(3)+4c+1(-2)=4+4c=0$이라 $c=-1$이에요. 직교 $\iff$ 내적 0.</p>`,
+      },
+      {
+        q: R`$\mathbf a=\langle2,-1,2\rangle$의 방향코사인 $\cos\beta$는?`,
+        choices: [R`$-1$`, R`$-\frac13$`, R`$\frac23$`, R`$-\frac1{\sqrt5}$`],
+        answer: 1,
+        explain: R`<p>$|\mathbf a|=\sqrt{4+1+4}=3$이고 $\cos\beta=\frac{a_2}{|\mathbf a|}=-\frac13$이에요. A는 슬라이드 오타처럼 $\frac{a_2}{|a_2|}$로 계산한 값이에요.</p>`,
+      },
+      {
+        q: R`어떤 벡터의 방향각이 $\alpha=\frac\pi3$, $\beta=\frac\pi4$일 때, $\gamma$가 예각이라면 $\gamma$는?`,
+        choices: [R`$\frac\pi6$`, R`$\frac\pi4$`, R`$\frac\pi3$`, R`$\frac{5\pi}{12}$`],
+        answer: 2,
+        explain: R`<p>$\cos^2\gamma=1-\cos^2\frac\pi3-\cos^2\frac\pi4=1-\frac14-\frac12=\frac14$. 예각이니 $\cos\gamma=\frac12$, $\gamma=\frac\pi3$이에요.</p>`,
+      },
+      {
+        q: R`$\mathbf a=\langle3,0,4\rangle$ 위로 $\mathbf b=\langle1,2,2\rangle$의 스칼라 사영 $\operatorname{comp}_{\mathbf a}\mathbf b$는?`,
+        choices: [R`$\frac{11}{3}$`, R`$\frac{11}{5}$`, R`$\frac{11}{25}$`, R`$11$`],
+        answer: 1,
+        explain: R`<p>$\mathbf a\cdot\mathbf b=3+0+8=11$, 분모는 그림자가 떨어지는 쪽 $|\mathbf a|=5$라 $\frac{11}5$예요. A는 $|\mathbf b|=3$으로 나눈 $\operatorname{comp}_{\mathbf b}\mathbf a$, C는 벡터 사영의 계수 $\frac{\mathbf a\cdot\mathbf b}{|\mathbf a|^2}$예요.</p>`,
+      },
+      {
+        q: R`힘 $\mathbf F=\langle1,2,3\rangle$이 입자를 $(1,0,2)$에서 $(3,1,1)$로 옮길 때 한 일은?`,
+        choices: [R`$1$`, R`$7$`, R`$\langle2,2,-3\rangle$`, R`$-1$`],
+        answer: 0,
+        explain: R`<p>$\mathbf D=\langle3-1,\,1-0,\,1-2\rangle=\langle2,1,-1\rangle$이고 $W=\mathbf F\cdot\mathbf D=2+2-3=1$이에요. 변위는 끝점에서 시점을 빼요.</p>`,
+      },
+    ]);
+  })();
+})();
+</script>
+</body>
+</html>

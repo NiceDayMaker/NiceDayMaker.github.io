@@ -1,0 +1,477 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>12.1 벡터함수와 공간곡선</title>
+<script>try{var t=localStorage.getItem("theme");if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
+<link rel="stylesheet" href="assets/katex/katex.min.css">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body data-section="12.1">
+<div class="shell">
+  <nav class="side" aria-label="이 절의 목차">
+    <a class="home" href="index.html">전체 목차로</a>
+    <ol>
+      <li><a href="#vf">벡터함수 · 예제 1</a></li>
+      <li><a href="#lim">극한과 연속 · 예제 2</a></li>
+      <li><a href="#curve">공간곡선</a></li>
+      <li><a href="#ex3">예제 3 · 직선</a></li>
+      <li><a href="#ex4">예제 4 · 나선</a></li>
+      <li><a href="#ex5">예제 5 · 선분</a></li>
+      <li><a href="#ex6">예제 6 · 원기둥과 평면</a></li>
+      <li><a href="#ex7">예제 7 · 포물곡면과 평면</a></li>
+      <li><a href="#lab">공간곡선 갤러리</a></li>
+      <li><a href="#summary">한눈에 정리</a></li>
+      <li><a href="#check">자가 점검</a></li>
+    </ol>
+  </nav>
+
+  <main>
+    <header class="hero">
+      <p class="chapter">12장 벡터함수</p>
+      <h1><span class="num">12.1</span>벡터함수와 공간곡선</h1>
+      <canvas id="hero" aria-hidden="true"></canvas>
+    </header>
+
+    <p class="lede">9.1의 매개변수곡선은 $t$를 넣으면 평면 위의 점 $(x,y)$가 나왔어요. 이번엔 $t$를 넣으면 <b>공간의 벡터</b>가 나오는 함수를 다뤄요. 그 벡터의 끝점이 움직이며 그리는 자취가 공간곡선이고, 11.5의 직선 $\mathbf r=\mathbf r_0+t\mathbf v$는 그중 가장 단순한 예였어요.</p>
+
+    <!-- ===================================================== -->
+    <h2 id="vf">벡터함수</h2>
+    <div class="def"><b>정의.</b> 정의역이 실수의 집합이고 치역이 벡터의 집합인 함수를 <b>벡터함수</b>(vector function) 또는 벡터값 함수(vector-valued function)라 해요.</div>
+    <p>벡터 $\mathbf r(t)$의 세 성분은 각각 $t$의 실숫값 함수예요. 이것을 $f(t)$, $g(t)$, $h(t)$라 하면 $f$, $g$, $h$를 $\mathbf r$의 <b>성분함수</b>(component function)라 하고</p>
+    $$\mathbf r(t)=\langle f(t),\,g(t),\,h(t)\rangle=f(t)\,\mathbf i+g(t)\,\mathbf j+h(t)\,\mathbf k$$
+    <p>로 써요. 벡터함수는 결국 <b>실수함수 세 개를 한 줄로 묶은 것</b>이라 정의역, 극한, 미분, 적분이 모두 성분별로 처리돼요.</p>
+
+    <div class="problem"><span class="tag">예제 1</span>$\mathbf r(t)=\left\langle t^3,\ \ln(3-t),\ \sqrt t\right\rangle$의 성분함수와 정의역을 구하라.</div>
+    <ol class="steps">
+      <li>성분함수는 $f(t)=t^3$, $g(t)=\ln(3-t)$, $h(t)=\sqrt t$예요.</li>
+      <li>$\mathbf r(t)$가 정의되려면 <b>세 성분이 모두 정의</b>되어야 해요.
+        <ul>
+          <li>$t^3$: 모든 실수</li>
+          <li>$\ln(3-t)$: $3-t>0$, 즉 $t\lt3$</li>
+          <li>$\sqrt t$: $t\ge0$</li>
+        </ul></li>
+      <li>세 조건의 공통부분이 정의역이에요. $0\le t\lt3$, 즉 구간 $[0,3)$.</li>
+    </ol>
+
+    <!-- ===================================================== -->
+    <h2 id="lim">극한과 연속</h2>
+    <div class="summary-box">
+      <p style="margin:0 0 .3rem"><b>1</b> $\mathbf r(t)=\langle f(t),g(t),h(t)\rangle$일 때, 각 성분함수의 극한이 존재하면</p>
+      $$\lim_{t\to a}\mathbf r(t)=\left\langle\lim_{t\to a}f(t),\ \lim_{t\to a}g(t),\ \lim_{t\to a}h(t)\right\rangle$$
+    </div>
+    <p>극한이 성분별이니 <b>연속</b>도 성분별이에요. $\displaystyle\lim_{t\to a}\mathbf r(t)=\mathbf r(a)$이면 $\mathbf r$은 $a$에서 연속이고, 이는 $f$, $g$, $h$가 모두 $a$에서 연속인 것과 같아요.</p>
+
+    <div class="problem"><span class="tag">예제 2</span>$\mathbf r(t)=(1+t^3)\,\mathbf i+te^{-t}\,\mathbf j+\dfrac{\sin t}{t}\,\mathbf k$일 때, $\displaystyle\lim_{t\to0}\mathbf r(t)$를 구하라.</div>
+    <p>성분마다 극한을 구해요.</p>
+    $$\lim_{t\to0}(1+t^3)=1,\qquad\lim_{t\to0}te^{-t}=0\cdot1=0,\qquad\lim_{t\to0}\frac{\sin t}{t}=1$$
+    $$\lim_{t\to0}\mathbf r(t)=\langle1,0,1\rangle=\mathbf i+\mathbf k$$
+    <p>셋째 성분은 $t=0$에서 정의되지 않지만 극한은 1이에요(유명한 극한 $\frac{\sin t}{t}\to1$). 그래서 $\mathbf r$은 $t=0$에서 정의되지 않으니 연속은 아니지만, 극한은 존재해요.</p>
+
+    <!-- ===================================================== -->
+    <h2 id="curve">공간곡선</h2>
+    <p>성분함수 $f$, $g$, $h$가 구간 $I$에서 연속이라 하자. $t$가 $I$ 전체에서 변할 때</p>
+    <div class="summary-box">
+      $$x=f(t),\qquad y=g(t),\qquad z=h(t) \tag{2}$$
+      <p style="margin:0">를 만족하는 공간의 모든 점 $(x,y,z)$의 집합 $C$를 <b>공간곡선</b>(space curve)이라 하고, (2)를 $C$의 <b>매개변수방정식</b>, $t$를 <b>매개변수</b>라 해요.</p>
+    </div>
+    <p>$C$는 시각 $t$에 위치가 $(f(t),g(t),h(t))$인 입자가 그리는 자취로 생각할 수 있어요. 벡터함수 $\mathbf r(t)=\langle f(t),g(t),h(t)\rangle$는 $C$ 위의 점 $P(f(t),g(t),h(t))$의 <b>위치벡터</b>예요. 그러니까 연속인 벡터함수 $\mathbf r$은 움직이는 벡터 $\mathbf r(t)$의 <b>끝점</b>이 그리는 공간곡선 $C$를 정의해요.</p>
+    <figure class="plot" id="fig-curve">
+      <figcaption>예시 곡선 $\mathbf r(t)=\langle2\cos t,\,2\sin t,\,1+0.8\sin3t\rangle$이에요. 재생하면 파란 위치벡터 $\mathbf r(t)$의 끝점이 빨간 곡선을 그려요. 점선 상자는 그 순간의 성분 $f(t)$, $g(t)$, $h(t)$를 보여 줘요. 곡선의 화살표 방향이 $t$가 커지는 방향(곡선의 <b>방향</b>)이에요.</figcaption>
+    </figure>
+    <p><b>평면곡선</b>도 같은 기호로 써요. 예를 들어 매개변수방정식 $x=t^2-2t$, $y=t+1$로 주어진 곡선의 벡터방정식은</p>
+    $$\mathbf r(t)=\langle t^2-2t,\ t+1\rangle=(t^2-2t)\,\mathbf i+(t+1)\,\mathbf j,\qquad\mathbf i=\langle1,0\rangle,\ \mathbf j=\langle0,1\rangle$$
+
+    <!-- ===================================================== -->
+    <h2 id="ex3">예제 3 · 직선</h2>
+    <div class="problem"><span class="tag">예제 3</span>벡터함수 $\mathbf r(t)=\langle1+t,\ 2+5t,\ -1+6t\rangle$로 정의된 곡선을 설명하라.</div>
+    <p>성분이 모두 $t$의 일차식이에요. 상수 부분과 $t$의 계수로 나누면</p>
+    $$\mathbf r(t)=\langle1,2,-1\rangle+t\,\langle1,5,6\rangle$$
+    <p>11.5의 직선의 벡터방정식 $\mathbf r=\mathbf r_0+t\mathbf v$ 꼴이에요. 따라서 이 곡선은 <b>점 $(1,2,-1)$을 지나고 벡터 $\langle1,5,6\rangle$에 평행한 직선</b>이에요.</p>
+    <div class="exam"><strong>요령.</strong> 성분이 모두 $t$의 일차식이면 직선이에요. $t=0$을 넣은 값이 지나는 점, $t$의 계수가 방향벡터예요.</div>
+
+    <!-- ===================================================== -->
+    <h2 id="ex4">예제 4 · 나선</h2>
+    <div class="problem"><span class="tag">예제 4</span>벡터방정식이 $\mathbf r(t)=\cos t\,\mathbf i+\sin t\,\mathbf j+t\,\mathbf k$인 곡선을 그려라.</div>
+    <ol class="steps">
+      <li>매개변수방정식은 $x=\cos t$, $y=\sin t$, $z=t$예요.</li>
+      <li>$x^2+y^2=\cos^2t+\sin^2t=1$이므로 곡선은 <b>원기둥 $x^2+y^2=1$ 위</b>에 있어요.</li>
+      <li>$x$, $y$만 보면 $xy$평면의 단위원을 시계 반대 방향으로 돌고, 동시에 $z=t$로 일정하게 올라가요. 그래서 원기둥을 감고 올라가는 <b>나선</b>(helix)이 돼요. $t=0$에서 $(1,0,0)$, $t=\frac\pi2$에서 $\left(0,1,\frac\pi2\right)$, 한 바퀴($t=2\pi$)에 $2\pi$만큼 올라가요.</li>
+    </ol>
+    <figure class="plot" id="fig-helix">
+      <figcaption>회색 선이 원기둥 $x^2+y^2=1$, 빨간 곡선이 나선이에요. 바닥의 초록 점은 곡선 위의 점을 $xy$평면에 내린 그림자 $(\cos t,\sin t,0)$인데, 단위원을 따라 돌기만 해요. 높이 $z=t$가 더해져서 나선이 된다는 게 보여요.</figcaption>
+    </figure>
+
+    <!-- ===================================================== -->
+    <h2 id="ex5">예제 5 · 선분</h2>
+    <div class="problem"><span class="tag">예제 5</span>점 $P(1,3,-2)$와 점 $Q(2,-1,3)$을 잇는 선분의 벡터방정식과 매개변수방정식을 구하라.</div>
+    <p>시점의 위치벡터를 $\mathbf r_0$, 종점의 위치벡터를 $\mathbf r_1$이라 하면, $\mathbf r_0$에서 $\mathbf r_1$로 가는 선분은</p>
+    <div class="summary-box">
+      $$\mathbf r(t)=(1-t)\,\mathbf r_0+t\,\mathbf r_1,\qquad0\le t\le1$$
+    </div>
+    <p>이에요. 11.5의 $\mathbf r_0+t(\mathbf r_1-\mathbf r_0)$를 정리한 것과 같아요. $t=0$이면 $\mathbf r_0$, $t=1$이면 $\mathbf r_1$이에요.</p>
+    <ol class="steps">
+      <li>$\mathbf r_0=\langle1,3,-2\rangle$, $\mathbf r_1=\langle2,-1,3\rangle$이므로
+        $$\mathbf r(t)=(1-t)\langle1,3,-2\rangle+t\langle2,-1,3\rangle=\langle1+t,\ 3-4t,\ -2+5t\rangle,\qquad0\le t\le1$$</li>
+      <li>매개변수방정식은
+        $$x=1+t,\qquad y=3-4t,\qquad z=-2+5t,\qquad0\le t\le1$$</li>
+    </ol>
+    <figure class="plot" id="fig-seg">
+      <figcaption>$t$는 “$Q$ 쪽으로 간 비율”이에요. $t=0.5$이면 정확히 중점이에요. 범위 $0\le t\le1$을 빼먹으면 선분이 아니라 직선 전체가 되니 꼭 같이 쓰세요.</figcaption>
+    </figure>
+
+    <!-- ===================================================== -->
+    <h2 id="ex6">예제 6 · 원기둥과 평면의 교선</h2>
+    <div class="problem"><span class="tag">예제 6</span>원기둥 $x^2+y^2=1$과 평면 $y+z=2$의 교선의 방정식을 표현하는 벡터함수를 구하라.</div>
+    <ol class="steps">
+      <li>교선 위의 점은 두 식을 동시에 만족해요. 원기둥의 식은 원의 매개변수로 바로 풀려요.
+        $$x=\cos t,\qquad y=\sin t\qquad(0\le t\le2\pi)$$</li>
+      <li>평면의 식 $y+z=2$에서 $z=2-y=2-\sin t$.</li>
+      <li>따라서
+        $$\mathbf r(t)=\cos t\,\mathbf i+\sin t\,\mathbf j+(2-\sin t)\,\mathbf k,\qquad0\le t\le2\pi$$</li>
+    </ol>
+    <p>이렇게 곡선을 벡터함수로 나타낸 것을 곡선 $C$의 <b>매개변수화</b>(parametrization)라 해요. 교선은 원기둥을 비스듬히 자른 단면이라 <b>타원</b>이고, $t=0,\frac\pi2,\pi,\frac{3\pi}2$에서 $(1,0,2)$, $(0,1,1)$, $(-1,0,2)$, $(0,-1,3)$을 지나요.</p>
+    <div class="exam"><strong>요령.</strong> 교선 문제는 <b>매개변수로 쓰기 쉬운 식을 먼저</b> 매개변수화하고, 나머지 식으로 남은 변수를 구해요. $x^2+y^2=r^2$이 보이면 $x=r\cos t$, $y=r\sin t$가 첫 수예요.</div>
+    <figure class="plot" id="fig-ex6">
+      <figcaption>회색이 원기둥, 초록 면이 평면 $y+z=2$, 빨간 곡선이 교선이에요. 재생하면 점이 타원을 따라 돌아요. 평면이 기울어져 있어서 $y$가 클수록 $z$가 낮아져요.</figcaption>
+    </figure>
+
+    <!-- ===================================================== -->
+    <h2 id="ex7">예제 7 · 포물곡면과 평면의 교선</h2>
+    <div class="problem"><span class="tag">예제 7</span>포물곡면 $4y=x^2+z^2$과 평면 $y=x$의 교선의 매개변수방정식을 구하라.</div>
+    <ol class="steps">
+      <li>$y=x$를 포물곡면의 식에 넣으면
+        $$4x=x^2+z^2\quad\Longrightarrow\quad x^2-4x+z^2=0\quad\Longrightarrow\quad(x-2)^2+z^2=4$$</li>
+      <li>이것은 $(x,z)$에 대해 중심 $(2,0)$, 반지름 2인 원의 식이에요. 원의 매개변수화를 쓰면
+        $$x=2+2\cos t,\qquad z=2\sin t$$</li>
+      <li>$y=x$이므로 매개변수방정식은
+        $$x=2+2\cos t,\qquad y=2+2\cos t,\qquad z=2\sin t,\qquad0\le t\le2\pi$$</li>
+    </ol>
+    <p>다른 방법으로 $x=t$로 두면 $z=\pm\sqrt{4t-t^2}$ ($0\le t\le4$)인데, 부호 때문에 곡선을 두 조각으로 나눠 써야 해요. 완전제곱식으로 원 모양을 찾으면 한 번에 쓸 수 있어 더 깔끔해요. (슬라이드에는 풀이가 없어서 채웠어요.)</p>
+    <figure class="plot" id="fig-ex7">
+      <figcaption>회색 그물이 $y$축을 중심으로 열린 포물곡면 $4y=x^2+z^2$, 초록 면이 평면 $y=x$, 빨간 곡선이 교선이에요. $x=y$라 교선은 원점과 $(4,4,0)$을 지나요.</figcaption>
+    </figure>
+
+    <!-- ===================================================== -->
+    <h2 id="lab">공간곡선 갤러리</h2>
+    <p>여러 공간곡선을 골라 돌려 보세요. “그림자”를 켜면 곡선을 세 좌표평면에 수직으로 내린 모양(사영)이 같이 그려져요. 공간곡선이 잘 상상되지 않을 때는 이 세 그림자를 먼저 그려 보는 게 좋아요. 예를 들어 꼬인 3차곡선 $\langle t,t^2,t^3\rangle$은 $xy$평면 그림자가 포물선 $y=x^2$, $xz$평면 그림자가 $z=x^3$이에요.</p>
+    <figure class="plot" id="fig-lab">
+      <figcaption>원뿔 나선 $\langle t\cos t,\,t\sin t,\,t\rangle$은 $x^2+y^2=t^2=z^2$이라 원뿔 $z^2=x^2+y^2$ 위에 있어요. 원환 나선은 도넛 표면을 감고, 세잎매듭은 자기 자신과 만나지 않으면서 꼬여 있어요.</figcaption>
+    </figure>
+
+    <!-- ===================================================== -->
+    <h2 id="summary">한눈에 정리</h2>
+    <div class="summary-box">
+      <ul>
+        <li>벡터함수 $\mathbf r(t)=\langle f(t),g(t),h(t)\rangle$: 실수함수 세 개를 묶은 것. 정의역은 세 성분 정의역의 <b>공통부분</b>.</li>
+        <li>극한, 연속은 성분별: $\lim\mathbf r(t)=\langle\lim f,\lim g,\lim h\rangle$.</li>
+        <li>공간곡선 = 위치벡터 $\mathbf r(t)$의 끝점이 그리는 자취. 매개변수방정식 $x=f(t)$, $y=g(t)$, $z=h(t)$.</li>
+        <li>성분이 모두 일차식이면 직선. 선분은 $(1-t)\mathbf r_0+t\mathbf r_1$, $0\le t\le1$.</li>
+        <li>$\langle\cos t,\sin t,t\rangle$은 원기둥 $x^2+y^2=1$ 위의 나선.</li>
+        <li>교선 매개변수화: 원 꼴($x^2+y^2=r^2$ 또는 완전제곱해서 원)을 $\cos t$, $\sin t$로 놓고, 나머지 식으로 남은 변수를 구함.</li>
+      </ul>
+    </div>
+
+    <!-- ===================================================== -->
+    <h2 id="check">자가 점검</h2>
+    <p>보기를 고르면 바로 정답과 풀이가 나와요.</p>
+    <div id="quiz"></div>
+
+    <nav class="pager" aria-label="절 이동"></nav>
+  </main>
+</div>
+
+<script src="assets/katex/katex.min.js"></script>
+<script src="assets/katex/auto-render.min.js"></script>
+<script src="assets/plot.js"></script>
+<script src="assets/space.js"></script>
+<script src="assets/quiz.js"></script>
+<script src="assets/site.js"></script>
+<script>
+(function () {
+  "use strict";
+  const { fmt } = Plot;
+  const V = Space.V;
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const num = (v, d) => fmt(v, d == null ? 2 : d);
+  const trim = (v) => String(+v.toFixed(3)).replace("-", "−");
+  const pt = (a) => "(" + a.map(trim).join(", ") + ")";
+  const TAU = 2 * Math.PI;
+  const segHtml = (labels, aria, cls) =>
+    '<span class="seg ' + (cls || "") + '" role="group" aria-label="' + aria + '">' +
+    labels.map((l, k) => '<button type="button" data-k="' + k + '" aria-pressed="false">' + l + "</button>").join("") + "</span>";
+  function pressOne(group, btn) { group.querySelectorAll("button").forEach((b) => b.setAttribute("aria-pressed", b === btn ? "true" : "false")); }
+  const samples = (f, a, b, n) => { const out = []; for (let i = 0; i <= n; i++) out.push(f(a + (b - a) * i / n)); return out; };
+  // 곡선: 지나온 부분은 진하게, 남은 부분은 연하게, 중간에 진행 방향 화살표
+  function trace(S, f, a, b, t, op) {
+    op = op || {};
+    const n = op.n || 240, col = op.color || "--curve";
+    S.path(samples(f, a, b, n), { color: col, width: op.width || 2.2, alpha: op.ghost == null ? .25 : op.ghost });
+    if (t > a) S.path(samples(f, a, Math.min(t, b), Math.max(2, Math.round(n * (Math.min(t, b) - a) / (b - a)))), { color: col, width: op.width || 2.6 });
+    (op.arrows || []).forEach((s) => {
+      const p = S.P(f(s)), q = S.P(f(s + (b - a) * 0.004)), ang = Math.atan2(q[1] - p[1], q[0] - p[0]);
+      Plot.arrowHead(S.ctx, p[0], p[1], ang, 9, Plot.palette().get(col.startsWith("--") ? col : "--curve"));
+    });
+  }
+  function cylinder(S, r, z0, z1, op) {
+    op = op || {};
+    const ring = (z) => samples((u) => [r * Math.cos(u), r * Math.sin(u), z], 0, TAU, 72);
+    S.path(ring(z0), { color: "--axis", width: 1.1, alpha: .7 });
+    S.path(ring(z1), { color: "--axis", width: 1.1, alpha: .7 });
+    for (let k = 0; k < (op.lines || 12); k++) {
+      const u = TAU * k / (op.lines || 12);
+      S.line([r * Math.cos(u), r * Math.sin(u), z0], [r * Math.cos(u), r * Math.sin(u), z1], { color: "--axis", width: 1, alpha: .35 });
+    }
+  }
+
+  /* ---------- 절 머리: 위치벡터가 나선을 그린다 ---------- */
+  (function () {
+    const cv = document.getElementById("hero"), ctx = cv.getContext("2d");
+    let W, H, k = reduce ? 1 : 0, start = 0;
+    function size() { const d = window.devicePixelRatio || 1; W = cv.clientWidth; H = cv.clientHeight; cv.width = W * d; cv.height = H * d; ctx.setTransform(d, 0, 0, d, 0, 0); }
+    function draw() {
+      const C = Plot.palette(); ctx.clearRect(0, 0, W, H);
+      // 축이 가로(x)인 나선을 비스듬히 내려다본 모습
+      const s = H / 3, turns = 7, len = (W * 0.9) / (0.906 * s), pitch = len / (turns * TAU);
+      const f = (t) => [-len / 2 + pitch * t, Math.cos(t), Math.sin(t)];
+      const P = (t) => { const p = f(t); return [W / 2 + (p[0] * 0.906 + p[1] * 0.62) * s, H / 2 - (p[1] * 0.36 + p[2] * 0.9) * s]; };
+      const tEnd = turns * TAU * k, N = 1000;
+      ctx.save(); ctx.lineCap = "round";
+      ctx.strokeStyle = C.curve; ctx.globalAlpha = .16; ctx.lineWidth = 1.4; ctx.beginPath();
+      for (let i = 0; i <= N; i++) { const p = P(turns * TAU * i / N); i ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1]); }
+      ctx.stroke();
+      ctx.globalAlpha = 1; ctx.lineWidth = 2.4; ctx.beginPath();
+      const m = Math.max(2, Math.round(N * k));
+      for (let i = 0; i <= m; i++) { const p = P(tEnd * i / m); i ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1]); }
+      ctx.stroke();
+      const e = P(tEnd); ctx.fillStyle = C.curve; ctx.beginPath(); ctx.arc(e[0], e[1], 4.5, 0, TAU); ctx.fill();
+      ctx.restore();
+    }
+    function tick(now) { if (!start) start = now; k = Math.min(1, (now - start) / 4000); draw(); if (k < 1) requestAnimationFrame(tick); }
+    size(); reduce ? draw() : requestAnimationFrame(tick);
+    if ("ResizeObserver" in window) new ResizeObserver(() => { size(); draw(); }).observe(cv);
+  })();
+
+  /* ---------- 공간곡선 개념 ---------- */
+  (function () {
+    const f = (t) => [2 * Math.cos(t), 2 * Math.sin(t), 1 + 0.8 * Math.sin(3 * t)];
+    Space.mount(document.getElementById("fig-curve"), {
+      range: 2.7, center: [0, 0.2, 0.8], height: 380, axes: [3, 3, 2.6], grid: 1, view: { az: 30, el: 24 },
+      t: { min: 0, max: TAU, value: 2.2, label: "t", duration: 8 },
+      alt: "위치벡터의 끝점이 그리는 공간곡선",
+      draw(S, C, api) {
+        const t = api.t, p = f(t);
+        S.box(p, { alpha: .65 });
+        trace(S, f, 0, TAU, t, { arrows: [0.9, 3.0, 5.1] });
+        S.arrow([0, 0, 0], p, { color: "--aux", width: 2.6, label: "r(t)", labelT: .55, math: false, size: 14, dx: 8, dy: 8 });
+        S.point(p, { color: "--curve", r: 5.5, label: "P", dx: 8, dy: -10 });
+        S.text(f(5.6), "C", { italic: true, math: true, bold: true, size: 17, color: "--curve", dx: 10, dy: 6 });
+      },
+      readout: (api) => {
+        const t = api.t, p = f(t);
+        return "t = <b>" + num(t) + "</b> · f(t) = 2cos t = " + num(p[0]) + ", g(t) = 2sin t = " + num(p[1]) + ", h(t) = 1 + 0.8 sin 3t = " + num(p[2]) +
+          "<br>r(t) = <b>⟨" + num(p[0]) + ", " + num(p[1]) + ", " + num(p[2]) + "⟩</b>";
+      },
+    });
+  })();
+
+  /* ---------- 예제 4: 나선 ---------- */
+  (function () {
+    const T1 = 2.5 * Math.PI, f = (t) => [Math.cos(t), Math.sin(t), t];
+    Space.mount(document.getElementById("fig-helix"), {
+      range: 4.2, center: [0, 0, 3.7], height: 460, axes: [2, 2, 8.8], view: { az: 30, el: 26 }, negAxes: .4,
+      t: { min: 0, max: T1, value: Math.PI / 2, label: "t", duration: 9 },
+      alt: "원기둥 위의 나선",
+      draw(S, C, api) {
+        const t = api.t, p = f(t);
+        cylinder(S, 1, 0, T1, { lines: 12 });
+        S.path(samples((u) => [Math.cos(u), Math.sin(u), 0], 0, TAU, 72), { color: "--ok", width: 1.4, alpha: .6 });
+        trace(S, f, 0, T1, t, { arrows: [1.2, 4.3, 6.9] });
+        S.line(p, [p[0], p[1], 0], { color: "--muted", dash: true, width: 1.2 });
+        S.point([p[0], p[1], 0], { color: "--ok", r: 4 });
+        S.arrow([0, 0, 0], p, { color: "--aux", width: 2.2, alpha: .85 });
+        S.point([1, 0, 0], { color: "--ink", r: 3.5, label: "(1, 0, 0)", dx: 8, dy: 12, size: 11.5 });
+        S.point([0, 1, Math.PI / 2], { color: "--ink", r: 3.5, label: "(0, 1, π/2)", dx: 8, dy: 4, size: 11.5 });
+        S.point(p, { color: "--curve", r: 5.5 });
+      },
+      readout: (api) => {
+        const t = api.t, p = f(t);
+        return "t = <b>" + num(t) + "</b> (" + num(t / TAU, 2) + "바퀴) · 점 " + pt(p) + "<br>x² + y² = cos²t + sin²t = <b>1</b> (언제나 원기둥 위) · 높이 z = t = " + num(t);
+      },
+    });
+  })();
+
+  /* ---------- 예제 5: 선분 ---------- */
+  (function () {
+    const P = [1, 3, -2], Q = [2, -1, 3], f = (t) => V.add(V.mul(P, 1 - t), V.mul(Q, t));
+    Space.mount(document.getElementById("fig-seg"), {
+      range: 3.6, center: [0.8, 0.8, 0.5], height: 380, axes: [3, 4, 3.6], view: { az: 26, el: 16 },
+      t: { min: 0, max: 1, value: 0.5, step: 0.05, label: "t", duration: 5 },
+      alt: "두 점을 잇는 선분",
+      draw(S, C, api) {
+        const t = api.t, p = f(t);
+        S.arrow([0, 0, 0], P, { color: "--muted", width: 1.4, alpha: .6, label: "r₀", math: false, size: 13, labelT: .5, dx: -18, dy: 0 });
+        S.arrow([0, 0, 0], Q, { color: "--muted", width: 1.4, alpha: .6, label: "r₁", math: false, size: 13, labelT: .5, dx: -18, dy: 0 });
+        S.line(P, Q, { color: "--curve", width: 1.6, alpha: .3 });
+        S.arrow(P, p, { color: "--curve", width: 3, head: t > 0.02 ? 11 : 0 });
+        S.arrow([0, 0, 0], p, { color: "--aux", width: 2.4, label: "r(t)", math: false, size: 13, labelT: .6, dx: 8, dy: 10 });
+        S.point(P, { color: "--ink", label: "P(1, 3, −2)", dx: 8, dy: 14, size: 12 });
+        S.point(Q, { color: "--ink", label: "Q(2, −1, 3)", dx: 8, dy: -10, size: 12 });
+        S.point(p, { color: "--curve", r: 5.5 });
+      },
+      readout: (api) => {
+        const t = api.t;
+        return "t = <b>" + num(t) + "</b> · r(t) = (1 − t)⟨1, 3, −2⟩ + t⟨2, −1, 3⟩ = <b>⟨" + num(1 + t) + ", " + num(3 - 4 * t) + ", " + num(-2 + 5 * t) + "⟩</b>" +
+          (Math.abs(t) < 1e-9 ? " = P" : Math.abs(t - 1) < 1e-9 ? " = Q" : Math.abs(t - 0.5) < 1e-9 ? " (중점)" : "");
+      },
+    });
+  })();
+
+  /* ---------- 예제 6: 원기둥과 평면 ---------- */
+  (function () {
+    const f = (t) => [Math.cos(t), Math.sin(t), 2 - Math.sin(t)];
+    Space.mount(document.getElementById("fig-ex6"), {
+      range: 2.5, center: [0, 0, 1.7], height: 420, axes: [2, 2, 4], view: { az: 32, el: 18 },
+      t: { min: 0, max: TAU, value: Math.PI / 2, label: "t", duration: 8 },
+      alt: "원기둥과 평면의 교선",
+      draw(S, C, api) {
+        const t = api.t;
+        cylinder(S, 1, 0, 3.6, { lines: 16 });
+        S.poly([[-1.5, -1.5, 3.5], [1.5, -1.5, 3.5], [1.5, 1.5, 0.5], [-1.5, 1.5, 0.5]], { fill: "--ok", alpha: .14, stroke: "--ok", strokeAlpha: .5 });
+        trace(S, f, 0, TAU, t, { arrows: [0.8, 3.9] });
+        [[0, "(1, 0, 2)"], [Math.PI / 2, "(0, 1, 1)"], [Math.PI, "(−1, 0, 2)"], [1.5 * Math.PI, "(0, −1, 3)"]].forEach(([u, l]) =>
+          S.point(f(u), { color: "--ink", r: 3.2, label: l, dx: 8, dy: -8, size: 11.5 }));
+        S.point(f(t), { color: "--curve", r: 5.5 });
+      },
+      readout: (api) => {
+        const t = api.t, p = f(t);
+        return "t = <b>" + num(t) + "</b> · r(t) = ⟨cos t, sin t, 2 − sin t⟩ = <b>" + pt(p) + "</b><br>x² + y² = " + num(p[0] * p[0] + p[1] * p[1], 3) + ", y + z = " + num(p[1] + p[2], 3) + " (두 식 모두 만족)";
+      },
+    });
+  })();
+
+  /* ---------- 예제 7: 포물곡면과 평면 ---------- */
+  (function () {
+    const f = (t) => [2 + 2 * Math.cos(t), 2 + 2 * Math.cos(t), 2 * Math.sin(t)];
+    Space.mount(document.getElementById("fig-ex7"), {
+      range: 4.4, center: [1.4, 2, 0.2], height: 420, axes: [5, 5.4, 3.4], view: { az: -32, el: 20 },
+      t: { min: 0, max: TAU, value: 1, label: "t", duration: 8 },
+      alt: "포물곡면과 평면의 교선",
+      draw(S, C, api) {
+        const Y = 4.2;
+        for (let k = 1; k <= 6; k++) {
+          const y = Y * k / 6, r = 2 * Math.sqrt(y);
+          S.path(samples((u) => [r * Math.cos(u), y, r * Math.sin(u)], 0, TAU, 60), { color: "--axis", width: 1, alpha: .3 });
+        }
+        for (let k = 0; k < 12; k++) {
+          const u = TAU * k / 12;
+          S.path(samples((s) => [2 * s * Math.cos(u), s * s, 2 * s * Math.sin(u)], 0, Math.sqrt(Y), 24), { color: "--axis", width: 1, alpha: .25 });
+        }
+        S.poly([[-0.4, -0.4, -2.8], [4.8, 4.8, -2.8], [4.8, 4.8, 2.8], [-0.4, -0.4, 2.8]], { fill: "--ok", alpha: .14, stroke: "--ok", strokeAlpha: .5 });
+        trace(S, f, 0, TAU, api.t, { arrows: [1.2, 4.3] });
+        S.point([0, 0, 0], { color: "--ink", r: 3.2, label: "(0, 0, 0)", dx: 8, dy: 14, size: 11.5 });
+        S.point([4, 4, 0], { color: "--ink", r: 3.2, label: "(4, 4, 0)", dx: 8, dy: 12, size: 11.5 });
+        S.point(f(api.t), { color: "--curve", r: 5.5 });
+      },
+      readout: (api) => {
+        const t = api.t, p = f(t);
+        return "t = <b>" + num(t) + "</b> · 점 <b>" + pt(p) + "</b><br>x² + z² = " + num(p[0] * p[0] + p[2] * p[2], 3) + " = 4y = " + num(4 * p[1], 3) + ", y = x";
+      },
+    });
+  })();
+
+  /* ---------- 공간곡선 갤러리 ---------- */
+  (function () {
+    const C3 = [
+      { name: "나선", f: (t) => [Math.cos(t), Math.sin(t), t / 3], a: 0, b: 4 * Math.PI, eq: "⟨cos t, sin t, t/3⟩", fr: { range: 2.6, center: [0, 0, 1.9], axes: [1.8, 1.8, 4.6] } },
+      { name: "꼬인 3차곡선", f: (t) => [t, t * t, t * t * t], a: -1.4, b: 1.4, eq: "⟨t, t², t³⟩", fr: { range: 3.9, center: [0, 0.8, -0.2], axes: [2, 2.4, 3] } },
+      { name: "원뿔 나선", f: (t) => [0.25 * t * Math.cos(t), 0.25 * t * Math.sin(t), 0.25 * t], a: 0, b: 4 * Math.PI, eq: "⟨t cos t, t sin t, t⟩ (¼로 축소)", fr: { range: 3.2, center: [0, 0, 1.6], axes: [3.4, 3.4, 3.6] } },
+      { name: "원환 나선", f: (t) => [(2 + 0.6 * Math.cos(10 * t)) * Math.cos(t), (2 + 0.6 * Math.cos(10 * t)) * Math.sin(t), 0.6 * Math.sin(10 * t)], a: 0, b: TAU, eq: "⟨(2 + 0.6cos 10t)cos t, (2 + 0.6cos 10t)sin t, 0.6 sin 10t⟩", fr: { range: 3, center: [0, 0, 0], axes: [3.2, 3.2, 1.6] }, n: 800 },
+      { name: "세잎매듭", f: (t) => [0.6 * (Math.sin(t) + 2 * Math.sin(2 * t)), 0.6 * (Math.cos(t) - 2 * Math.cos(2 * t)), -0.6 * Math.sin(3 * t)], a: 0, b: TAU, eq: "0.6⟨sin t + 2sin 2t, cos t − 2cos 2t, −sin 3t⟩", fr: { range: 2.4, center: [0, 0, 0], axes: [2.4, 2.4, 1.6] }, n: 500 },
+      { name: "예제 6 타원", f: (t) => [Math.cos(t), Math.sin(t), 2 - Math.sin(t)], a: 0, b: TAU, eq: "⟨cos t, sin t, 2 − sin t⟩", fr: { range: 2.2, center: [0, 0, 1.5], axes: [1.8, 1.8, 3.6] } },
+    ];
+    const st = { c: C3[0], shadow: true };
+    const api = Space.mount(document.getElementById("fig-lab"), Object.assign({}, C3[0].fr, {
+      height: 420, view: { az: 32, el: 22 },
+      t: { min: 0, max: 1, value: 1, label: "진행", duration: 7 },
+      alt: "여러 가지 공간곡선",
+      controls: segHtml(C3.map((c) => c.name), "곡선 고르기", "lab-c") + segHtml(["그림자 켜기", "끄기"], "그림자", "lab-sh"),
+      draw(S, Cc, api) {
+        const c = st.c, tt = c.a + (c.b - c.a) * api.t, n = c.n || 300;
+        if (st.shadow) {
+          const L = c.fr.axes;
+          const zf = -L[2] * 0.55, yf = -L[1] * 0.55, xf = -L[0] * 0.55;
+          S.path(samples((u) => { const p = c.f(u); return [p[0], p[1], zf]; }, c.a, c.b, n), { color: "--aux", width: 1.4, alpha: .55, dash: [4, 3] });
+          S.path(samples((u) => { const p = c.f(u); return [p[0], yf, p[2]]; }, c.a, c.b, n), { color: "--ok", width: 1.4, alpha: .55, dash: [4, 3] });
+          S.path(samples((u) => { const p = c.f(u); return [xf, p[1], p[2]]; }, c.a, c.b, n), { color: "--mark-ink", width: 1.4, alpha: .45, dash: [4, 3] });
+        }
+        trace(S, c.f, c.a, c.b, tt, { n: n, ghost: .2 });
+        S.point(c.f(tt), { color: "--curve", r: 5 });
+      },
+      readout: () => "<b>" + st.c.name + "</b> r(t) = " + st.c.eq + (st.shadow ? "<br>점선 그림자: 파랑 = xy평면, 초록 = xz평면, 갈색 = yz평면 방향으로 내린 사영" : ""),
+    }));
+    const g = api.bar.querySelector(".lab-c"), h = api.bar.querySelector(".lab-sh");
+    g.querySelectorAll("button").forEach((b, k) => b.addEventListener("click", () => { st.c = C3[k]; pressOne(g, b); api.setFrame(C3[k].fr); api.setT(0); api.play(); }));
+    h.querySelectorAll("button").forEach((b, k) => b.addEventListener("click", () => { st.shadow = k === 0; pressOne(h, b); api.redraw(); }));
+    pressOne(g, g.querySelector("button")); pressOne(h, h.querySelector("button"));
+  })();
+
+  /* ---------- 자가 점검 ---------- */
+  (function () {
+    const R = String.raw;
+    Quiz.mount(document.getElementById("quiz"), [
+      {
+        q: R`$\mathbf r(t)=\left\langle\sqrt{t+2},\ \ln(4-t),\ \frac1t\right\rangle$의 정의역은?`,
+        choices: [R`$[-2,4)$`, R`$[-2,0)\cup(0,4)$`, R`$(0,4)$`, R`$(-2,4]$`],
+        answer: 1,
+        explain: R`<p>$t\ge-2$, $t\lt4$, $t\ne0$의 공통부분이에요. 세 성분이 모두 정의되어야 해요.</p>`,
+      },
+      {
+        q: R`$\displaystyle\lim_{t\to0}\left\langle\frac{e^t-1}{t},\ \cos t,\ t^2\right\rangle$는?`,
+        choices: [R`$\langle0,1,0\rangle$`, R`$\langle1,1,0\rangle$`, R`$\langle1,0,0\rangle$`, R`존재하지 않는다`],
+        answer: 1,
+        explain: R`<p>성분별로 $\frac{e^t-1}{t}\to1$(로피탈 또는 $e^t$의 급수), $\cos t\to1$, $t^2\to0$이에요.</p>`,
+      },
+      {
+        q: R`$\mathbf r(t)=\langle2-t,\ 1+3t,\ 4t\rangle$이 나타내는 곡선은?`,
+        choices: [R`점 $(2,1,0)$을 지나고 $\langle-1,3,4\rangle$에 평행한 직선`, R`점 $(-1,3,4)$를 지나고 $\langle2,1,0\rangle$에 평행한 직선`, R`원점을 지나는 직선`, "나선"],
+        answer: 0,
+        explain: R`<p>$\langle2,1,0\rangle+t\langle-1,3,4\rangle$로 나누면 $t=0$의 값이 지나는 점, $t$의 계수가 방향이에요.</p>`,
+      },
+      {
+        q: R`곡선 $\mathbf r(t)=\langle3\cos t,\ 3\sin t,\ 2t\rangle$이 놓인 곡면은?`,
+        choices: [R`$x^2+y^2=9$`, R`$x^2+y^2+z^2=9$`, R`$x^2+y^2=3$`, R`$z=x^2+y^2$`],
+        answer: 0,
+        explain: R`<p>$x^2+y^2=9\cos^2t+9\sin^2t=9$라 반지름 3인 원기둥 위의 나선이에요.</p>`,
+      },
+      {
+        q: R`점 $(0,1,2)$에서 $(2,-1,4)$로 가는 선분은?`,
+        choices: [R`$\langle2t,\ 1-2t,\ 2+2t\rangle,\ 0\le t\le1$`, R`$\langle2t,\ 1-2t,\ 2+2t\rangle,\ t\in\mathbb R$`, R`$\langle2-2t,\ -1+2t,\ 4-2t\rangle,\ 0\le t\le1$`, R`$\langle2,\ -2,\ 2\rangle t$`],
+        answer: 0,
+        explain: R`<p>$(1-t)\langle0,1,2\rangle+t\langle2,-1,4\rangle=\langle2t,1-2t,2+2t\rangle$에 $0\le t\le1$. B는 직선 전체, C는 방향이 거꾸로($Q$에서 $P$로)예요.</p>`,
+      },
+      {
+        q: R`원기둥 $x^2+y^2=4$와 곡면 $z=xy$의 교선을 매개변수화한 것은?`,
+        choices: [R`$\langle2\cos t,\ 2\sin t,\ 4\cos t\sin t\rangle$`, R`$\langle\cos t,\ \sin t,\ \cos t\sin t\rangle$`, R`$\langle2\cos t,\ 2\sin t,\ 2\cos t\sin t\rangle$`, R`$\langle t,\ \sqrt{4-t^2},\ t\sqrt{4-t^2}\rangle$`],
+        answer: 0,
+        explain: R`<p>$x=2\cos t$, $y=2\sin t$로 두면 $z=xy=4\cos t\sin t$($=2\sin2t$)예요. D는 $y\ge0$인 절반만 나와요.</p>`,
+      },
+      {
+        q: R`곡선 $\langle t\cos t,\ t\sin t,\ t\rangle$이 놓인 곡면은?`,
+        choices: [R`원기둥 $x^2+y^2=1$`, R`원뿔 $z^2=x^2+y^2$`, R`구 $x^2+y^2+z^2=1$`, R`평면 $z=x$`],
+        answer: 1,
+        explain: R`<p>$x^2+y^2=t^2(\cos^2t+\sin^2t)=t^2=z^2$이에요. 갤러리의 원뿔 나선이에요.</p>`,
+      },
+      {
+        q: R`벡터함수 $\mathbf r$이 $t=a$에서 연속이라는 것과 같은 것은?`,
+        choices: [R`$\mathbf r(a)\ne\mathbf 0$`, R`세 성분함수가 모두 $a$에서 연속`, R`한 성분함수라도 $a$에서 연속`, R`$|\mathbf r(t)|$가 $a$에서 연속`],
+        answer: 1,
+        explain: R`<p>극한이 성분별이니 $\lim\mathbf r(t)=\mathbf r(a)$는 세 성분 모두 연속인 것과 같아요. D는 필요조건일 뿐이에요(예: 성분 부호가 튀어도 길이는 연속일 수 있어요).</p>`,
+      },
+    ]);
+  })();
+})();
+</script>
+</body>
+</html>

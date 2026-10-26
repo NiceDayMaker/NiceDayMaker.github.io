@@ -1,0 +1,346 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>10.6 비판정법과 근판정법</title>
+<script>try{var t=localStorage.getItem("theme");if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
+<link rel="stylesheet" href="assets/katex/katex.min.css">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body data-section="10.6">
+<div class="shell">
+  <nav class="side" aria-label="이 절의 목차">
+    <a class="home" href="index.html">전체 목차로</a>
+    <ol>
+      <li><a href="#ratio">비판정법</a></li>
+      <li><a href="#why">왜 성립할까</a></li>
+      <li><a href="#ex2">예제 2 · nⁿ/n!</a></li>
+      <li><a href="#ex3">예제 3 · L = 1이면</a></li>
+      <li><a href="#root">근판정법</a></li>
+      <li><a href="#ex4">예제 4 · 근판정법으로 수렴</a></li>
+      <li><a href="#ex5">예제 5 · 판정불가 다음</a></li>
+      <li><a href="#explorer">판정 실험실</a></li>
+      <li><a href="#which">언제 무엇을 쓸까</a></li>
+      <li><a href="#summary">한눈에 정리</a></li>
+      <li><a href="#check">자가 점검</a></li>
+    </ol>
+  </nav>
+
+  <main>
+    <header class="hero">
+      <p class="chapter">10장 무한수열과 급수</p>
+      <h1><span class="num">10.6</span>비판정법과 근판정법</h1>
+      <canvas id="hero" aria-hidden="true"></canvas>
+    </header>
+
+    <p class="lede">급수가 수렴하는지 보려면 항이 얼마나 빨리 작아지는지가 중요해요. 비판정법은 <b>이웃한 두 항의 비</b>로, 근판정법은 <b>항의 $n$제곱근</b>으로 그 속도를 재서 등비급수와 비교합니다.</p>
+
+    <!-- ===================================================== -->
+    <h2 id="ratio">비판정법</h2>
+    <div class="summary-box">
+      <p style="margin:0 0 .4rem"><b>비판정법</b> (The Ratio Test)</p>
+      $$\lim_{n\to\infty}\left|\frac{a_{n+1}}{a_n}\right|=L$$
+      <ul>
+        <li>(i) $L<1$이면 $\sum a_n$은 <b>절대수렴</b>(따라서 수렴)한다.</li>
+        <li>(ii) $L>1$이거나 $L=\infty$이면 $\sum a_n$은 <b>발산</b>한다.</li>
+        <li>(iii) $L=1$이면 <b>판정불가</b>. 다른 판정법을 써야 한다.</li>
+      </ul>
+    </div>
+    <p>절댓값을 씌워서 보므로, 부호가 바뀌는 급수라도 바로 <b>절대수렴</b> 여부를 판정할 수 있다는 게 큰 장점이에요.</p>
+
+    <!-- ===================================================== -->
+    <h2 id="why">왜 성립할까</h2>
+    <p>(i)의 증명 아이디어는 주어진 급수를 <b>수렴하는 등비급수와 비교</b>하는 거예요.</p>
+    <ol class="steps">
+      <li>$L<1$이면 $L\lt r<1$인 수 $r$을 하나 고를 수 있어요. 비가 $L$로 다가가니까 충분히 큰 $N$부터는 $|a_{n+1}|/|a_n|\lt r$이에요.</li>
+      <li>그러면 $|a_{N+1}|\lt r|a_N|$, $|a_{N+2}|\lt r^2|a_N|$, … 일반적으로
+        $$|a_{N+k}|<|a_N|\,r^k$$</li>
+      <li>오른쪽 $\sum|a_N|r^k$는 공비 $r<1$인 등비급수라 수렴해요. 비교판정법에 의해 $\sum|a_n|$도 수렴합니다.</li>
+    </ol>
+    <p>(ii)는 더 간단해요. 비가 1보다 크면 어느 순간부터 $|a_{n+1}|>|a_n|$이라 항이 0으로 가지 않아요. 그러면 발산판정법에 의해 발산합니다.</p>
+
+    <!-- ===================================================== -->
+    <h2 id="ex2">예제 2 · $n^n/n!$</h2>
+    <div class="problem"><span class="tag">예제 2</span>급수 $\displaystyle\sum_{n=1}^\infty\frac{n^n}{n!}$의 수렴성을 판정하라.</div>
+    <p>$a_n=n^n/n!$은 양수라서 절댓값은 필요 없어요. 비를 정리하면</p>
+    $$\frac{a_{n+1}}{a_n}=\frac{(n+1)^{n+1}}{(n+1)!}\cdot\frac{n!}{n^n}=\frac{(n+1)(n+1)^n}{(n+1)\,n!}\cdot\frac{n!}{n^n}=\left(\frac{n+1}{n}\right)^n=\left(1+\frac1n\right)^n\to e$$
+    <p>$e>1$이므로 비판정법 (ii)에 의해 <b>발산</b>해요. 아래 판정 실험실에서 “nⁿ/n!”을 고르면 비가 $e\approx2.718$로 다가가는 게 보여요.</p>
+    <div class="exam"><strong>참고.</strong> 이 문제는 발산판정법이 더 쉬워요.
+      $$a_n=\frac{n^n}{n!}=\frac{n\cdot n\cdot n\cdots n}{1\cdot2\cdot3\cdots n}\ge n$$
+      분수 하나하나가 1 이상이고 첫 번째가 $n/1=n$이라서예요. 따라서 $\lim a_n\neq0$이고 발산합니다. <b>항이 0으로 가는지 먼저 보는 습관</b>을 들이세요.</div>
+
+    <!-- ===================================================== -->
+    <h2 id="ex3">예제 3 · $L=1$이면</h2>
+    <div class="problem"><span class="tag">예제 3</span>비판정법의 (iii)은 $\lim|a_{n+1}/a_n|=1$이면 이 판정법이 아무 정보도 주지 않음을 나타낸다. 예를 들어 보여라.</div>
+    <table class="vals compare" aria-label="L = 1인 두 급수 비교">
+      <thead><tr><th>급수</th><th>비</th><th>극한</th><th>실제</th></tr></thead>
+      <tbody>
+        <tr><th>$\sum 1/n^2$</th><td>$\dfrac{1/(n+1)^2}{1/n^2}=\dfrac{n^2}{(n+1)^2}$</td><td>$\to1$</td><td><b>수렴</b> ($p=2$인 $p$급수)</td></tr>
+        <tr><th>$\sum 1/n$</th><td>$\dfrac{1/(n+1)}{1/n}=\dfrac{n}{n+1}$</td><td>$\to1$</td><td><b>발산</b> (조화급수)</td></tr>
+      </tbody>
+    </table>
+    <p>둘 다 $L=1$인데 결과는 반대예요. 그러니 $L=1$이면 $\sum a_n$은 수렴할 수도 있고 발산할 수도 있어요. 이런 급수는 <b>$p$급수 판정, 비교판정법, 적분판정법</b>처럼 다른 방법으로 봐야 해요.</p>
+
+    <div class="exam"><strong>시험 포인트.</strong> $n$에 대한 <b>분수식(다항식/다항식)이나 루트</b>로만 된 항은 비판정법을 쓰면 거의 항상 $L=1$이 나와요. 이런 급수에 비판정법을 쓰면 시간만 버리니, 처음부터 $p$급수나 비교판정법을 쓰세요.</div>
+
+    <!-- ===================================================== -->
+    <h2 id="root">근판정법</h2>
+    <div class="summary-box">
+      <p style="margin:0 0 .4rem"><b>근판정법</b> (The Root Test)</p>
+      $$\lim_{n\to\infty}\sqrt[n]{|a_n|}=L$$
+      <ul>
+        <li>(i) $L<1$이면 $\sum a_n$은 <b>절대수렴</b>(따라서 수렴)한다.</li>
+        <li>(ii) $L>1$이거나 $L=\infty$이면 $\sum a_n$은 <b>발산</b>한다.</li>
+        <li>(iii) $L=1$이면 <b>판정불가</b>.</li>
+      </ul>
+    </div>
+    <p>결론의 모양이 비판정법과 똑같아요. 항 전체가 <b>무언가의 $n$제곱</b> 꼴일 때 $n$제곱근이 깔끔하게 벗겨져서 특히 편해요. 이유도 같아요. $\sqrt[n]{|a_n|}\lt r$이면 $|a_n|\lt r^n$이라 등비급수와 비교할 수 있거든요.</p>
+
+    <!-- ===================================================== -->
+    <h2 id="ex4">예제 4 · 근판정법으로 수렴</h2>
+    <div class="problem"><span class="tag">예제 4</span>급수 $\displaystyle\sum_{n=1}^\infty\left(\frac{2n+3}{3n+2}\right)^n$의 수렴성을 판정하라.</div>
+    <p>항 전체가 $n$제곱이니 근판정법이 딱 맞아요.</p>
+    $$\sqrt[n]{|a_n|}=\frac{2n+3}{3n+2}=\frac{2+3/n}{3+2/n}\to\frac23<1$$
+    <p>따라서 근판정법 (i)에 의해 <b>(절대)수렴</b>해요. 아래 판정 실험실에서 “((2n+3)/(3n+2))ⁿ”을 골라 $2/3$로 모이는 점들을 확인해 보세요.</p>
+
+    <!-- ===================================================== -->
+    <h2 id="ex5">예제 5 · 판정불가 다음</h2>
+    <div class="problem"><span class="tag">예제 5</span>급수 $\displaystyle\sum_{n=1}^\infty\left(\frac{n}{n+1}\right)^n$의 수렴, 발산 여부를 판정하라.</div>
+    <ol class="steps">
+      <li><b>근판정법.</b> $\sqrt[n]{|a_n|}=\dfrac{n}{n+1}\to1$. 판정불가예요.</li>
+      <li><b>발산판정법으로 전환.</b> 항 자체의 극한을 봐요. 6.4절에서 배운 $\lim(1+1/n)^n=e$를 쓰면
+        $$a_n=\left(\frac{n}{n+1}\right)^n=\frac{1}{\left(\frac{n+1}{n}\right)^n}=\frac{1}{(1+1/n)^n}\to\frac1e\neq0$$</li>
+      <li>항이 0으로 가지 않으므로 발산판정법에 의해 <b>발산</b>해요.</li>
+    </ol>
+    <p>바로 아래 판정 실험실에서 “(n/(n+1))ⁿ”을 고르면 왼쪽 점들은 1로 가는데(판정불가), 오른쪽 부분합은 기울기 약 $1/e$로 끝없이 커지는 게 보여요.</p>
+
+    <!-- ===================================================== -->
+    <h2 id="explorer">판정 실험실</h2>
+    <p>지금까지 본 예제들을 직접 돌려 보세요. 급수를 고르고 판정법을 바꾸면 그래프 두 개가 함께 움직여요.</p>
+    <ul>
+      <li><b>왼쪽:</b> 판정에 쓰는 값(비 또는 $n$제곱근)이에요. 점들이 1보다 아래(초록 영역)에 모이면 수렴, 위(빨강 영역)에 모이면 발산, 정확히 1로 가면 판정불가예요.</li>
+      <li><b>오른쪽:</b> 실제 부분합 $S_n=a_1+\cdots+a_n$이에요. 수렴하면 점선으로 표시한 합에서 멈춰요.</li>
+    </ul>
+    <figure class="plot" id="fig-lab">
+      <figcaption>위로 향한 화살표는 값이 그래프 위쪽 밖으로 나간 항이에요. 판정불가($L=1$)인 $1/n^2$와 $1/n$을 비교해 보세요. 왼쪽 그림은 거의 똑같은데 오른쪽 부분합은 한쪽만 멈춰요.</figcaption>
+    </figure>
+    <h3>판정법을 바꿔도 $L$이 같은 이유</h3>
+    <p>판정법을 바꿔도 빨간 $L$ 선이 그대로인 건 우연이 아니에요. <b>비의 극한이 존재하면 $n$제곱근의 극한도 같은 값</b>이라는 정리가 있어요. 그래서 비판정법이 판정불가($L=1$)면 근판정법도 판정불가입니다.</p>
+    <p>다만 $L$로 <b>다가가는 속도</b>는 달라요. “2ⁿ/n!”을 골라 두 판정법을 번갈아 보세요. 비는 $2/(n+1)$이라 빠르게 0에 붙지만, $n$제곱근은 대략 $2e/n$ 정도로 아주 천천히 내려가요. 그래서 시험에서는 결론이 같으니 <b>계산이 쉬운 쪽</b>을 고르면 돼요.</p>
+    <p>반대 방향은 성립하지 않아요. 비가 진동해서 극한이 없는데 $n$제곱근의 극한은 있는 급수도 있어서, 근판정법이 조금 더 넓게 쓸 수 있는 판정법이에요.</p>
+
+    <!-- ===================================================== -->
+    <h2 id="which">언제 무엇을 쓸까</h2>
+    <table class="vals compare" aria-label="판정법 고르기">
+      <thead><tr><th>항의 모양</th><th>먼저 쓸 판정법</th><th>예</th></tr></thead>
+      <tbody>
+        <tr><th>계승 $n!$, 지수 $c^n$, 둘의 곱</th><td>비판정법</td><td>$\dfrac{n^3}{3^n}$, $\dfrac{2^n}{n!}$, $\dfrac{n!}{10^n}$</td></tr>
+        <tr><th>항 전체가 $(\ \cdot\ )^n$</th><td>근판정법</td><td>$\left(\dfrac{2n+3}{3n+2}\right)^n$, $\dfrac{1}{(\ln n)^n}$</td></tr>
+        <tr><th>$n$의 분수식, 루트</th><td>$p$급수, 비교판정법 (비/근은 $L=1$)</td><td>$\dfrac1{n^2}$, $\dfrac{n}{n^3+1}$</td></tr>
+        <tr><th>항이 0으로 안 감</th><td>발산판정법</td><td>$\dfrac{n^n}{n!}$, $\left(\dfrac{n}{n+1}\right)^n$</td></tr>
+      </tbody>
+    </table>
+
+    <!-- ===================================================== -->
+    <h2 id="summary">한눈에 정리</h2>
+    <div class="summary-box">
+      <ul>
+        <li>비판정법: $L=\lim|a_{n+1}/a_n|$. 근판정법: $L=\lim\sqrt[n]{|a_n|}$.</li>
+        <li>$L<1$ 절대수렴, $L>1$ 또는 $\infty$ 발산, $L=1$ 판정불가.</li>
+        <li>원리: 등비급수와 비교. 비 또는 $n$제곱근이 결국 $r<1$ 아래면 $|a_n|$은 $r^n$보다 빨리 작아진다.</li>
+        <li>계승과 지수는 비판정법, 항 전체가 $n$제곱이면 근판정법.</li>
+        <li>판정불가면 다른 판정법으로. 특히 항이 0으로 안 가면 발산판정법.</li>
+        <li>자주 쓰는 극한: $(1+1/n)^n\to e$, $\sqrt[n]{n}\to1$, $\sqrt[n]{c}\to1$ ($c>0$).</li>
+      </ul>
+    </div>
+
+    <!-- ===================================================== -->
+    <h2 id="check">자가 점검</h2>
+    <p>보기를 고르면 바로 정답과 풀이가 나와요. 그래프가 있는 문제는 판정에 쓰는 값이 어디로 가는지 확인해 보세요.</p>
+    <div id="quiz"></div>
+
+    <nav class="pager" aria-label="절 이동"></nav>
+  </main>
+</div>
+
+<script src="assets/katex/katex.min.js"></script>
+<script src="assets/katex/auto-render.min.js"></script>
+<script src="assets/plot.js"></script>
+<script src="assets/quiz.js"></script>
+<script src="assets/site.js"></script>
+<script>
+(function () {
+  "use strict";
+  const { fmt, seqPanel } = Plot;
+  const i = (s) => "<i>" + s + "</i>";
+  const segHtml = (labels, aria, cls) =>
+    '<span class="seg ' + (cls || "") + '" role="group" aria-label="' + aria + '">' +
+    labels.map((l, k) => '<button type="button" data-k="' + k + '" aria-pressed="false">' + l + "</button>").join("") + "</span>";
+  function pressOne(group, btn) { group.querySelectorAll("button").forEach((b) => b.setAttribute("aria-pressed", b === btn ? "true" : "false")); }
+  const fact = (n) => { let p = 1; for (let k = 2; k <= n; k++) p *= k; return p; };
+  const num = (v) => (Math.abs(v) >= 1e4 ? v.toExponential(2).replace("e+", "×10^") : fmt(v, 3));
+
+  Plot.heroSeries(document.getElementById("hero"), (n) => Math.pow(0.72, n), 22, 0.72 / 0.28);
+
+  /* ---------- 판정 실험실 ---------- */
+  (function () {
+    const NMAX = 30;
+    const presets = [
+      { label: "nⁿ/n!", a: (n) => Math.pow(n, n) / fact(n), L: Math.E, Ltxt: "e ≈ 2.718", sumY: [0, 120], verdict: "L = e > 1 이라 <b>발산</b>" },
+      { label: "2ⁿ/n!", a: (n) => Math.pow(2, n) / fact(n), L: 0, Ltxt: "0", sumY: [0, 7.5], sum: Math.exp(2) - 1, verdict: "L = 0 < 1 이라 <b>절대수렴</b> (합 e² − 1)" },
+      { label: "n³/3ⁿ", a: (n) => n ** 3 / Math.pow(3, n), L: 1 / 3, Ltxt: "1/3", sumY: [0, 5], sum: 4.125, verdict: "L = 1/3 < 1 이라 <b>절대수렴</b> (합 4.125)" },
+      { label: "((2n+3)/(3n+2))ⁿ", a: (n) => Math.pow((2 * n + 3) / (3 * n + 2), n), L: 2 / 3, Ltxt: "2/3", sumY: [0, 4], verdict: "L = 2/3 < 1 이라 <b>절대수렴</b>" },
+      { label: "1/n²", a: (n) => 1 / (n * n), L: 1, Ltxt: "1", sumY: [0, 2], sum: Math.PI ** 2 / 6, verdict: "L = 1, <b>판정불가</b>. 실제로는 수렴 (p = 2, 합 π²/6)" },
+      { label: "1/n", a: (n) => 1 / n, L: 1, Ltxt: "1", sumY: [0, 5], verdict: "L = 1, <b>판정불가</b>. 실제로는 발산 (조화급수, 아주 느리게 커짐)" },
+      { label: "(n/(n+1))ⁿ", a: (n) => Math.pow(n / (n + 1), n), L: 1, Ltxt: "1", sumY: [0, 13], verdict: "L = 1, <b>판정불가</b>. 그런데 aₙ → 1/e ≠ 0 이라 발산판정법으로 <b>발산</b>" },
+    ];
+    presets.forEach((p) => {
+      if (p.sum == null) { let s = 0; for (let k = 1; k <= 400; k++) { const v = p.a(k); if (!isFinite(v)) break; s += v; } p.sumGuess = s; }
+      p.S = [0]; for (let k = 1; k <= NMAX; k++) p.S[k] = p.S[k - 1] + p.a(k);
+    });
+    presets[3].sum = presets[3].sumGuess;
+    const st = { p: presets[0], test: "ratio" };
+    const tv = (n) => (st.test === "ratio" ? Math.abs(st.p.a(n + 1) / st.p.a(n)) : Math.pow(Math.abs(st.p.a(n)), 1 / n));
+
+    const left = seqPanel({ f: tv, nMax: NMAX, y: [0, 3.2], title: "판정에 쓰는 값", yTicks: [1, 2, 3], height: 240, alt: "비 또는 n제곱근의 값" });
+    const right = seqPanel({ f: (n) => st.p.S[n], nMax: NMAX, y: [0, 120], title: "부분합 Sₙ", color: "--aux", joined: true, height: 240, alt: "부분합" });
+    function config() {
+      const p = st.p;
+      left.title = st.test === "ratio" ? "비 |aₙ₊₁ / aₙ|" : "n제곱근 ⁿ√|aₙ|";
+      left._lines = [{ y: 1, label: "1", color: "--muted" }, { y: p.L, label: "L = " + p.Ltxt, color: "--curve", dash: false }];
+      right.view.y = [p.sumY[0] - (p.sumY[1] - p.sumY[0]) * 0.09, p.sumY[1]];
+      const tEl = document.querySelector('#fig-lab .panel-title'); if (tEl) tEl.textContent = left.title;
+      right._lines = p.sum != null ? [{ y: p.sum, label: "합 ≈ " + fmt(p.sum, 3), color: "--ok" }] : [];
+      right.ticks.y = niceTicks(p.sumY[1]);
+    }
+    function niceTicks(top) { const st = top > 50 ? 50 : top > 8 ? 5 : top > 3 ? 1 : 0.5; const t = []; for (let v = st; v < top - 1e-9; v += st) t.push(Math.round(v * 100) / 100); return t; }
+    // 선과 배경 띠는 매번 현재 설정으로 그린다
+    const drawLines = (lines) => function (ctx, T, N, C) {
+      lines().forEach((l) => {
+        if (l.y < this.view.y[0] || l.y > this.view.y[1]) return;
+        const col = C.get(l.color);
+        ctx.save(); ctx.strokeStyle = col; ctx.lineWidth = 1.4; if (l.dash !== false) ctx.setLineDash([5, 4]);
+        ctx.beginPath(); ctx.moveTo(T.X(0), T.Y(l.y)); ctx.lineTo(T.w, T.Y(l.y)); ctx.stroke(); ctx.restore();
+        Plot.label(ctx, l.label, T.w - 4, T.Y(l.y) - 9, { size: 11.5, color: col, align: "right", halo: C.surface });
+      });
+    };
+    left.under = function (ctx, T, N, C) {
+      ctx.save();
+      ctx.fillStyle = C.ok; ctx.globalAlpha = .08; ctx.fillRect(0, T.Y(1), T.w, T.Y(0) - T.Y(1));
+      ctx.fillStyle = C.curve; ctx.fillRect(0, 0, T.w, T.Y(1));
+      ctx.restore();
+      Plot.label(ctx, "수렴", T.X(0) + 8, T.Y(0.12), { size: 11.5, color: C.ok });
+      Plot.label(ctx, "발산", T.X(0) + 8, T.Y(3.0), { size: 11.5, color: C.curve });
+      drawLines(() => left._lines).call(left, ctx, T, N, C);
+    };
+    right.under = function (ctx, T, N, C) { drawLines(() => right._lines).call(right, ctx, T, N, C); };
+    config();
+
+    const api = Plot.mount(document.getElementById("fig-lab"), {
+      t: { min: 1, max: NMAX, value: 12, label: "n" },
+      duration: 8,
+      panels: [left, right],
+      controls:
+        segHtml(presets.map((p) => "Σ " + p.label), "급수 고르기", "lab-series") +
+        segHtml(["비판정법", "근판정법"], "판정법", "lab-test"),
+      readout: (N) => {
+        const n = Math.floor(N + 1e-9), v = tv(n);
+        const name = st.test === "ratio" ? "|a<sub>" + (n + 1) + "</sub> / a<sub>" + n + "</sub>|" : "<sup>" + n + "</sup>√|a<sub>" + n + "</sub>|";
+        return i("n") + " = <b>" + n + "</b>, " + name + " = <b>" + num(v) + "</b>, S<sub>" + n + "</sub> = <b>" + num(st.p.S[n]) + "</b><br>" + st.p.verdict;
+      },
+    });
+    const gS = api.bar.querySelector(".lab-series"), gT = api.bar.querySelector(".lab-test");
+    gS.querySelectorAll("button").forEach((b, k) => b.addEventListener("click", () => {
+      st.p = presets[k]; pressOne(gS, b); config(); api.panels.forEach((p) => p.resize()); api.setRange(1, NMAX, 1); api.play();
+    }));
+    gT.querySelectorAll("button").forEach((b, k) => b.addEventListener("click", () => {
+      st.test = k ? "root" : "ratio"; pressOne(gT, b); config(); api.redraw();
+    }));
+    pressOne(gS, gS.querySelector("button")); pressOne(gT, gT.querySelector("button"));
+  })();
+
+  /* ---------- 자가 점검 ---------- */
+  (function () {
+    const R = String.raw;
+    const qseq = (f, L, opt) => {
+      opt = opt || {};
+      const nMax = opt.nMax || 25, top = opt.top || 2;
+      return {
+        t: { min: 1, max: nMax, label: "n" }, duration: 3.5,
+        panels: [seqPanel({
+          f, nMax, y: [0, top], height: 200, title: opt.title, yTicks: opt.yTicks || [1],
+          lines: [{ y: 1, label: "1", color: "--muted" }].concat(L == null ? [] : [{ y: L, label: "L = " + opt.Ltxt, color: "--curve", dash: false }]),
+          bands: [{ from: 0, to: 1, color: "--ok" }, { from: 1, to: top, color: "--curve" }],
+        })],
+        readout: (N) => i("n") + " = <b>" + Math.floor(N) + "</b>, 값 = <b>" + num(f(Math.floor(N))) + "</b>",
+      };
+    };
+
+    Quiz.mount(document.getElementById("quiz"), [
+      {
+        q: R`급수 $\displaystyle\sum_{n=1}^\infty(-1)^n\frac{n^3}{3^n}$에 대해 옳은 것은?`,
+        choices: ["절대수렴", "조건수렴", "발산", "비판정법으로 판정불가"],
+        answer: 0,
+        explain: R`<p>$\left|\frac{a_{n+1}}{a_n}\right|=\frac{(n+1)^3}{3^{n+1}}\cdot\frac{3^n}{n^3}=\frac13\left(1+\frac1n\right)^3\to\frac13<1$ 이므로 <b>절대수렴</b>해요. 비판정법은 절댓값으로 보기 때문에 부호가 바뀌어도 바로 절대수렴을 말해 줍니다.</p>`,
+        plotWidth: "26rem",
+        plot: qseq((n) => ((n + 1) / n) ** 3 / 3, 1 / 3, { Ltxt: "1/3", title: "|aₙ₊₁ / aₙ|" }),
+      },
+      {
+        q: R`급수 $\displaystyle\sum_{n=1}^\infty\frac{n!}{10^n}$은?`,
+        choices: ["수렴", "판정불가", "발산", "절대수렴"],
+        answer: 2,
+        explain: R`<p>$\frac{a_{n+1}}{a_n}=\frac{(n+1)!}{10^{n+1}}\cdot\frac{10^n}{n!}=\frac{n+1}{10}\to\infty$ 이므로 <b>발산</b>해요. 처음 몇 항은 작아지지만($n<9$), 계승이 지수를 결국 이기기 때문에 $n\ge10$부터는 항이 계속 커져요.</p>`,
+        plotWidth: "26rem",
+        plot: qseq((n) => (n + 1) / 10, null, { top: 3, yTicks: [1, 2, 3], nMax: 28, title: "|aₙ₊₁ / aₙ| = (n+1)/10" }),
+      },
+      {
+        q: R`급수 $\displaystyle\sum_{n=1}^\infty\frac{1}{n^3}$에 비판정법을 쓰면?`,
+        choices: ["수렴한다고 판정", "판정불가", "발산한다고 판정", "절대수렴한다고 판정"],
+        answer: 1,
+        explain: R`<p>$\frac{n^3}{(n+1)^3}\to1$ 이라 <b>판정불가</b>예요. 실제로는 $p=3>1$인 $p$급수라 수렴하지만, 그건 비판정법이 아니라 $p$급수 판정으로 알 수 있는 사실이에요.</p>`,
+        plotWidth: "26rem",
+        plot: qseq((n) => (n / (n + 1)) ** 3, 1, { Ltxt: "1", title: "|aₙ₊₁ / aₙ|" }),
+      },
+      {
+        q: R`급수 $\displaystyle\sum_{n=1}^\infty\left(\frac{n}{2n+1}\right)^n$은?`,
+        choices: ["발산", "판정불가", "조건수렴", "수렴"],
+        answer: 3,
+        explain: R`<p>근판정법: $\sqrt[n]{a_n}=\frac{n}{2n+1}\to\frac12<1$ 이므로 (절대)<b>수렴</b>해요.</p>`,
+        plotWidth: "26rem",
+        plot: qseq((n) => n / (2 * n + 1), 0.5, { Ltxt: "1/2", title: "ⁿ√aₙ" }),
+      },
+      {
+        q: R`급수 $\displaystyle\sum_{n=2}^\infty\frac{1}{(\ln n)^n}$은?`,
+        choices: ["수렴", "발산", "판정불가", R`$n=2$부터라 판단할 수 없다`],
+        answer: 0,
+        explain: R`<p>근판정법: $\sqrt[n]{a_n}=\frac{1}{\ln n}\to0<1$ 이므로 <b>수렴</b>해요. 항 전체가 $n$제곱 꼴이라 근판정법이 가장 빠릅니다.</p>`,
+        plotWidth: "26rem",
+        plot: qseq((n) => (n < 2 ? NaN : 1 / Math.log(n)), 0, { Ltxt: "0", top: 2, title: "ⁿ√aₙ = 1/ln n" }),
+      },
+      {
+        q: R`급수 $\displaystyle\sum_{n=1}^\infty\left(1-\frac1n\right)^{n^2}$에 근판정법을 쓴 결과는?`,
+        choices: [R`$L=1$, 판정불가`, R`$L=e$, 발산`, R`$L=\dfrac1e$, 수렴`, R`$L=0$, 수렴`],
+        answer: 2,
+        explain: R`<p>$\sqrt[n]{a_n}=\left(1-\frac1n\right)^{n^2/n}=\left(1-\frac1n\right)^n\to e^{-1}=\frac1e<1$ 이므로 <b>수렴</b>해요. 지수 $n^2$를 $n$으로 나누는 게 핵심이에요.</p>`,
+        plotWidth: "26rem",
+        plot: qseq((n) => (1 - 1 / n) ** n, 1 / Math.E, { Ltxt: "1/e", title: "ⁿ√aₙ = (1 − 1/n)ⁿ" }),
+      },
+      {
+        q: R`급수 $\displaystyle\sum_{n=1}^\infty\left(1+\frac2n\right)^n$에 대해 옳은 것은?`,
+        choices: ["근판정법으로 수렴", "근판정법으로 발산", "근판정법은 판정불가, 발산판정법으로 발산", "판정불가라서 알 수 없다"],
+        answer: 2,
+        explain: R`<p>$\sqrt[n]{a_n}=1+\frac2n\to1$ 이라 근판정법은 판정불가예요. 하지만 $a_n=\left(1+\frac2n\right)^n\to e^2\neq0$ 이므로 발산판정법에 의해 <b>발산</b>합니다. 예제 5와 같은 흐름이에요.</p>`,
+      },
+      {
+        q: R`어떤 급수에서 $\displaystyle\lim_{n\to\infty}\left|\frac{a_{n+1}}{a_n}\right|=1$이었다. 이 급수에 대해 말할 수 있는 것은?`,
+        choices: ["반드시 수렴한다", "반드시 발산한다", "반드시 조건수렴한다", "수렴할 수도, 발산할 수도 있다"],
+        answer: 3,
+        explain: R`<p>예제 3처럼 $\sum1/n^2$(수렴)과 $\sum1/n$(발산) 모두 $L=1$이에요. 그래서 이 정보만으로는 아무것도 결론 낼 수 없습니다.</p>`,
+      },
+    ]);
+  })();
+})();
+</script>
+</body>
+</html>
