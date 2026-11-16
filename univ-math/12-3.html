@@ -21,6 +21,9 @@
       <li><a href="#thm10">정리 10 · 예제 4</a></li>
       <li><a href="#plane">평면곡선의 곡률 · 예제 5</a></li>
       <li><a href="#tnb">법선벡터와 종법선벡터 · 예제 6, 7</a></li>
+      <li><a href="#osc">법평면, 접촉평면, 접촉원</a></li>
+      <li><a href="#ex8">예제 8, 9</a></li>
+      <li><a href="#torsion">비틀림률 · 예제 10</a></li>
       <li><a href="#summary">한눈에 정리</a></li>
       <li><a href="#check">자가 점검</a></li>
     </ol>
@@ -33,7 +36,7 @@
       <canvas id="hero" aria-hidden="true"></canvas>
     </header>
 
-    <p class="lede">곡선의 길이는 9.2에서 평면곡선으로 이미 구했어요. 이번엔 공간곡선으로 넓히고, 그 길이를 기준으로 <b>곡선이 얼마나 휘었는지(곡률)</b>를 재요.</p>
+    <p class="lede">곡선의 길이는 9.2에서 평면곡선으로 이미 구했어요. 이번엔 공간곡선으로 넓히고, 그 길이를 기준으로 <b>곡선이 얼마나 휘었는지(곡률)</b>와 <b>얼마나 비틀렸는지(비틀림률)</b>를 재요.</p>
 
     <!-- ===================================================== -->
     <h2 id="len">호의 길이</h2>
@@ -216,6 +219,95 @@
     </figure>
 
     <!-- ===================================================== -->
+    <h2 id="osc">법평면, 접촉평면, 접촉원</h2>
+    <p>곡선 $C$ 위의 점 $P$에서 서로 수직인 $\mathbf T$, $\mathbf N$, $\mathbf B$를 얻었으니, 이 중 두 벡터로 평면을 만들 수 있어요. 그중 둘에 이름이 있어요.</p>
+    <div class="def">
+      <dl style="margin:0">
+        <dt>법평면<span class="en">normal plane</span></dt>
+        <dd>$P$에서 $\mathbf N$과 $\mathbf B$에 의해 결정되는 평면. 접선벡터 $\mathbf T$와 직교하는 모든 직선들로 이루어져 있어요. 그래서 <b>$\mathbf T$가 법선벡터</b>예요.</dd>
+        <dt>접촉평면<span class="en">osculating plane</span></dt>
+        <dd>$P$에서 $\mathbf T$와 $\mathbf N$에 의해 결정되는 평면. $P$ 부근의 곡선 부분을 가장 가깝게 품는 평면이에요. <b>$\mathbf B$가 법선벡터</b>예요. 평면곡선이면 접촉평면은 그 곡선을 포함하는 평면 자체예요.</dd>
+        <dt>접촉원(곡률원)<span class="en">osculating circle</span></dt>
+        <dd>접촉평면 안에 있고, $P$를 지나며, $P$에서 $\mathbf N$ 방향으로 $\frac1\kappa$ 떨어진 점을 중심으로 하는 반지름 $\frac1\kappa$인 원. 그 중심을 $P$에서 $C$의 <b>곡률중심</b>이라 해요.</dd>
+      </dl>
+    </div>
+    <p>접촉원은 $P$에서 곡선과 <b>접선벡터, 법선벡터, 곡률을 모두 공유</b>하는 원이에요. 그래서 $P$ 부근에서 곡선이 어떻게 생겼는지를 원 하나로 나타낸 것으로 볼 수 있어요. 많이 휜 곳에서는 작은 원, 거의 곧은 곳에서는 큰 원이 돼요.</p>
+    <div class="exam"><strong>핵심.</strong> 평면의 방정식은 “한 점 + 법선벡터”로 써요(11.5). 법평면은 $P$와 $\mathbf T$, 접촉평면은 $P$와 $\mathbf B$로 써요. 법선벡터는 길이와 상관없으니 $\mathbf r'(t)$나 $\mathbf r'\times\mathbf r''$처럼 같은 방향의 벡터를 그대로 써도 돼요.</div>
+
+    <!-- ===================================================== -->
+    <h2 id="ex8">예제 8, 9</h2>
+    <div class="problem"><span class="tag">예제 8</span>점 $P\left(0,1,\frac\pi2\right)$에서 예제 6의 나선에 대한 법평면과 접촉평면의 방정식을 구하라.</div>
+    <ol class="steps">
+      <li>$\mathbf r(t)=\langle\cos t,\sin t,t\rangle$에서 $P$는 $t=\frac\pi2$예요.</li>
+      <li>법평면은 $P$를 지나고 $\mathbf r'\left(\frac\pi2\right)=\left\langle-\sin\frac\pi2,\ \cos\frac\pi2,\ 1\right\rangle=\langle-1,0,1\rangle$을 법선벡터로 가져요($\mathbf T$와 같은 방향).
+        $$-1(x-0)+0(y-1)+1\left(z-\frac\pi2\right)=0\quad\Longrightarrow\quad z=x+\frac\pi2$$</li>
+      <li>접촉평면은 $\mathbf T$와 $\mathbf N$을 품으므로 법선벡터는 $\mathbf B$예요. 예제 6에서 $\mathbf B(t)=\frac{1}{\sqrt2}\langle\sin t,-\cos t,1\rangle$이라 $\mathbf B\left(\frac\pi2\right)=\frac{1}{\sqrt2}\langle1,0,1\rangle$. 방향만 필요하니 $\langle1,0,1\rangle$을 써요.
+        $$1(x-0)+0(y-1)+1\left(z-\frac\pi2\right)=0\quad\Longrightarrow\quad z=-x+\frac\pi2$$</li>
+    </ol>
+    <p>검산: $\mathbf N\left(\frac\pi2\right)=\left\langle-\cos\frac\pi2,-\sin\frac\pi2,0\right\rangle=\langle0,-1,0\rangle$은 두 평면에 모두 평행해야 하고, 실제로 두 법선벡터 $\langle-1,0,1\rangle$, $\langle1,0,1\rangle$과의 내적이 0이에요.</p>
+    <figure class="plot" id="fig-osc">
+      <figcaption>나선 위를 움직이는 점 $P$에서의 법평면(초록, $\mathbf N$과 $\mathbf B$를 품음), 접촉평면(파랑, $\mathbf T$와 $\mathbf N$을 품음), 접촉원(빨간 원)이에요. 버튼으로 보고 싶은 것을 고르세요. 처음 위치 $t=\frac\pi2$가 예제 8의 점이에요. 나선의 곡률은 $\frac12$이라 접촉원의 반지름은 늘 2이고, 중심은 $\mathbf N$ 쪽으로 2만큼 간 곳이에요.</figcaption>
+    </figure>
+
+    <div class="problem"><span class="tag">예제 9</span>원점에서 포물선 $y=x^2$의 접촉원을 구하고 그래프로 나타내라.</div>
+    <ol class="steps">
+      <li>예제 5에서 $\kappa(0)=2$였어요. 그래서 접촉원의 반지름은 $\frac1\kappa=\frac12$.</li>
+      <li>원점에서 포물선은 위로 휘어 들어가니 $\mathbf N=\mathbf j=\langle0,1\rangle$이에요. 중심은 원점에서 $\mathbf N$ 방향으로 $\frac12$ 간 $\left(0,\frac12\right)$.</li>
+      <li>그러므로 접촉원의 방정식은
+        $$x^2+\left(y-\frac12\right)^2=\frac14$$</li>
+    </ol>
+    <p>예제 5 그림의 초록 원이 바로 접촉원이에요. 점을 $x=0$에 두면 이 원이 나오고, 원점 부근에서 포물선과 아주 잘 겹쳐요.</p>
+
+    <div class="summary-box">
+      <p style="margin:0 0 .3rem">단위접선벡터, 단위법선벡터, 종법선벡터, 곡률에 관한 공식의 요약</p>
+      $$\mathbf T(t)=\frac{\mathbf r'(t)}{|\mathbf r'(t)|},\qquad\mathbf N(t)=\frac{\mathbf T'(t)}{|\mathbf T'(t)|},\qquad\mathbf B(t)=\mathbf T(t)\times\mathbf N(t)$$
+      $$\kappa=\left|\frac{d\mathbf T}{ds}\right|=\frac{|\mathbf T'(t)|}{|\mathbf r'(t)|}=\frac{|\mathbf r'(t)\times\mathbf r''(t)|}{|\mathbf r'(t)|^3}$$
+    </div>
+
+    <!-- ===================================================== -->
+    <h2 id="torsion">비틀림률</h2>
+    <p>곡률 $\kappa=\left|\frac{d\mathbf T}{ds}\right|$는 곡선이 <b>굽은 정도</b>를 나타내요. $\mathbf T$는 법평면의 법선벡터이므로 $\frac{d\mathbf T}{ds}$는 $P$가 $C$를 따라 움직일 때 법평면이 어떻게 변하는지 알려 줘요($\frac{d\mathbf T}{ds}=\kappa\mathbf N$이라 접선벡터는 $\mathbf N$ 쪽으로 돌아요).</p>
+    <p>그런데 공간곡선은 굽을 뿐 아니라 접촉평면 밖으로 <b>비틀어질</b> 수도 있어요. $\mathbf B$가 접촉평면에 직교하므로, $\frac{d\mathbf B}{ds}$는 $P$가 $C$를 따라 움직일 때 접촉평면이 어떻게 변하는지 알려 줘요. 그리고 이 벡터는 $\mathbf N$에 평행해요.</p>
+    <ol class="steps">
+      <li>$|\mathbf B|=1$이므로 12.2 정리 4에 의해 $\frac{d\mathbf B}{ds}\perp\mathbf B$.</li>
+      <li>$\mathbf B=\mathbf T\times\mathbf N$을 미분하면
+        $$\frac{d\mathbf B}{ds}=\frac{d\mathbf T}{ds}\times\mathbf N+\mathbf T\times\frac{d\mathbf N}{ds}=\kappa\,\mathbf N\times\mathbf N+\mathbf T\times\frac{d\mathbf N}{ds}=\mathbf T\times\frac{d\mathbf N}{ds}$$
+        외적이라 $\frac{d\mathbf B}{ds}\perp\mathbf T$.</li>
+      <li>$\mathbf B$에도 $\mathbf T$에도 수직이니 남은 방향 $\mathbf N$에 평행해요.</li>
+    </ol>
+    <p>따라서 다음을 만족하는 스칼라 $\tau$가 존재해요.</p>
+    $$\frac{d\mathbf B}{ds}=-\tau\,\mathbf N \tag{12}$$
+    <p>(식 12의 $-$ 부호는 관습적으로 붙여요.) 이 $\tau$를 $P$에서 $C$의 <b>비틀림률</b>(torsion)이라 해요. 식 12의 양변을 $\mathbf N$과 내적하고 $\mathbf N\cdot\mathbf N=1$을 이용하면 다음을 얻어요.</p>
+    <div class="summary-box">
+      <p style="margin:0 0 .3rem"><b>13 정의</b> 곡선 $C$의 비틀림률은</p>
+      $$\tau=-\frac{d\mathbf B}{ds}\cdot\mathbf N$$
+    </div>
+    <p>비틀림률은 $s$ 대신 매개변수 $t$로 표현하면 계산하기 쉬워요. 연쇄법칙으로 $\mathbf B'(t)=\frac{d\mathbf B}{ds}\frac{ds}{dt}=\frac{d\mathbf B}{ds}\,|\mathbf r'(t)|$이므로, 정의 13으로부터</p>
+    <div class="summary-box">
+      $$\tau(t)=-\frac{\mathbf B'(t)\cdot\mathbf N(t)}{|\mathbf r'(t)|} \tag{14}$$
+    </div>
+
+    <div class="problem"><span class="tag">예제 10</span>나선 $\mathbf r(t)=\langle\cos t,\ \sin t,\ t\rangle$의 비틀림률을 구하라.</div>
+    <ol class="steps">
+      <li>예제 6으로부터
+        $$\frac{ds}{dt}=|\mathbf r'(t)|=\sqrt2,\qquad\mathbf N(t)=\langle-\cos t,\ -\sin t,\ 0\rangle,\qquad\mathbf B(t)=\frac{1}{\sqrt2}\langle\sin t,\ -\cos t,\ 1\rangle$$</li>
+      <li>$\mathbf B$를 미분하면
+        $$\mathbf B'(t)=\frac{1}{\sqrt2}\langle\cos t,\ \sin t,\ 0\rangle$$</li>
+      <li>식 14로부터
+        $$\tau(t)=-\frac{\mathbf B'(t)\cdot\mathbf N(t)}{|\mathbf r'(t)|}=-\frac12\langle\cos t,\ \sin t,\ 0\rangle\cdot\langle-\cos t,\ -\sin t,\ 0\rangle=-\frac12\left(-\cos^2t-\sin^2t\right)=\frac12$$</li>
+    </ol>
+    <p>$xy$평면의 단위원 $\mathbf r(t)=\langle\cos t,\sin t,0\rangle$과 예제 10의 나선은 둘 다 곡률이 일정해요. 원은 $\kappa=1$, $\tau=0$이고 나선은 $\kappa=\frac12$, $\tau=\frac12$예요. <b>원은 각 점에서 굽어 있지만 비틀어져 있지 않고</b>, <b>나선은 각 점에서 굽어 있으면서 동시에 위로 비틀어져</b> 있어요. 평면곡선은 접촉평면이 늘 같은 평면이라 $\mathbf B$가 변하지 않으니 비틀림률이 항상 0이에요.</p>
+    <div class="summary-box">
+      <p style="margin:0 0 .3rem"><b>15 정리</b> 벡터함수 $\mathbf r$의 비틀림률은</p>
+      $$\tau(t)=\frac{[\mathbf r'(t)\times\mathbf r''(t)]\cdot\mathbf r'''(t)}{|\mathbf r'(t)\times\mathbf r''(t)|^2}$$
+    </div>
+    <p>정리 15를 쓰면 $\mathbf B$를 구해서 미분하지 않아도 돼요. 나선이면 $\mathbf r'\times\mathbf r''=\langle\sin t,-\cos t,1\rangle$, $\mathbf r'''=\langle\sin t,-\cos t,0\rangle$이라 $\tau=\frac{\sin^2t+\cos^2t}{2}=\frac12$로 예제 10과 같아요. 꼬인 3차곡선 $\langle t,t^2,t^3\rangle$이면 $\mathbf r'\times\mathbf r''=\langle6t^2,-6t,2\rangle$(예제 4), $\mathbf r'''=\langle0,0,6\rangle$이라</p>
+    $$\tau(t)=\frac{12}{36t^4+36t^2+4}=\frac{3}{9t^4+9t^2+1},\qquad\tau(0)=3$$
+    <figure class="plot" id="fig-torsion">
+      <figcaption>곡선을 따라 접촉평면(파란 조각)과 종법선벡터 $\mathbf B$(파랑)가 움직여요. 단위원에서는 접촉평면이 언제나 $xy$평면이라 $\mathbf B$가 꼼짝하지 않아요($\tau=0$). 나선과 꼬인 3차곡선에서는 접촉평면이 곡선을 따라 기울어지며 돌아가요. 그 도는 빠르기($s$ 기준)가 비틀림률이에요. 회색 조각과 회색 화살표는 처음 위치의 접촉평면과 $\mathbf B$예요.</figcaption>
+    </figure>
+
+    <!-- ===================================================== -->
     <h2 id="summary">한눈에 정리</h2>
     <div class="summary-box">
       <ul>
@@ -225,6 +317,8 @@
         <li>원(반지름 $a$)은 $\kappa=\frac1a$, 직선은 $\kappa=0$. 평면곡선 $y=f(x)$: $\kappa=\dfrac{|f''|}{(1+f'^2)^{3/2}}$.</li>
         <li>$\mathbf T=\dfrac{\mathbf r'}{|\mathbf r'|}$, $\mathbf N=\dfrac{\mathbf T'}{|\mathbf T'|}$, $\mathbf B=\mathbf T\times\mathbf N$: 서로 수직인 단위벡터 세 개.</li>
         <li>계산 요령: $|\mathbf r'|$의 루트 안이 완전제곱인지 먼저 보기. 곡률만 필요하면 정리 10이 대개 더 빠름.</li>
+        <li>법평면은 $\mathbf N$, $\mathbf B$를 품고 법선벡터가 $\mathbf T$. 접촉평면은 $\mathbf T$, $\mathbf N$을 품고 법선벡터가 $\mathbf B$. 접촉원은 중심이 $P$에서 $\mathbf N$ 방향으로 $\frac1\kappa$, 반지름 $\frac1\kappa$.</li>
+        <li>비틀림률 $\tau=-\dfrac{d\mathbf B}{ds}\cdot\mathbf N=-\dfrac{\mathbf B'(t)\cdot\mathbf N(t)}{|\mathbf r'(t)|}=\dfrac{(\mathbf r'\times\mathbf r'')\cdot\mathbf r'''}{|\mathbf r'\times\mathbf r''|^2}$. 평면곡선은 $\tau=0$, 나선은 $\kappa=\tau=\frac12$.</li>
       </ul>
     </div>
 
@@ -449,6 +543,74 @@
     wireSeg(api, "tnb-c", (k) => { cur = CS[k]; api.setFrame(cur.fr); api.setT((cur.t0 - cur.a) / (cur.b - cur.a)); });
   })();
 
+  /* ---------- 예제 8: 법평면, 접촉평면, 접촉원 ---------- */
+  (function () {
+    const r = (t) => [Math.cos(t), Math.sin(t), t];
+    const SHOW = [["n"], ["o"], ["c"], ["n", "o", "c"]];
+    let show = SHOW[3];
+    const api = Space.mount(document.getElementById("fig-osc"), {
+      range: 3.6, center: [0, 0, 1.9], height: 460, axes: [2.4, 2.4, 5], view: { az: 28, el: 22 }, negAxes: .5,
+      t: { min: 0, max: 1.5 * Math.PI, value: Math.PI / 2, label: "t", duration: 9 },
+      alt: "나선의 법평면, 접촉평면, 접촉원",
+      controls: segHtml(["법평면", "접촉평면", "접촉원", "모두"], "보여 줄 것", "osc-s"),
+      draw(S, C, api) {
+        const t = api.t, P = r(t), F = frame(r, t), R = 1 / F.kappa;
+        const meshes = [];
+        if (show.includes("n")) meshes.push({ f: (u, v) => V.add(P, V.add(V.mul(F.N, u), V.mul(F.B, v))), u: [-1.3, 1.3], v: [-1.3, 1.3], n: 6, color: "--ok", alpha: .28, lineAlpha: .2 });
+        if (show.includes("o")) meshes.push({ f: (u, v) => V.add(P, V.add(V.mul(F.T, u), V.mul(F.N, v))), u: [-1.8, 1.8], v: [-1, 2 * R + 0.4], n: 6, color: "--aux", alpha: .25, lineAlpha: .2 });
+        const ex = [{ pts: samples(r, -0.3, 2 * Math.PI, 300), color: "--ink", width: 2, alpha: .75, bias: .02 }];
+        const Cc = V.add(P, V.mul(F.N, R));
+        if (show.includes("c")) ex.push({ pts: samples((a) => V.add(Cc, V.add(V.mul(F.N, -R * Math.cos(a)), V.mul(F.T, R * Math.sin(a)))), 0, TAU, 120), color: "--curve", width: 2.6, bias: .05 });
+        S.mesh(meshes, ex);
+        if (show.includes("c")) { S.line(P, Cc, { color: "--curve", width: 1.2, dash: [4, 4] }); S.point(Cc, { color: "--curve", r: 3.5, ring: false }); S.text(Cc, "곡률중심", { size: 11.5, color: "--curve", dx: -8, dy: 12, align: "right" }); }
+        S.arrow(P, V.add(P, F.T), { color: "--curve", width: 2.6, label: "T", labelT: 1, dx: 6, dy: -6 });
+        S.arrow(P, V.add(P, F.N), { color: "--ok", width: 2.6, label: "N", labelT: 1, dx: 6, dy: -6 });
+        S.arrow(P, V.add(P, F.B), { color: "--aux", width: 2.6, label: "B", labelT: 1, dx: 6, dy: -6 });
+        S.point(P, { color: "--ink", r: 4.5, label: "P", dx: -16, dy: -8, size: 14 });
+      },
+      readout: (api) => {
+        const t = api.t, P = r(t), F = frame(r, t);
+        const eq = (n) => (num(n[0], 3) + "x + " + num(n[1], 3) + "y + " + num(n[2], 3) + "z = " + num(V.dot(n, P), 3)).replace(/\+ −/g, "− ");
+        return "t = <b>" + num(t, 3) + "</b> · P(" + P.map((v) => num(v)).join(", ") + ") · 접촉원 반지름 1/κ = <b>" + num(1 / F.kappa, 3) + "</b>" +
+          "<br>법평면 (법선 T): " + eq(F.T) + "<br>접촉평면 (법선 B): " + eq(F.B);
+      },
+    });
+    wireSeg(api, "osc-s", (k) => { show = SHOW[k]; api.redraw(); }, 3);
+  })();
+
+  /* ---------- 비틀림률: 접촉평면이 도는 모습 ---------- */
+  (function () {
+    const d3 = (r, t) => { const h = 2e-3; return V.mul(V.add(V.sub(r(t + 2 * h), V.mul(r(t + h), 2)), V.sub(V.mul(r(t - h), 2), r(t - 2 * h))), 1 / (2 * h * h * h)); };
+    const tau = (r, t) => { const c = V.cross(d1(r, t), d2(r, t)); return V.dot(c, d3(r, t)) / V.dot(c, c); };
+    const CS = [
+      { name: "단위원", sz: .55, r: (t) => [Math.cos(t), Math.sin(t), 0], a: 0, b: TAU, fr: { range: 2.1, center: [0, 0, 0.3], axes: [1.8, 1.8, 1.8] } },
+      { name: "나선", sz: .9, r: (t) => [Math.cos(t), Math.sin(t), t], a: 0, b: TAU, fr: { range: 3.6, center: [0, 0, 3], axes: [2, 2, 7] } },
+      { name: "꼬인 3차곡선", sz: .4, r: (t) => [t, t * t, t * t * t], a: -1.1, b: 1.1, fr: { range: 2.2, center: [0, 0.6, 0], axes: [1.8, 1.8, 1.8] } },
+    ];
+    let cur = CS[1];
+    const plate = (P, F, s, color, alpha) => ({ f: (u, v) => V.add(P, V.add(V.mul(F.T, u), V.mul(F.N, v))), u: [-s, s], v: [-s, s], n: 4, color: color, alpha: alpha, lineAlpha: .15 });
+    const api = Space.mount(document.getElementById("fig-torsion"), Object.assign({}, cur.fr, {
+      height: 440, view: { az: 32, el: 22 }, negAxes: .4,
+      t: { min: 0, max: 1, value: 0.3, label: "위치", duration: 9 },
+      alt: "곡선을 따라 움직이는 접촉평면과 종법선벡터",
+      controls: segHtml(CS.map((c) => c.name), "곡선 고르기", "tor-c"),
+      draw(S, C, api) {
+        const t = cur.a + (cur.b - cur.a) * api.t, P = cur.r(t), F = frame(cur.r, t);
+        const P0 = cur.r(cur.a), F0 = frame(cur.r, cur.a), sz = cur.sz;
+        S.mesh([plate(P0, F0, sz, "--axis", .25), plate(P, F, sz, "--aux", .35)], [{ pts: samples(cur.r, cur.a, cur.b, 300), color: "--ink", width: 2, alpha: .7, bias: .02 }]);
+        S.arrow(P0, V.add(P0, V.mul(F0.B, 0.8)), { color: "--muted", width: 1.6, alpha: .7 });
+        S.arrow(P, V.add(P, V.mul(F.B, 0.9)), { color: "--aux", width: 3, label: "B", labelT: 1, dx: 6, dy: -6 });
+        S.arrow(P, V.add(P, V.mul(F.T, 0.7)), { color: "--curve", width: 2.2, label: "T", labelT: 1, dx: 6, dy: -6 });
+        S.point(P, { color: "--ink", r: 4.5 });
+      },
+      readout: (api) => {
+        const t = cur.a + (cur.b - cur.a) * api.t, F = frame(cur.r, t), tv = cur === CS[0] ? 0 : tau(cur.r, t);
+        return cur.name + " · t = <b>" + num(t, 3) + "</b> · 곡률 κ = <b>" + num(F.kappa, 3) + "</b> · 비틀림률 τ = <b>" + num(tv, 3) + "</b><br>B = " + vec(F.B);
+      },
+    }));
+    wireSeg(api, "tor-c", (k) => { cur = CS[k]; api.setFrame(cur.fr); }, 1);
+  })();
+
   /* ---------- 자가 점검 ---------- */
   (function () {
     const R = String.raw;
@@ -500,6 +662,18 @@
         choices: [R`$|\mathbf r(t)|$`, R`$|\mathbf r'(t)|$`, R`$|\mathbf T'(t)|$`, R`$\kappa(t)$`],
         answer: 1,
         explain: R`<p>식 (7): 호의 길이함수를 미분하면 속력 $|\mathbf r'(t)|$예요. 곡률 공식 (9)의 분모가 여기서 나와요.</p>`,
+      },
+      {
+        q: R`나선 $\mathbf r(t)=\langle\cos t,\sin t,t\rangle$의 $t=0$인 점 $(1,0,0)$에서 접촉평면의 방정식은?`,
+        choices: [R`$y-z=0$`, R`$y+z=0$`, R`$x=1$`, R`$z=0$`],
+        answer: 0,
+        explain: R`<p>접촉평면의 법선은 $\mathbf B(0)=\frac1{\sqrt2}\langle0,-1,1\rangle$이라 $-y+z=0$, 즉 $y-z=0$이에요. $y+z=0$은 법선이 $\mathbf r'(0)=\langle0,1,1\rangle$인 법평면이에요.</p>`,
+      },
+      {
+        q: R`평면 위에 놓인 곡선(예: 원, 포물선)의 비틀림률은?`,
+        choices: [R`곡률과 같다`, R`항상 0이다`, R`항상 1이다`, R`곡률의 역수이다`],
+        answer: 1,
+        explain: R`<p>평면곡선은 접촉평면이 그 평면 하나로 고정돼 $\mathbf B$가 변하지 않아요. $\frac{d\mathbf B}{ds}=\mathbf 0$이라 $\tau=0$이에요. 정리 15로 봐도 $\mathbf r'\times\mathbf r''$은 평면에 수직, $\mathbf r'''$은 평면에 평행이라 내적이 0이에요.</p>`,
       },
     ]);
   })();
