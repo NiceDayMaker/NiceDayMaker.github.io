@@ -27,6 +27,12 @@
       { id: "12.2", title: "벡터함수의 도함수와 적분", href: "12-2.html" },
       { id: "12.3", title: "호의 길이와 곡률", href: "12-3.html" },
     ] },
+    { no: 13, title: "편미분", sections: [
+      { id: "13.1", title: "다변수함수", href: "13-1.html" },
+      { id: "13.2", title: "다변수함수의 극한과 연속", href: "13-2.html" },
+      { id: "13.3", title: "편도함수", href: "13-3.html" },
+      { id: "13.4", title: "접평면과 선형근사", href: "13-4.html" },
+    ] },
   ];
   const ALL = CHAPTERS.flatMap((c) => c.sections);
 

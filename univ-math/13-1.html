@@ -1,0 +1,546 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>13.1 다변수함수</title>
+<script>try{var t=localStorage.getItem("theme");if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
+<link rel="stylesheet" href="assets/katex/katex.min.css">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body data-section="13.1">
+<div class="shell">
+  <nav class="side" aria-label="이 절의 목차">
+    <a class="home" href="index.html">전체 목차로</a>
+    <ol>
+      <li><a href="#def">이변수함수</a></li>
+      <li><a href="#ex1">정의역 · 예제 1, 2</a></li>
+      <li><a href="#graph">그래프 · 예제 5, 6, 8</a></li>
+      <li><a href="#level">등위곡선 · 예제 10~12</a></li>
+      <li><a href="#steep">간격과 가파름</a></li>
+      <li><a href="#three">삼변수함수 · 예제 14</a></li>
+      <li><a href="#surf">등위곡면 · 예제 15</a></li>
+      <li><a href="#summary">한눈에 정리</a></li>
+      <li><a href="#check">자가 점검</a></li>
+    </ol>
+  </nav>
+
+  <main>
+    <header class="hero">
+      <p class="chapter">13장 편미분</p>
+      <h1><span class="num">13.1</span>다변수함수</h1>
+      <canvas id="hero" aria-hidden="true"></canvas>
+    </header>
+
+    <p class="lede">지금까지의 함수는 입력이 수 하나였어요. 이번 장에서는 <b>입력이 두 개 이상</b>인 함수를 다뤄요. 넓이 $A=xy$, 원기둥 부피 $V=\pi r^2h$처럼 결과가 여러 양에 함께 달려 있는 경우가 흔하거든요. 이 절에서는 이런 함수를 정의하고, 그래프와 등위곡선으로 <b>눈에 보이게</b> 만드는 방법을 정리해요.</p>
+
+    <!-- ===================================================== -->
+    <h2 id="def">이변수함수</h2>
+    <div class="def"><b>정의.</b> <b>이변수함수</b>(function of two variables) $f$는 집합 $D$에 속하는 실수의 순서쌍 $(x,y)$ 각각에 $f(x,y)$로 나타내는 유일한 실수를 대응시키는 규칙이에요. 집합 $D$를 $f$의 <b>정의역</b>, $f$가 취하는 값 전체의 집합 $\{f(x,y)\mid(x,y)\in D\}$를 $f$의 <b>치역</b>이라 해요.</div>
+    <p>$z=f(x,y)$로 쓰면 $x$, $y$는 마음대로 고를 수 있는 <b>독립변수</b>, $z$는 그에 따라 정해지는 <b>종속변수</b>예요. 식만 주어지고 정의역을 따로 말하지 않으면, <b>식이 실숫값으로 잘 정의되는 모든 $(x,y)$</b>를 정의역으로 봐요. 그래서 정의역을 구할 때는 일변수와 똑같이 세 가지를 확인해요.</p>
+    <ul>
+      <li>분모 $\ne0$</li>
+      <li>짝수 제곱근 안 $\ge0$</li>
+      <li>로그 안 $>0$</li>
+    </ul>
+    <p>다만 답이 수직선의 구간이 아니라 <b>평면의 영역</b>이라, 경계선을 그리고 어느 쪽인지 정하는 과정이 하나 더 들어가요.</p>
+
+    <!-- ===================================================== -->
+    <h2 id="ex1">정의역 구하기</h2>
+    <div class="problem"><span class="tag">예제 1</span>다음 각 함수에 대해 $f(3,2)$를 계산하고 정의역을 구하고 그려라.<br>(a) $f(x,y)=\dfrac{\sqrt{x+y+1}}{x-1}$ &nbsp;&nbsp; (b) $f(x,y)=x\ln(y^2-x)$</div>
+    <h3>(a)</h3>
+    <ol class="steps">
+      <li>함숫값: $f(3,2)=\dfrac{\sqrt{3+2+1}}{3-1}=\dfrac{\sqrt6}{2}$</li>
+      <li>제곱근 안이 음수가 아니어야 하니 $x+y+1\ge0$, 즉 $y\ge-x-1$. 직선 $y=-x-1$ <b>위쪽과 그 직선 위</b>예요.</li>
+      <li>분모가 0이 아니어야 하니 $x\ne1$. 직선 $x=1$ 위의 점은 빼요.</li>
+      <li>정의역: $D=\{(x,y)\mid x+y+1\ge0,\ x\ne1\}$</li>
+    </ol>
+    <h3>(b)</h3>
+    <ol class="steps">
+      <li>함숫값: $f(3,2)=3\ln(2^2-3)=3\ln1=0$</li>
+      <li>로그 안이 양수여야 하니 $y^2-x>0$, 즉 $x\lt y^2$. 포물선 $x=y^2$의 <b>왼쪽</b>이고, 포물선 자신은 빠져요.</li>
+      <li>정의역: $D=\{(x,y)\mid x\lt y^2\}$</li>
+    </ol>
+    <div class="exam"><strong>요령.</strong> 경계선을 그린 다음 어느 쪽인지는 <b>경계 위에 있지 않은 점 하나를 넣어 보면</b> 바로 정해져요. (b)에서 $(0,1)$을 넣으면 $1-0>0$이라 성립하니, $(0,1)$이 있는 쪽(포물선 왼쪽)이 정의역이에요. 등호가 들어가면 경계선을 실선, 빠지면 점선으로 그려요.</div>
+
+    <div class="problem"><span class="tag">예제 2</span>$g(x,y)=\sqrt{9-x^2-y^2}$의 정의역과 치역을 구하라.</div>
+    <ol class="steps">
+      <li>정의역: $9-x^2-y^2\ge0$, 즉 $x^2+y^2\le9$. 중심이 원점이고 반지름이 3인 <b>원판</b>(경계 포함)이에요.
+        $$D=\{(x,y)\mid x^2+y^2\le9\}$$</li>
+      <li>치역: $D$ 안에서 $0\le9-x^2-y^2\le9$이므로 $0\le\sqrt{9-x^2-y^2}\le3$. 원점에서 3, 경계에서 0이고 그 사이 값은 모두 나와요.
+        $$\{z\mid0\le z\le3\}=[0,3]$$</li>
+    </ol>
+    <figure class="plot" id="fig-dom">
+      <figcaption>칠한 부분이 정의역이에요. 실선 경계는 포함, 점선 경계는 제외예요. 재생하면 점이 고리를 따라 돌며 정의역 안팎을 드나들고, 아래에 그 점에서의 함숫값이 나와요.</figcaption>
+    </figure>
+
+    <!-- ===================================================== -->
+    <h2 id="graph">그래프</h2>
+    <div class="def"><b>정의.</b> $f$가 정의역이 $D$인 이변수함수일 때, $f$의 <b>그래프</b>는 $(x,y)\in D$이고 $z=f(x,y)$인 $\mathbb R^3$의 모든 점 $(x,y,z)$의 집합이에요.</div>
+    <p>일변수함수의 그래프가 평면의 <b>곡선</b>이었다면, 이변수함수의 그래프는 공간의 <b>곡면</b> $S$예요. 정의역 $D$의 각 점 $(x,y)$ 바로 위(또는 아래) 높이 $f(x,y)$에 점을 찍어서 이어 붙인 모양이에요.</p>
+
+    <div class="problem"><span class="tag">예제 5</span>함수 $f(x,y)=6-3x-2y$의 그래프를 그려라.</div>
+    <ol class="steps">
+      <li>$z=6-3x-2y$는 $3x+2y+z=6$, 즉 <b>평면</b>이에요(11.5).</li>
+      <li>절편: $x$절편 $(2,0,0)$, $y$절편 $(0,3,0)$, $z$절편 $(0,0,6)$. 세 점을 이은 삼각형이 제1팔분공간에 있는 부분이에요.</li>
+    </ol>
+    <p>이처럼 $f(x,y)=ax+by+c$ 꼴의 함수를 <b>선형함수</b>(linear function)라 하고, 그래프는 항상 평면 $z=ax+by+c$예요. 일변수에서 일차함수의 그래프가 직선인 것과 같아요.</p>
+
+    <div class="problem"><span class="tag">예제 6</span>$g(x,y)=\sqrt{9-x^2-y^2}$의 그래프를 그려라.</div>
+    <ol class="steps">
+      <li>$z=\sqrt{9-x^2-y^2}$에서 $z\ge0$이고, 양변을 제곱하면 $x^2+y^2+z^2=9$예요.</li>
+      <li>반지름 3인 구 가운데 $z\ge0$인 부분, 즉 <b>위쪽 반구</b>예요.</li>
+    </ol>
+    <p class="note">구 전체 $x^2+y^2+z^2=9$는 한 함수의 그래프가 아니에요. $(0,0)$ 위에 $z=3$과 $z=-3$ 두 점이 있어서 대응이 “유일”하지 않거든요. 아래쪽 반구는 다른 함수 $z=-\sqrt{9-x^2-y^2}$의 그래프예요.</p>
+
+    <div class="problem"><span class="tag">예제 8</span>$h(x,y)=4x^2+y^2$의 정의역과 치역을 구하고 그래프를 그려라.</div>
+    <ol class="steps">
+      <li>다항식이라 모든 순서쌍에서 정의돼요. 정의역은 $\mathbb R^2$ 전체예요.</li>
+      <li>$4x^2+y^2\ge0$이고 0 이상의 모든 값을 가지므로 치역은 $[0,\infty)$예요.</li>
+      <li>$z=4x^2+y^2$는 <b>타원포물면</b>이에요. 수평 단면 $z=k$($k>0$)는 타원 $4x^2+y^2=k$, 수직 단면($x=0$ 또는 $y=0$)은 포물선이에요.</li>
+    </ol>
+    <figure class="plot" id="fig-graph">
+      <figcaption>세 예제의 그래프예요. 끌어서 돌려 보세요. 평면은 세 절편을 이은 삼각형, 반구는 꼭대기 높이가 3, 타원포물면은 $x$ 방향($4x^2$)이 더 가파라서 단면이 $y$축 쪽으로 긴 타원이에요.</figcaption>
+    </figure>
+
+    <!-- ===================================================== -->
+    <h2 id="level">등위곡선</h2>
+    <p>곡면을 종이에 그리기는 어려워요. 그래서 지도에서 산을 등고선으로 나타내듯, 높이가 같은 점들을 이은 곡선을 정의역에 그려요.</p>
+    <div class="def"><b>정의.</b> 이변수함수 $f$의 <b>등위곡선</b>(level curve)은 $k$가 상수(치역에 속하는 값)일 때 방정식 $f(x,y)=k$를 만족하는 곡선이에요.</div>
+    <p>등위곡선 $f(x,y)=k$는 곡면 $z=f(x,y)$를 <b>수평평면 $z=k$로 자른 단면</b>을 $xy$평면에 내려놓은(사영한) 곡선이에요. 여러 $k$에 대한 등위곡선을 한 그림에 모은 것을 <b>등위곡선도</b>(contour map)라 해요.</p>
+
+    <div class="problem"><span class="tag">예제 10</span>$k=-6,0,6,12$일 때 함수 $f(x,y)=6-3x-2y$의 등위곡선을 그려라.</div>
+    <ol class="steps">
+      <li>$6-3x-2y=k$, 즉 $3x+2y+(k-6)=0$이에요.</li>
+      <li>$k$마다 기울기가 $-\frac32$로 같은 직선이에요.
+        $$k=-6:\ 3x+2y=12,\qquad k=0:\ 3x+2y=6,\qquad k=6:\ 3x+2y=0,\qquad k=12:\ 3x+2y=-6$$</li>
+    </ol>
+    <p>평면의 등위곡선은 <b>평행하고 간격이 같은 직선들</b>이에요. 기울기가 어디서나 같은 면이니까요.</p>
+
+    <div class="problem"><span class="tag">예제 11</span>$k=0,1,2,3$일 때 $g(x,y)=\sqrt{9-x^2-y^2}$의 등위곡선을 그려라.</div>
+    <ol class="steps">
+      <li>$\sqrt{9-x^2-y^2}=k$를 제곱하면 $x^2+y^2=9-k^2$이에요.</li>
+      <li>중심이 원점, 반지름이 $\sqrt{9-k^2}$인 동심원이에요.
+        $$k=0:\ r=3,\qquad k=1:\ r=2\sqrt2,\qquad k=2:\ r=\sqrt5,\qquad k=3:\ r=0\ (\text{점 }(0,0))$$</li>
+    </ol>
+    <p>$k$를 1씩 올릴 때 반지름은 $3\to2.83\to2.24\to0$으로 줄어드는 폭이 점점 커져요. 반구 꼭대기 근처보다 <b>가장자리에서 원 간격이 좁고</b>, 실제로 반구는 가장자리가 가장 가팔라요.</p>
+
+    <div class="problem"><span class="tag">예제 12</span>$h(x,y)=4x^2+y^2+1$의 등위곡선을 그려라.</div>
+    <ol class="steps">
+      <li>$4x^2+y^2+1=k$, 즉 $4x^2+y^2=k-1$이에요.</li>
+      <li>$k\lt1$이면 해가 없고, $k=1$이면 점 $(0,0)$, $k>1$이면 타원
+        $$\frac{x^2}{\frac14(k-1)}+\frac{y^2}{k-1}=1$$
+        이에요. $y$ 방향 반지름이 $x$ 방향의 2배인 타원들이에요.</li>
+    </ol>
+    <figure class="plot" id="fig-level">
+      <figcaption>$k$를 움직이면 수평평면 $z=k$(회색)가 곡면을 자르고, 그 단면(빨강)을 아래 바닥(등위곡선도)에 그대로 내려놓은 것이 등위곡선이에요. 바닥의 옅은 곡선은 예제에서 고른 $k$ 값들의 등위곡선이에요. 예제 10의 평면은 높이를 줄여서 그렸어요.</figcaption>
+    </figure>
+
+    <!-- ===================================================== -->
+    <h2 id="steep">간격과 가파름</h2>
+    <p>$k$를 <b>같은 간격</b>으로 골라 등위곡선을 그리면, 곡선 사이 간격이 곡면의 가파른 정도를 알려 줘요.</p>
+    <ul>
+      <li>등위곡선이 <b>촘촘한 곳</b>: 조금만 옮겨도 높이가 많이 변해요. <b>가파른</b> 곳이에요.</li>
+      <li>등위곡선이 <b>성긴 곳</b>: 많이 옮겨야 높이가 변해요. <b>완만한</b> 곳이에요.</li>
+    </ul>
+    <figure class="plot" id="fig-steep">
+      <figcaption>왼쪽은 $k=0.5,1,1.5,\dots,4$의 등위곡선도, 오른쪽은 $y=0$으로 자른 단면이에요. 포물면 $z=x^2+y^2$는 바깥으로 갈수록 가팔라져서 원 간격이 좁아지고, 원뿔 $z=2\sqrt{x^2+y^2}$는 기울기가 일정해서 간격도 일정해요.</figcaption>
+    </figure>
+
+    <!-- ===================================================== -->
+    <h2 id="three">삼변수함수</h2>
+    <p><b>삼변수함수</b> $f$는 정의역 $D\subset\mathbb R^3$의 순서쌍 $(x,y,z)$ 각각에 유일한 실수 $f(x,y,z)$를 대응시키는 규칙이에요. 예를 들어 지구 표면 위 점 $(x,y,z)$에서의 기온 $T=f(x,y,z)$가 있어요.</p>
+    <div class="problem"><span class="tag">예제 14</span>$f(x,y,z)=\ln(z-y)+xy\sin z$의 정의역을 구하라.</div>
+    <ol class="steps">
+      <li>$xy\sin z$는 모든 점에서 정의되니, 조건은 로그 하나예요: $z-y>0$.</li>
+      <li>정의역: $D=\{(x,y,z)\in\mathbb R^3\mid z>y\}$. 평면 $z=y$의 <b>위쪽에 놓인 반공간</b>이고, 평면 자신은 빠져요.</li>
+    </ol>
+    <figure class="plot" id="fig-half">
+      <figcaption>회색 면이 평면 $z=y$예요($x$는 아무 값이나 돼요). 재생하면 점이 위아래로 움직여요. 평면보다 위에 있으면($z>y$) 정의역 안이라 초록, 아래면 빨강이에요.</figcaption>
+    </figure>
+
+    <!-- ===================================================== -->
+    <h2 id="surf">등위곡면</h2>
+    <p>삼변수함수의 그래프는 4차원 공간에 놓여서 그릴 수 없어요. 대신 등위곡선을 한 차원 올린 <b>등위곡면</b>(level surface) $f(x,y,z)=k$를 그려서 함수를 살펴봐요. 점 $(x,y,z)$가 등위곡면 위를 움직이는 동안 $f$의 값은 $k$로 고정돼요.</p>
+    <div class="problem"><span class="tag">예제 15</span>함수 $f(x,y,z)=x^2+y^2+z^2$의 등위곡면을 구하라.</div>
+    <ol class="steps">
+      <li>$x^2+y^2+z^2=k$에서 $k\lt0$이면 해가 없고, $k=0$이면 원점 하나예요.</li>
+      <li>$k>0$이면 중심이 원점, 반지름이 $\sqrt k$인 <b>동심구면</b>들이에요. $f$는 원점에서 떨어진 거리의 제곱이니 당연한 결과예요.</li>
+    </ol>
+    <figure class="plot" id="fig-sphere">
+      <figcaption>$k$를 바꾸면 등위곡면 $x^2+y^2+z^2=k$(반지름 $\sqrt k$)가 커져요. 옅은 원은 $k=1,4,9$(반지름 1, 2, 3)인 구면의 적도예요. $k$가 같은 간격으로 늘어도 반지름은 점점 천천히 커져요.</figcaption>
+    </figure>
+
+    <!-- ===================================================== -->
+    <h2 id="summary">한눈에 정리</h2>
+    <div class="summary-box">
+      <ul>
+        <li>이변수함수 $z=f(x,y)$: 정의역 $D\subset\mathbb R^2$, 치역 $\{f(x,y)\mid(x,y)\in D\}$. 정의역은 분모 $\ne0$, 짝수 제곱근 안 $\ge0$, 로그 안 $>0$을 만족하는 평면의 영역.</li>
+        <li>그래프는 곡면 $\{(x,y,f(x,y))\}$. 선형함수 $ax+by+c$의 그래프는 평면.</li>
+        <li>$\sqrt{9-x^2-y^2}$는 위쪽 반구, $4x^2+y^2$은 타원포물면. 구 전체는 한 함수의 그래프가 아님.</li>
+        <li>등위곡선 $f(x,y)=k$: 곡면을 높이 $k$에서 자른 단면을 $xy$평면에 내린 것. 같은 간격의 $k$에서 곡선이 촘촘하면 가파름.</li>
+        <li>삼변수함수 $f(x,y,z)$의 정의역은 공간의 영역, 시각화는 등위곡면 $f(x,y,z)=k$로.</li>
+      </ul>
+    </div>
+
+    <!-- ===================================================== -->
+    <h2 id="check">자가 점검</h2>
+    <p>보기를 고르면 바로 정답과 풀이가 나와요.</p>
+    <div id="quiz"></div>
+
+    <nav class="pager" aria-label="절 이동"></nav>
+  </main>
+</div>
+
+<script src="assets/katex/katex.min.js"></script>
+<script src="assets/katex/auto-render.min.js"></script>
+<script src="assets/plot.js"></script>
+<script src="assets/space.js"></script>
+<script src="assets/quiz.js"></script>
+<script src="assets/site.js"></script>
+<script>
+(function () {
+  "use strict";
+  const { fmt, label } = Plot;
+  const V = Space.V;
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const num = (v, d) => fmt(v, d == null ? 2 : d);
+  const TAU = 2 * Math.PI;
+  const samples = (f, a, b, n) => { const out = []; for (let i = 0; i <= n; i++) out.push(f(a + (b - a) * i / n)); return out; };
+  const segHtml = (labels, aria, cls) =>
+    '<span class="seg ' + (cls || "") + '" role="group" aria-label="' + aria + '">' +
+    labels.map((l, k) => '<button type="button" data-k="' + k + '" aria-pressed="false">' + l + "</button>").join("") + "</span>";
+  function pressOne(group, btn) { group.querySelectorAll("button").forEach((b) => b.setAttribute("aria-pressed", b === btn ? "true" : "false")); }
+  function wireSeg(api, cls, fn, first) {
+    const g = api.bar.querySelector("." + cls), bs = [...g.querySelectorAll("button")];
+    bs.forEach((b, k) => b.addEventListener("click", () => { pressOne(g, b); fn(k); }));
+    pressOne(g, bs[first || 0]);
+  }
+  // 등위곡선(마칭 스퀘어): f(x,y) = k 인 선분들
+  function contour(f, xr, yr, n, k) {
+    const nx = Array.isArray(n) ? n[0] : n, ny = Array.isArray(n) ? n[1] : n;
+    const G = [], segs = [];
+    for (let i = 0; i <= nx; i++) { const row = []; for (let j = 0; j <= ny; j++) row.push(f(xr[0] + (xr[1] - xr[0]) * i / nx, yr[0] + (yr[1] - yr[0]) * j / ny) - k); G.push(row); }
+    const X = (i) => xr[0] + (xr[1] - xr[0]) * i / nx, Y = (j) => yr[0] + (yr[1] - yr[0]) * j / ny;
+    for (let i = 0; i < nx; i++) for (let j = 0; j < ny; j++) {
+      const c = [[i, j], [i + 1, j], [i + 1, j + 1], [i, j + 1]], v = c.map(([a, b]) => G[a][b]);
+      if (v.some((x) => !isFinite(x))) continue;
+      const hit = [];
+      for (let e = 0; e < 4; e++) {
+        const a = v[e], b = v[(e + 1) % 4];
+        if ((a < 0) !== (b < 0)) {
+          const s = a / (a - b), p = c[e], q = c[(e + 1) % 4];
+          hit.push([X(p[0] + (q[0] - p[0]) * s), Y(p[1] + (q[1] - p[1]) * s)]);
+        }
+      }
+      if (hit.length === 2) segs.push([hit[0], hit[1]]);
+      else if (hit.length === 4) { segs.push([hit[0], hit[1]]); segs.push([hit[2], hit[3]]); }
+    }
+    return segs;
+  }
+
+  /* ---------- 절 머리: 퍼져 나가는 등위곡선 ---------- */
+  (function () {
+    const cv = document.getElementById("hero"), ctx = cv.getContext("2d");
+    let W, H, ph = 0, start = 0;
+    function size() { const d = window.devicePixelRatio || 1; W = cv.clientWidth; H = cv.clientHeight; cv.width = W * d; cv.height = H * d; ctx.setTransform(d, 0, 0, d, 0, 0); }
+    function draw() {
+      const C = Plot.palette(); ctx.clearRect(0, 0, W, H);
+      const hills = [[0.28, 0.55, 1.0], [0.68, 0.45, 0.8]];
+      for (let m = 0; m < 9; m++) {
+        const r = ((m + ph) % 9) / 9;
+        hills.forEach(([cx, cy, s], i) => {
+          ctx.save(); ctx.strokeStyle = i ? C.aux : C.curve; ctx.lineWidth = 1.6; ctx.globalAlpha = 0.75 * (1 - r);
+          ctx.beginPath(); ctx.ellipse(W * cx, H * cy, r * W * 0.26 * s, r * H * 0.55 * s, 0.2 * (i ? -1 : 1), 0, TAU); ctx.stroke(); ctx.restore();
+        });
+      }
+    }
+    function tick(now) { if (!start) start = now; ph = ((now - start) / 2200) % 9; draw(); requestAnimationFrame(tick); }
+    size(); reduce ? (ph = 0.5, draw()) : requestAnimationFrame(tick);
+    if ("ResizeObserver" in window) new ResizeObserver(() => { size(); draw(); }).observe(cv);
+  })();
+
+  /* ---------- 예제 1, 2: 정의역 ---------- */
+  (function () {
+    const PRE = [
+      { name: "예제 1 (a)", f: (x, y) => Math.sqrt(x + y + 1) / (x - 1), inD: (x, y) => x + y + 1 >= 0 && Math.abs(x - 1) > 1e-9,
+        loop: (t) => [0.6 + 2.1 * Math.cos(TAU * t), 0.2 + 1.9 * Math.sin(TAU * t)],
+        bounds(ctx, T, C) {
+          line(ctx, T, [-4, 3], [3, -4], C.aux, false); line(ctx, T, [1, -4], [1, 4], C.curve, true);
+          label(ctx, "y = −x − 1", T.X(-3.2), T.Y(2.55), { size: 12.5, color: C.aux, halo: C.surface });
+          label(ctx, "x = 1 (제외)", T.X(1.12), T.Y(3.55), { size: 12.5, color: C.curve, halo: C.surface });
+        },
+        why: (x, y) => (x + y + 1 < 0 ? "x + y + 1 < 0이라 제곱근이 정의되지 않음" : "x = 1이라 분모가 0") },
+      { name: "예제 1 (b)", f: (x, y) => x * Math.log(y * y - x), inD: (x, y) => y * y - x > 0,
+        loop: (t) => [0.4 + 2.2 * Math.cos(TAU * t), 0.3 + 1.6 * Math.sin(TAU * t)],
+        bounds(ctx, T, C) {
+          const pts = samples((s) => [s * s, s], -2.2, 2.2, 120);
+          ctx.save(); ctx.setLineDash([6, 5]); ctx.strokeStyle = C.curve; ctx.lineWidth = 2; ctx.beginPath();
+          pts.forEach((p, i) => (i ? ctx.lineTo(T.X(p[0]), T.Y(p[1])) : ctx.moveTo(T.X(p[0]), T.Y(p[1])))); ctx.stroke(); ctx.restore();
+          label(ctx, "x = y² (제외)", T.X(2.3), T.Y(1.0), { size: 12.5, color: C.curve, halo: C.surface });
+        },
+        why: () => "y² − x ≤ 0이라 로그가 정의되지 않음" },
+      { name: "예제 2", f: (x, y) => Math.sqrt(9 - x * x - y * y), inD: (x, y) => x * x + y * y <= 9,
+        loop: (t) => [3.5 * Math.cos(TAU * t), 2.6 * Math.sin(TAU * t)],
+        bounds(ctx, T, C) {
+          ctx.save(); ctx.strokeStyle = C.aux; ctx.lineWidth = 2; ctx.beginPath(); ctx.ellipse(T.X(0), T.Y(0), 3 * T.sx, 3 * T.sy, 0, 0, TAU); ctx.stroke(); ctx.restore();
+          label(ctx, "x² + y² = 9", T.X(2.25), T.Y(2.55), { size: 12.5, color: C.aux, halo: C.surface });
+        },
+        why: () => "x² + y² > 9라 제곱근 안이 음수" },
+    ];
+    function line(ctx, T, a, b, c, dash) {
+      ctx.save(); if (dash) ctx.setLineDash([6, 5]); ctx.strokeStyle = c; ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.moveTo(T.X(a[0]), T.Y(a[1])); ctx.lineTo(T.X(b[0]), T.Y(b[1])); ctx.stroke(); ctx.restore();
+    }
+    let cur = PRE[0];
+    const panel = {
+      curve: false, x: () => 0, y: () => 0, grid: 1, maxWidth: "520px", alt: "정의역 그림",
+      view: { x: [-4.2, 4.2], y: [-4, 4] }, ticks: { x: [-3, -2, -1, 1, 2, 3], y: [-3, -2, -1, 1, 2, 3] },
+      under(ctx, T, t, C) {
+        ctx.save(); ctx.fillStyle = C.aux; ctx.globalAlpha = 0.16;
+        const n = 120, dx = 8.4 / n, dy = 8 / n;
+        for (let i = 0; i < n; i++) for (let j = 0; j < n; j++) {
+          const x = -4.2 + (i + 0.5) * dx, y = -4 + (j + 0.5) * dy;
+          if (cur.inD(x, y)) ctx.fillRect(T.X(x - dx / 2), T.Y(y + dy / 2), dx * T.sx + 0.6, dy * T.sy + 0.6);
+        }
+        ctx.restore();
+      },
+      over(ctx, T, t, C) {
+        cur.bounds(ctx, T, C);
+        const loop = samples(cur.loop, 0, 1, 160);
+        ctx.save(); ctx.strokeStyle = C.ink; ctx.globalAlpha = .35; ctx.setLineDash([2, 4]); ctx.lineWidth = 1.3; ctx.beginPath();
+        loop.forEach((p, i) => (i ? ctx.lineTo(T.X(p[0]), T.Y(p[1])) : ctx.moveTo(T.X(p[0]), T.Y(p[1])))); ctx.stroke(); ctx.restore();
+        const p = cur.loop(t), ok = cur.inD(p[0], p[1]);
+        Plot.dot(ctx, T.X(p[0]), T.Y(p[1]), 6, ok ? C.ok : C.curve, C.surface);
+      },
+    };
+    const api = Plot.mount(document.getElementById("fig-dom"), {
+      t: { min: 0, max: 1, value: 0.1, label: "점" }, duration: 10, panels: [panel],
+      controls: segHtml(PRE.map((p) => p.name), "함수 고르기", "dom-p"),
+      readout: (t) => {
+        const p = cur.loop(t), ok = cur.inD(p[0], p[1]);
+        return "점 (" + num(p[0]) + ", " + num(p[1]) + ") · " + (ok ? "<b>정의역 안</b> · 함숫값 = <b>" + num(cur.f(p[0], p[1]), 3) + "</b>" : "<b>정의역 밖</b>: " + cur.why(p[0], p[1]));
+      },
+    });
+    wireSeg(api, "dom-p", (k) => { cur = PRE[k]; api.redraw(); });
+  })();
+
+  /* ---------- 예제 5, 6, 8: 그래프 ---------- */
+  (function () {
+    const PRE = [
+      { name: "예제 5 평면", fr: { range: 4.3, center: [0.9, 1.3, 2.4], axes: [3, 4, 7] },
+        surf: { f: (u, v) => { const x = 2 * u, y = 3 * (1 - u) * v; return [x, y, 6 - 3 * x - 2 * y]; }, u: [0, 1], v: [0, 1], n: [12, 12], color: "--aux" },
+        extra(S) {
+          S.path([[2, 0, 0], [0, 3, 0], [0, 0, 6], [2, 0, 0]], { color: "--aux", width: 2 });
+          S.point([2, 0, 0], { color: "--curve", label: "(2, 0, 0)", dx: -8, dy: 16, size: 12 });
+          S.point([0, 3, 0], { color: "--curve", label: "(0, 3, 0)", dx: 6, dy: 14, size: 12 });
+          S.point([0, 0, 6], { color: "--curve", label: "(0, 0, 6)", dx: 10, dy: 0, size: 12 });
+        },
+        text: "z = 6 − 3x − 2y: 평면 3x + 2y + z = 6 (제1팔분공간 부분)" },
+      { name: "예제 6 반구", fr: { range: 3.9, center: [0, 0, 1.1], axes: [4, 4, 4.3] },
+        surf: { f: (r, th) => [r * Math.cos(th), r * Math.sin(th), Math.sqrt(Math.max(0, 9 - r * r))], u: [0, 3], v: [0, TAU], n: [14, 40], color: "--aux" },
+        extra(S) { S.point([0, 0, 3], { color: "--curve", label: "(0, 0, 3)", dx: 10, dy: -8, size: 12 }); },
+        text: "z = √(9 − x² − y²): 반지름 3인 위쪽 반구 · 치역 [0, 3]" },
+      { name: "예제 8 타원포물면", fr: { range: 3.6, center: [0, 0, 2], axes: [2.2, 3.2, 5.6] },
+        surf: { f: (r, th) => { const x = r / 2 * Math.cos(th), y = r * Math.sin(th); return [x, y, 4 * x * x + y * y]; }, u: [0, 2.1], v: [0, TAU], n: [14, 40], color: "--aux", color2: "--curve", zr: [0, 4.4] },
+        extra(S) {
+          const k = 4, pts = samples((th) => [Math.sqrt(k) / 2 * Math.cos(th), Math.sqrt(k) * Math.sin(th), 0], 0, TAU, 80);
+          S.path(pts, { color: "--muted", width: 1.4, dash: true });
+          S.text([0, 2.15, 0], "4x² + y² = 4", { size: 12, color: "--muted" });
+        },
+        text: "z = 4x² + y²: 타원포물면 · 정의역 ℝ², 치역 [0, ∞) · 점선은 높이 4에서의 단면을 바닥에 내린 타원" },
+    ];
+    let cur = PRE[0];
+    const api = Space.mount(document.getElementById("fig-graph"), Object.assign({}, PRE[0].fr, {
+      height: 420, view: { az: 28, el: 22 }, negAxes: .3, alt: "이변수함수의 그래프",
+      controls: segHtml(PRE.map((p) => p.name), "그래프 고르기", "gr-p"),
+      draw(S) { S.mesh([cur.surf]); cur.extra(S); },
+      readout: () => cur.text,
+    }));
+    wireSeg(api, "gr-p", (k) => { cur = PRE[k]; api.setFrame(cur.fr); });
+  })();
+
+  /* ---------- 예제 10~12: 등위곡선 ---------- */
+  (function () {
+    const PRE = [
+      { name: "예제 10", f: (x, y) => 6 - 3 * x - 2 * y, xr: [-2, 3], yr: [-2, 4], zs: 0.2, fl: -3.6, ks: [-6, 0, 6, 12], k: [-6, 12], k0: 6,
+        surf: { f: (u, v) => [u, v, 0.2 * (6 - 3 * u - 2 * v)], u: [-2, 3], v: [-2, 4], n: [10, 10] },
+        fr: { range: 4.6, center: [0.5, 1, -0.4], axes: [3.6, 4.6, 3.6] }, desc: (k) => "직선 3x + 2y = " + num(6 - k, 1) },
+      { name: "예제 11", f: (x, y) => { const s = 9 - x * x - y * y; return s >= 0 ? Math.sqrt(s) : NaN; }, xr: [-3.05, 3.05], yr: [-3.05, 3.05], zs: 1, fl: -1.6, ks: [0, 1, 2, 3], k: [0, 3], k0: 1,
+        surf: { f: (r, th) => [r * Math.cos(th), r * Math.sin(th), Math.sqrt(Math.max(0, 9 - r * r))], u: [0, 3], v: [0, TAU], n: [12, 36] },
+        fr: { range: 4.1, center: [0, 0, 0.6], axes: [3.6, 3.6, 4] }, desc: (k) => "원 x² + y² = " + num(9 - k * k) + " (반지름 " + num(Math.sqrt(Math.max(0, 9 - k * k))) + ")" },
+      { name: "예제 12", f: (x, y) => 4 * x * x + y * y + 1, xr: [-1.2, 1.2], yr: [-2.3, 2.3], zs: 1, fl: -0.6, ks: [2, 3, 4, 5], k: [1, 5.4], k0: 3,
+        surf: { f: (r, th) => { const x = r / 2 * Math.cos(th), y = r * Math.sin(th); return [x, y, 4 * x * x + y * y + 1]; }, u: [0, 2.1], v: [0, TAU], n: [12, 36] },
+        fr: { range: 3.9, center: [0, 0, 2], axes: [2.2, 3.2, 6.4] }, desc: (k) => (k < 1 ? "해 없음 (k < 1)" : "타원 4x² + y² = " + num(k - 1)) },
+    ];
+    let cur = PRE[1];
+    const kOf = (t) => cur.k[0] + (cur.k[1] - cur.k[0]) * t;
+    const api = Space.mount(document.getElementById("fig-level"), Object.assign({}, cur.fr, {
+      height: 440, view: { az: 30, el: 24 }, negAxes: .3, alt: "곡면을 수평평면으로 잘라 얻는 등위곡선",
+      t: { min: 0, max: 1, value: (cur.k0 - cur.k[0]) / (cur.k[1] - cur.k[0]), label: "k", duration: 7 },
+      controls: segHtml(PRE.map((p) => p.name), "함수 고르기", "lv-p"),
+      draw(S, C, api) {
+        const k = kOf(api.t), zk = k * cur.zs, xr = cur.xr, yr = cur.yr;
+        // 아래 바닥: 등위곡선도
+        const fl = cur.fl;
+        S.poly([[xr[0], yr[0], fl], [xr[1], yr[0], fl], [xr[1], yr[1], fl], [xr[0], yr[1], fl]], { fill: "--axis", alpha: .1, stroke: "--axis", strokeAlpha: .5 });
+        S.text([xr[1], yr[0], fl], "등위곡선도", { size: 12, color: "--muted", dx: 6, dy: 8 });
+        cur.ks.forEach((kk) => contour(cur.f, xr, yr, 70, kk).forEach((s) => S.line([s[0][0], s[0][1], fl], [s[1][0], s[1][1], fl], { color: "--muted", width: 1.3, alpha: .55 })));
+        const segs = contour(cur.f, xr, yr, 90, k);
+        segs.forEach((s) => S.line([s[0][0], s[0][1], fl], [s[1][0], s[1][1], fl], { color: "--curve", width: 2.6 }));
+        if (segs.length) { const s = segs[Math.floor(segs.length / 3)][0]; S.line([s[0], s[1], zk], [s[0], s[1], fl], { color: "--curve", width: 1.2, dash: [3, 4], alpha: .7 }); }
+        // 곡면 + 수평평면 + 단면
+        const pl = { f: (u, v) => [u, v, zk], u: xr, v: yr, n: [2, 2], color: "--axis", alpha: .22, lines: false };
+        const cut = segs.map((s) => ({ pts: [[s[0][0], s[0][1], zk], [s[1][0], s[1][1], zk]], color: "--curve", width: 3, bias: .06 }));
+        S.mesh([Object.assign({ color: "--aux", alpha: .62 }, cur.surf), pl], cut);
+        S.text([xr[1], yr[0], zk], "z = k", { size: 12.5, color: "--muted", dx: 6 });
+      },
+      readout: (api) => { const k = kOf(api.t); return "k = <b>" + num(k, 2) + "</b> · 등위곡선: " + cur.desc(k) + (cur.zs !== 1 ? " · (높이는 " + cur.zs + "배로 줄여 그림)" : ""); },
+    }));
+    wireSeg(api, "lv-p", (k) => { cur = PRE[k]; api.setFrame(cur.fr); api.setT((cur.k0 - cur.k[0]) / (cur.k[1] - cur.k[0])); }, 1);
+  })();
+
+  /* ---------- 간격과 가파름 ---------- */
+  (function () {
+    const PRE = [
+      { name: "포물면 z = x² + y²", r: (k) => Math.sqrt(k), prof: (x) => x * x },
+      { name: "원뿔 z = 2√(x² + y²)", r: (k) => k / 2, prof: (x) => 2 * Math.abs(x) },
+    ];
+    const KS = [0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4];
+    let cur = PRE[0];
+    const map = {
+      curve: false, x: () => 0, y: () => 0, grid: 0, title: "등위곡선도", alt: "등위곡선도",
+      view: { x: [-2.3, 2.3], y: [-2.3, 2.3] }, ticks: { x: [-2, -1, 1, 2], y: [-2, -1, 1, 2] },
+      over(ctx, T, k, C) {
+        KS.forEach((kk) => {
+          ctx.save(); ctx.strokeStyle = C.aux; ctx.lineWidth = 1.5; ctx.globalAlpha = .7;
+          ctx.beginPath(); ctx.arc(T.X(0), T.Y(0), cur.r(kk) * T.sx, 0, TAU); ctx.stroke(); ctx.restore();
+        });
+        ctx.save(); ctx.strokeStyle = C.curve; ctx.lineWidth = 3; ctx.beginPath(); ctx.arc(T.X(0), T.Y(0), cur.r(k) * T.sx, 0, TAU); ctx.stroke(); ctx.restore();
+      },
+    };
+    const side = {
+      curve: false, x: () => 0, y: () => 0, grid: 0, title: "단면 y = 0", axisLabels: ["x", "z"], alt: "단면 그래프",
+      view: { x: [-2.3, 2.3], y: [-0.4, 4.4] }, ticks: { x: [-2, -1, 1, 2], y: [1, 2, 3, 4] },
+      over(ctx, T, k, C) {
+        KS.forEach((kk) => {
+          const r = cur.r(kk);
+          ctx.save(); ctx.strokeStyle = C.axis; ctx.globalAlpha = .45; ctx.setLineDash([3, 4]); ctx.lineWidth = 1;
+          ctx.beginPath(); ctx.moveTo(T.X(-r), T.Y(kk)); ctx.lineTo(T.X(r), T.Y(kk)); ctx.stroke();
+          ctx.globalAlpha = .7; ctx.strokeStyle = C.aux; ctx.setLineDash([2, 3]);
+          ctx.beginPath(); ctx.moveTo(T.X(r), T.Y(kk)); ctx.lineTo(T.X(r), T.Y(0)); ctx.moveTo(T.X(-r), T.Y(kk)); ctx.lineTo(T.X(-r), T.Y(0)); ctx.stroke(); ctx.restore();
+        });
+        const pts = samples((x) => [x, cur.prof(x)], -2.2, 2.2, 200);
+        ctx.save(); ctx.strokeStyle = C.ink; ctx.lineWidth = 2.2; ctx.beginPath();
+        pts.forEach((p, i) => (i ? ctx.lineTo(T.X(p[0]), T.Y(Math.min(p[1], 4.6))) : ctx.moveTo(T.X(p[0]), T.Y(p[1])))); ctx.stroke(); ctx.restore();
+        const r = cur.r(k);
+        ctx.save(); ctx.strokeStyle = C.curve; ctx.lineWidth = 2.4; ctx.beginPath(); ctx.moveTo(T.X(-r), T.Y(k)); ctx.lineTo(T.X(r), T.Y(k)); ctx.stroke(); ctx.restore();
+        Plot.dot(ctx, T.X(r), T.Y(k), 4.5, C.curve, C.surface); Plot.dot(ctx, T.X(-r), T.Y(k), 4.5, C.curve, C.surface);
+      },
+    };
+    const api = Plot.mount(document.getElementById("fig-steep"), {
+      t: { min: 0.5, max: 4, value: 2, step: 0.5, label: "k" }, duration: 6, panels: [map, side],
+      controls: segHtml(PRE.map((p) => p.name), "곡면 고르기", "st-p"),
+      readout: (k) => {
+        const r = cur.r(k), gap = k < 4 ? cur.r(k + 0.5) - r : null;
+        return "k = <b>" + num(k, 1) + "</b> · 원의 반지름 " + num(r, 3) + (gap != null ? " · 다음 원(k + 0.5)까지 간격 <b>" + num(gap, 3) + "</b>" : "");
+      },
+    });
+    wireSeg(api, "st-p", (k) => { cur = PRE[k]; api.redraw(); });
+  })();
+
+  /* ---------- 예제 14: 반공간 z > y ---------- */
+  (function () {
+    const P0 = [1.2, 0.8];
+    Space.mount(document.getElementById("fig-half"), {
+      range: 3, center: [0, 0, 0.2], height: 380, axes: [2.6, 2.6, 2.6], view: { az: 38, el: 16 }, negAxes: .55,
+      t: { min: 0, max: 1, value: 0.75, label: "z", duration: 6 },
+      alt: "평면 z = y 위쪽의 반공간",
+      draw(S, C, api) {
+        const z = -1.6 + 3.8 * api.t, P = [P0[0], P0[1], z], Q = [P0[0], P0[1], P0[1]], ok = z > P0[1];
+        S.mesh([{ f: (u, v) => [u, v, v], u: [-2, 2], v: [-2, 2], n: [8, 8], color: "--axis", alpha: .35 }],
+          [{ pts: [[P0[0], P0[1], -1.6], [P0[0], P0[1], 2.2]], color: "--muted", width: 1.2, dash: true, bias: 0 }]);
+        S.point(Q, { color: "--muted", r: 3.5, label: "평면 위: z = y = " + num(P0[1], 1), dx: 12, dy: 16, size: 11.5 });
+        S.point(P, { color: ok ? "--ok" : "--curve", r: 6.5 });
+        S.text([-2, 2, 2], "z = y", { size: 13, color: "--muted", dx: 4 });
+      },
+      readout: (api) => {
+        const z = -1.6 + 3.8 * api.t, ok = z > P0[1] + 1e-9;
+        return "점 (" + num(P0[0], 1) + ", " + num(P0[1], 1) + ", " + num(z) + ") · z − y = " + num(z - P0[1]) + (ok ? " &gt; 0 → <b>정의역 안</b>" : " ≤ 0 → <b>정의역 밖</b> (ln(z − y) 정의 안 됨)");
+      },
+    });
+  })();
+
+  /* ---------- 예제 15: 등위곡면 ---------- */
+  (function () {
+    Space.mount(document.getElementById("fig-sphere"), {
+      range: 3.6, center: [0, 0, 0], height: 420, axes: 3.6, view: { az: 30, el: 20 }, negAxes: .9,
+      t: { min: 0.25, max: 9, value: 4, label: "k", duration: 8 },
+      alt: "동심구면인 등위곡면",
+      draw(S, C, api) {
+        const k = api.t, R = Math.sqrt(k);
+        [1, 2, 3].forEach((r) => S.path(samples((th) => [r * Math.cos(th), r * Math.sin(th), 0], 0, TAU, 90), { color: "--muted", width: 1.2, alpha: .55, dash: [4, 4] }));
+        S.mesh([{ f: (th, ph) => [R * Math.sin(ph) * Math.cos(th), R * Math.sin(ph) * Math.sin(th), R * Math.cos(ph)], u: [0, TAU], v: [0.0001, Math.PI], n: [36, 18], color: "--aux", alpha: .42 }]);
+      },
+      readout: (api) => "k = <b>" + num(api.t) + "</b> · 등위곡면 x² + y² + z² = " + num(api.t) + " · 반지름 √k = <b>" + num(Math.sqrt(api.t), 3) + "</b>",
+    });
+  })();
+
+  /* ---------- 자가 점검 ---------- */
+  (function () {
+    const R = String.raw;
+    Quiz.mount(document.getElementById("quiz"), [
+      {
+        q: R`$f(x,y)=\dfrac{\ln(x-1)}{y}$의 정의역은?`,
+        choices: [R`$\{(x,y)\mid x>1\}$`, R`$\{(x,y)\mid x>1,\ y\ne0\}$`, R`$\{(x,y)\mid x\ge1,\ y\ne0\}$`, R`$\{(x,y)\mid y\ne0\}$`],
+        answer: 1,
+        explain: R`<p>로그 안 $x-1>0$이고 분모 $y\ne0$이에요. 두 조건을 모두 만족해야 해요.</p>`,
+      },
+      {
+        q: R`$f(x,y)=x^2e^{y}$에 대해 $f(2,0)$은?`,
+        choices: [R`$0$`, R`$2$`, R`$4$`, R`$4e$`],
+        answer: 2,
+        explain: R`<p>$2^2\cdot e^0=4\cdot1=4$예요.</p>`,
+      },
+      {
+        q: R`$g(x,y)=\sqrt{16-x^2-y^2}$의 치역은?`,
+        choices: [R`$[0,16]$`, R`$[0,4]$`, R`$[-4,4]$`, R`$[0,\infty)$`],
+        answer: 1,
+        explain: R`<p>정의역 $x^2+y^2\le16$에서 $0\le16-x^2-y^2\le16$이라 제곱근은 $0$부터 $4$까지예요. 그래프는 반지름 4인 위쪽 반구예요.</p>`,
+      },
+      {
+        q: R`$f(x,y)=2x-y+3$의 그래프는?`,
+        choices: [R`직선`, R`평면`, R`포물면`, R`원뿔`],
+        answer: 1,
+        explain: R`<p>$ax+by+c$ 꼴의 선형함수라 그래프는 평면 $z=2x-y+3$이에요. 입력이 두 개이니 그래프는 곡선이 아니라 면이에요.</p>`,
+      },
+      {
+        q: R`$f(x,y)=x^2+y^2$의 등위곡선 $f(x,y)=4$는?`,
+        choices: [R`반지름 4인 원`, R`반지름 2인 원`, R`직선 $x+y=4$`, R`포물선 $y=4-x^2$`],
+        answer: 1,
+        explain: R`<p>$x^2+y^2=4$는 중심이 원점, 반지름이 $\sqrt4=2$인 원이에요.</p>`,
+      },
+      {
+        q: R`$h(x,y)=x^2+4y^2$의 등위곡선($k>0$)은?`,
+        choices: [R`$x$ 방향으로 긴 타원`, R`$y$ 방향으로 긴 타원`, R`원`, R`쌍곡선`],
+        answer: 0,
+        explain: R`<p>$x^2+4y^2=k$에서 $x$ 방향 반지름 $\sqrt k$, $y$ 방향 반지름 $\frac{\sqrt k}{2}$라 $x$ 방향으로 길어요. 예제 12($4x^2+y^2$)와는 반대예요.</p>`,
+      },
+      {
+        q: R`같은 간격의 $k$로 그린 등위곡선도에서 곡선이 촘촘한 곳은?`,
+        choices: [R`곡면이 완만한 곳`, R`곡면이 가파른 곳`, R`함숫값이 0인 곳`, R`정의역 밖`],
+        answer: 1,
+        explain: R`<p>조금만 움직여도 높이가 $k$만큼 바뀐다는 뜻이라 가파른 곳이에요.</p>`,
+      },
+      {
+        q: R`$f(x,y,z)=x+y+z$의 등위곡면 $f=k$는?`,
+        choices: [R`구면`, R`평행한 평면들`, R`원기둥`, R`원점을 지나는 직선`],
+        answer: 1,
+        explain: R`<p>$x+y+z=k$는 법선벡터가 $\langle1,1,1\rangle$로 같은 평면이에요. $k$마다 평행하게 옮겨진 평면들이에요.</p>`,
+      },
+    ]);
+  })();
+})();
+</script>
+</body>
+</html>

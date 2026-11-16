@@ -1,0 +1,421 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>13.4 접평면과 선형근사</title>
+<script>try{var t=localStorage.getItem("theme");if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
+<link rel="stylesheet" href="assets/katex/katex.min.css">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body data-section="13.4">
+<div class="shell">
+  <nav class="side" aria-label="이 절의 목차">
+    <a class="home" href="index.html">전체 목차로</a>
+    <ol>
+      <li><a href="#recall">일변수의 선형근사</a></li>
+      <li><a href="#tangent">접평면 · 예제 1</a></li>
+      <li><a href="#linear">선형근사</a></li>
+      <li><a href="#diff">미분가능성 · 예제 2</a></li>
+      <li><a href="#total">미분과 전미분</a></li>
+      <li><a href="#ex4">예제 4 · dz와 Δz</a></li>
+      <li><a href="#ex5">예제 5 · 오차 추정</a></li>
+      <li><a href="#three">삼변수 이상의 함수</a></li>
+      <li><a href="#summary">한눈에 정리</a></li>
+      <li><a href="#check">자가 점검</a></li>
+    </ol>
+  </nav>
+
+  <main>
+    <header class="hero">
+      <p class="chapter">13장 편미분</p>
+      <h1><span class="num">13.4</span>접평면과 선형근사</h1>
+      <canvas id="hero" aria-hidden="true"></canvas>
+    </header>
+
+    <p class="lede">미분가능한 곡선은 한 점 근처를 확대하면 직선처럼 보였어요. 그래서 접선으로 함숫값을 어림할 수 있었죠. 곡면도 똑같아요. 한 점 근처를 확대하면 <b>평면처럼</b> 보이고, 그 평면이 접평면이에요. 접평면으로 이변수함수의 값을 어림하는 것이 선형근사예요.</p>
+
+    <!-- ===================================================== -->
+    <h2 id="recall">일변수의 선형근사</h2>
+    <p>함숫값 $f(x)$의 근삿값을 구하려고 점 $(a,f(a))$에서 $f$의 접선을 그래프로 갖는 선형함수 $L$을 썼어요.</p>
+    <div class="summary-box">
+      <p style="margin:0 0 .2rem">$a$에서 $f$의 <b>선형화</b></p>
+      $$L(x)=f(a)+f'(a)(x-a)$$
+      <p style="margin:0 0 .2rem">$a$에서 $f$의 <b>선형근사</b> 또는 <b>접선근사</b></p>
+      $$f(x)\approx f(a)+f'(a)(x-a)$$
+    </div>
+    <p>이번 절은 이 두 식을 변수가 두 개인 경우로 옮기는 작업이에요. 접선은 접평면으로, $f'(a)$는 두 편미분계수 $f_x$, $f_y$로 바뀌어요.</p>
+
+    <!-- ===================================================== -->
+    <h2 id="tangent">접평면</h2>
+    <p>점 $P(x_0,y_0,z_0)$을 지나는 임의의 평면의 방정식은 $A(x-x_0)+B(y-y_0)+C(z-z_0)=0$이에요(11.5). $C\ne0$이면 양변을 $C$로 나누고 $a=-\frac AC$, $b=-\frac BC$로 놓아서</p>
+    $$z-z_0=a(x-x_0)+b(y-y_0) \tag{1}$$
+    <p>로 쓸 수 있어요. 이 평면이 곡면 $S$: $z=f(x,y)$의 $P$에서의 접평면이 되려면, $P$를 지나는 곡면 위의 곡선들의 접선을 모두 품어야 해요. 특히 13.3의 두 단면 곡선 $C_1$, $C_2$의 접선 $T_1$, $T_2$를 품어야 해요.</p>
+    <ol class="steps">
+      <li><b>$P$에서의 접평면과 $y=y_0$의 교선</b>은 접선 $T_1$이 되어야 해요. 식 (1)에서 $y=y_0$으로 놓으면
+        $$z-z_0=a(x-x_0),\quad y=y_0$$
+        이것은 기울기가 $a$인 직선이고, $T_1$의 기울기는 $f_x(x_0,y_0)$이므로 $a=f_x(x_0,y_0)$이에요.</li>
+      <li><b>$P$에서의 접평면과 $x=x_0$의 교선</b>은 접선 $T_2$가 되어야 해요. 식 (1)에서 $x=x_0$으로 놓으면
+        $$z-z_0=b(y-y_0),\quad x=x_0$$
+        $T_2$의 기울기가 $f_y(x_0,y_0)$이므로 $b=f_y(x_0,y_0)$이에요.</li>
+    </ol>
+    <div class="summary-box">
+      <p style="margin:0 0 .3rem"><b>2</b> $f$가 연속인 편도함수를 갖는다고 가정하자. 점 $P(x_0,y_0,z_0)$에서 곡면 $z=f(x,y)$에 대한 접평면의 방정식은 다음과 같다.</p>
+      $$z-z_0=f_x(x_0,y_0)(x-x_0)+f_y(x_0,y_0)(y-y_0)$$
+    </div>
+    <p>일변수의 접선 $y-y_0=f'(x_0)(x-x_0)$과 모양이 똑같아요. 기울기가 방향마다 하나씩, 두 개로 늘었을 뿐이에요.</p>
+
+    <div class="problem"><span class="tag">예제 1</span>점 $(1,1,3)$에서 타원포물면 $z=2x^2+y^2$에 대한 접평면을 구하라.</div>
+    <ol class="steps">
+      <li>$f(x,y)=2x^2+y^2$이라 하면
+        $$f_x(x,y)=4x,\qquad f_y(x,y)=2y,\qquad f_x(1,1)=4,\qquad f_y(1,1)=2$$</li>
+      <li>식 2에 의해 $(1,1,3)$에서 접평면의 방정식은
+        $$z-3=4(x-1)+2(y-1)\quad\text{즉}\quad z=4x+2y-3$$</li>
+    </ol>
+    <figure class="plot" id="fig-tplane">
+      <figcaption>곡면(파랑)과 접점에서의 접평면(주황)이에요. 슬라이더로 접점 둘레를 확대하면, 곡면이 점점 접평면과 구별되지 않을 만큼 평평해져요. 확대할 때 창의 크기가 줄어든 비율만큼 그림도 키웠기 때문에 “같은 크기로 본” 모습이에요(높이는 보기 좋게 줄였어요).</figcaption>
+    </figure>
+
+    <!-- ===================================================== -->
+    <h2 id="linear">선형근사</h2>
+    <p>함수 $z=f(x,y)$의 곡면 위의 점 $(a,b,f(a,b))$에서 $f$의 그래프에 대한 접평면의 방정식은</p>
+    $$z=f(a,b)+f_x(a,b)(x-a)+f_y(a,b)(y-b)$$
+    <p>이에요. 이 평면을 그래프로 갖는 선형함수에 이름을 붙여요.</p>
+    <div class="summary-box">
+      $$L(x,y)=f(a,b)+f_x(a,b)(x-a)+f_y(a,b)(y-b) \tag{3}$$
+      <p style="margin:0 0 .5rem">를 $(a,b)$에서 $f$의 <b>선형화</b>(linearization)라 하고, 근사식</p>
+      $$f(x,y)\approx f(a,b)+f_x(a,b)(x-a)+f_y(a,b)(y-b) \tag{4}$$
+      <p style="margin:0">를 $(a,b)$에서 $f$의 <b>선형근사</b>(linear approximation) 또는 <b>접평면 근사</b>(tangent plane approximation)라 해요.</p>
+    </div>
+    <p>예제 1이라면 $(1,1)$에서 $L(x,y)=4x+2y-3$이고, 예를 들어 $f(1.1,0.95)\approx4(1.1)+2(0.95)-3=3.3$이에요. 실제 값 $f(1.1,0.95)=2(1.21)+0.9025=3.3225$와 아주 가까워요. 접점에서 멀어질수록 근사는 나빠져요.</p>
+
+    <!-- ===================================================== -->
+    <h2 id="diff">이변수함수의 미분가능성</h2>
+    <p>일변수에서는 미분계수가 존재하면 접선이 곡선에 잘 붙어 있었어요. 이변수에서는 $f_x$, $f_y$가 존재해도 곡면이 그 점에서 찢어져 있을 수 있어요(13.2 예제 2의 $\frac{xy}{x^2+y^2}$는 $f_x(0,0)=f_y(0,0)=0$이지만 원점에서 연속도 아니에요). 그래서 접평면이 곡면을 잘 근사하는 경우를 따로 정의해요.</p>
+    <div class="def"><b>7 정의.</b> $z=f(x,y)$일 때 증분을 $\Delta z=f(a+\Delta x,b+\Delta y)-f(a,b)$라 하자. $\Delta z$를
+      $$\Delta z=f_x(a,b)\,\Delta x+f_y(a,b)\,\Delta y+\varepsilon_1\Delta x+\varepsilon_2\Delta y$$
+      의 꼴로 나타낼 수 있고, $(\Delta x,\Delta y)\to(0,0)$일 때 $\varepsilon_1\to0$, $\varepsilon_2\to0$이면 $f$는 $(a,b)$에서 <b>미분가능</b>하다고 해요.</div>
+    <p>“접평면과의 차이가 $\Delta x$, $\Delta y$보다 <b>훨씬 빨리</b> 0이 된다”는 뜻이에요. 위 그림에서 확대할수록 곡면이 평면에 붙는 것이 바로 이것이에요. 이 정의를 직접 확인하기는 번거로워서, 보통은 다음 정리를 써요.</p>
+    <div class="summary-box">
+      <p style="margin:0"><b>8 정리</b> 편도함수 $f_x$, $f_y$가 $(a,b)$ 부근에서 존재하고 $(a,b)$에서 연속이면, $f$는 $(a,b)$에서 미분가능하다.</p>
+    </div>
+
+    <div class="problem"><span class="tag">예제 2</span>$f(x,y)=xe^{xy}$이 $(1,0)$에서 미분가능함을 보이고, 이 점에서의 선형화를 구하라. 이를 이용해서 $f(1.1,-0.1)$의 근삿값을 구하라.</div>
+    <ol class="steps">
+      <li>편도함수를 구해요. $f_x$는 곱의 미분이에요.
+        $$f_x(x,y)=e^{xy}+xye^{xy},\qquad f_y(x,y)=x^2e^{xy}$$
+        $$f_x(1,0)=1,\qquad f_y(1,0)=1$$</li>
+      <li>$f_x$, $f_y$는 지수함수와 다항식의 곱과 합이라 모든 점에서 연속이에요. 정리 8에 의해 $f$는 $(1,0)$에서 미분가능해요.</li>
+      <li>$f(1,0)=1\cdot e^0=1$이므로 선형화는
+        $$L(x,y)=f(1,0)+f_x(1,0)(x-1)+f_y(1,0)(y-0)=1+1\cdot(x-1)+1\cdot y=x+y$$</li>
+      <li>선형근사로
+        $$f(1.1,-0.1)\approx L(1.1,-0.1)=1.1+(-0.1)=1$$</li>
+    </ol>
+    <p>실제 값은 $f(1.1,-0.1)=1.1e^{-0.11}\approx0.98542$라 오차는 약 $0.015$예요.</p>
+
+    <!-- ===================================================== -->
+    <h2 id="total">미분과 전미분</h2>
+    <p>미분가능한 일변수함수 $y=f(x)$에 대해 미분 $dx$를 독립변수로 정의해요. 즉 $dx$는 임의의 실수로 주어질 수 있어요. 이때 $y$의 미분은</p>
+    $$dy=f'(x)\,dx \tag{9}$$
+    <p>예요. $x$가 $dx=\Delta x$만큼 변할 때 $\Delta y$는 <b>곡선</b> $y=f(x)$의 높이 변화, $dy$는 <b>접선</b>의 높이 변화를 나타내요.</p>
+    <figure class="plot" id="fig-dy">
+      <figcaption>$y=f(x)$와 $x=a$에서의 접선이에요. $\Delta x$를 움직이면 곡선의 높이 변화 $\Delta y$(파랑)와 접선의 높이 변화 $dy$(빨강)가 나란히 보여요. $\Delta x$가 작을수록 둘의 차이가 훨씬 빨리 작아져요.</figcaption>
+    </figure>
+    <p>미분가능한 이변수함수 $z=f(x,y)$에 대해서도 미분 $dx$와 $dy$를 독립변수로 정의해요. 그러면 미분 $dz$를 다음과 같이 정의하고, 이것을 <b>전미분</b>(total differential)이라 해요. 때때로 $dz$ 대신 $df$로 써요.</p>
+    <div class="summary-box">
+      $$dz=f_x(x,y)\,dx+f_y(x,y)\,dy=\frac{\partial z}{\partial x}\,dx+\frac{\partial z}{\partial y}\,dy \tag{10}$$
+    </div>
+    <p>식 (10)에서 $dx=\Delta x=x-a$, $dy=\Delta y=y-b$로 택하면, $z$의 미분은</p>
+    $$dz=f_x(a,b)(x-a)+f_y(a,b)(y-b)$$
+    <p>이고, 미분 기호를 이용하면 선형근사식 (4)는</p>
+    $$f(x,y)\approx f(a,b)+dz$$
+    <p>가 돼요. $(x,y)$가 $(a,b)$에서 $(a+\Delta x,b+\Delta y)$까지 변할 때 <b>$dz$는 접평면의 높이 변화</b>, <b>$\Delta z$는 곡면 $z=f(x,y)$의 높이 변화</b>를 나타내요.</p>
+
+    <!-- ===================================================== -->
+    <h2 id="ex4">예제 4 · dz와 Δz</h2>
+    <div class="problem"><span class="tag">예제 4</span>(a) $z=f(x,y)=x^2+3xy-y^2$일 때 미분 $dz$를 구하라.<br>(b) $x$가 2에서 2.05로 변하고 $y$가 3에서 2.96까지 변할 때 $\Delta z$와 $dz$의 값을 비교하라.</div>
+    <h3>(a)</h3>
+    <p>정의 (10)에 따르면</p>
+    $$dz=\frac{\partial z}{\partial x}\,dx+\frac{\partial z}{\partial y}\,dy=(2x+3y)\,dx+(3x-2y)\,dy$$
+    <h3>(b)</h3>
+    <ol class="steps">
+      <li>$x=2$, $dx=\Delta x=0.05$, $y=3$, $dy=\Delta y=-0.04$로 놓으면
+        $$dz=[2(2)+3(3)](0.05)+[3(2)-2(3)](-0.04)=13(0.05)+0=0.65$$</li>
+      <li>$z$의 증분은
+        $$\Delta z=f(2.05,2.96)-f(2,3)=\left[(2.05)^2+3(2.05)(2.96)-(2.96)^2\right]-\left[2^2+3(2)(3)-3^2\right]$$
+        $$=(4.2025+18.204-8.7616)-13=13.6449-13=0.6449$$</li>
+      <li>$\Delta z\approx dz$이고 차이는 $0.0051$이에요. $dz$는 곱셈 두 번이면 되지만 $\Delta z$는 함숫값 두 개를 정확히 계산해야 해요.</li>
+    </ol>
+    <figure class="plot" id="fig-dz">
+      <figcaption>점 $(2,3)$에서 $(2+\Delta x,\,3+\Delta y)$로 옮길 때, 접평면(주황)이 올라간 높이가 $dz$(빨강), 곡면(파랑)이 올라간 높이가 $\Delta z$(초록)예요. 이동 방향은 예제처럼 $\Delta y=-0.8\,\Delta x$로 고정했어요. 이동량을 줄이면 두 막대의 차이가 거의 사라져요. 높이는 줄여서 그렸어요.</figcaption>
+    </figure>
+
+    <!-- ===================================================== -->
+    <h2 id="ex5">예제 5 · 오차 추정</h2>
+    <div class="problem"><span class="tag">예제 5</span>밑면의 반지름이 10 cm, 높이가 25 cm인 직원뿔이 있다. 측정오차는 각각 0.1 cm이다. 미분을 이용해서 원뿔의 부피를 계산할 때 최대 오차를 추정하라.</div>
+    <ol class="steps">
+      <li>밑면의 반지름이 $r$, 높이가 $h$인 원뿔의 부피는 $V=\dfrac{\pi r^2h}{3}$이므로 전미분은
+        $$dV=\frac{\partial V}{\partial r}\,dr+\frac{\partial V}{\partial h}\,dh=\frac{2\pi rh}{3}\,dr+\frac{\pi r^2}{3}\,dh$$</li>
+      <li>각 오차는 많아야 0.1 cm이므로 $|\Delta r|\le0.1$, $|\Delta h|\le0.1$. 최대 오차를 구하려면 두 항이 같은 부호로 더해지도록 $dr=dh=0.1$을 택해요. $r=10$, $h=25$를 넣으면
+        $$dV=\frac{500\pi}{3}(0.1)+\frac{100\pi}{3}(0.1)=\frac{600\pi}{3}(0.1)=20\pi\approx63\ \text{cm}^3$$</li>
+      <li>그러므로 계산한 부피의 최대 오차는 약 $63\ \text{cm}^3$예요.</li>
+    </ol>
+    <p>부피 자체는 $V=\frac{\pi\cdot100\cdot25}{3}=\frac{2500\pi}{3}\approx2618\ \text{cm}^3$라, 상대오차는 $\frac{20\pi}{2500\pi/3}=0.024$, 약 2.4%예요. 반지름 쪽 계수($\frac{500\pi}{3}$)가 높이 쪽($\frac{100\pi}{3}$)보다 5배 커서, 반지름 측정이 오차에 훨씬 크게 영향을 줘요.</p>
+
+    <!-- ===================================================== -->
+    <h2 id="three">삼변수 이상의 함수</h2>
+    <p>선형근사, 미분가능성, 미분은 이변수보다 많은 변수의 함수에서도 같은 방법으로 정의할 수 있어요. 미분가능한 함수는 정의 7과 비슷한 표현으로 정의하고, 그런 함수의 선형근사는</p>
+    <div class="summary-box">
+      $$f(x,y,z)\approx f(a,b,c)+f_x(a,b,c)(x-a)+f_y(a,b,c)(y-b)+f_z(a,b,c)(z-c)$$
+    </div>
+    <p>이고, 선형화 $L(x,y,z)$는 위 식의 우변이에요. $w=f(x,y,z)$이면 $w$의 증분은</p>
+    $$\Delta w=f(x+\Delta x,\ y+\Delta y,\ z+\Delta z)-f(x,y,z)$$
+    <p>이고, 미분 $dw$는 독립변수인 미분 $dx$, $dy$, $dz$로 다음과 같이 정의해요.</p>
+    <div class="summary-box">
+      $$dw=\frac{\partial w}{\partial x}\,dx+\frac{\partial w}{\partial y}\,dy+\frac{\partial w}{\partial z}\,dz$$
+    </div>
+    <p>예를 들어 상자의 부피 $V=xyz$를 $x=75$, $y=60$, $z=40$ (cm)에서 각각 0.2 cm 이내의 오차로 쟀다면 $dV=yz\,dx+xz\,dy+xy\,dz=(2400+3000+4500)(0.2)=1980\ \text{cm}^3$가 최대 오차의 어림값이에요.</p>
+
+    <!-- ===================================================== -->
+    <h2 id="summary">한눈에 정리</h2>
+    <div class="summary-box">
+      <ul>
+        <li>접평면: $z-z_0=f_x(x_0,y_0)(x-x_0)+f_y(x_0,y_0)(y-y_0)$. 두 단면의 접선 $T_1$, $T_2$를 품는 평면.</li>
+        <li>선형화 $L(x,y)=f(a,b)+f_x(a,b)(x-a)+f_y(a,b)(y-b)$, 선형근사 $f(x,y)\approx L(x,y)$.</li>
+        <li>미분가능: $\Delta z=f_x\Delta x+f_y\Delta y+\varepsilon_1\Delta x+\varepsilon_2\Delta y$, $\varepsilon_1,\varepsilon_2\to0$. 정리 8: $f_x$, $f_y$가 연속이면 미분가능.</li>
+        <li>전미분 $dz=f_x\,dx+f_y\,dy$는 접평면의 높이 변화, $\Delta z$는 곡면의 높이 변화. $\Delta z\approx dz$.</li>
+        <li>오차 추정: 각 측정오차를 같은 부호로 넣어 $|dV|$를 최대로.</li>
+        <li>삼변수: $dw=w_x\,dx+w_y\,dy+w_z\,dz$, 선형근사도 항이 하나 늘 뿐.</li>
+      </ul>
+    </div>
+
+    <!-- ===================================================== -->
+    <h2 id="check">자가 점검</h2>
+    <p>보기를 고르면 바로 정답과 풀이가 나와요.</p>
+    <div id="quiz"></div>
+
+    <nav class="pager" aria-label="절 이동"></nav>
+  </main>
+</div>
+
+<script src="assets/katex/katex.min.js"></script>
+<script src="assets/katex/auto-render.min.js"></script>
+<script src="assets/plot.js"></script>
+<script src="assets/space.js"></script>
+<script src="assets/quiz.js"></script>
+<script src="assets/site.js"></script>
+<script>
+(function () {
+  "use strict";
+  const { fmt, label } = Plot;
+  const V = Space.V;
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const num = (v, d) => fmt(v, d == null ? 2 : d);
+  const TAU = 2 * Math.PI;
+  const samples = (f, a, b, n) => { const out = []; for (let i = 0; i <= n; i++) out.push(f(a + (b - a) * i / n)); return out; };
+  const segHtml = (labels, aria, cls) =>
+    '<span class="seg ' + (cls || "") + '" role="group" aria-label="' + aria + '">' +
+    labels.map((l, k) => '<button type="button" data-k="' + k + '" aria-pressed="false">' + l + "</button>").join("") + "</span>";
+  function pressOne(group, btn) { group.querySelectorAll("button").forEach((b) => b.setAttribute("aria-pressed", b === btn ? "true" : "false")); }
+  function wireSeg(api, cls, fn, first) {
+    const g = api.bar.querySelector("." + cls), bs = [...g.querySelectorAll("button")];
+    bs.forEach((b, k) => b.addEventListener("click", () => { pressOne(g, b); fn(k); }));
+    pressOne(g, bs[first || 0]);
+  }
+  function path2(ctx, T, f, a, b, n, color, w, alpha, dash) {
+    ctx.save(); ctx.strokeStyle = color; ctx.lineWidth = w || 2.2; ctx.globalAlpha = alpha == null ? 1 : alpha; if (dash) ctx.setLineDash(dash); ctx.beginPath();
+    for (let i = 0; i <= n; i++) { const p = f(a + (b - a) * i / n); i ? ctx.lineTo(T.X(p[0]), T.Y(p[1])) : ctx.moveTo(T.X(p[0]), T.Y(p[1])); }
+    ctx.stroke(); ctx.restore();
+  }
+  function seg2(ctx, T, A, B, color, w, dash, alpha) {
+    ctx.save(); ctx.strokeStyle = color; ctx.lineWidth = w || 2; ctx.globalAlpha = alpha == null ? 1 : alpha; if (dash) ctx.setLineDash(dash);
+    ctx.beginPath(); ctx.moveTo(T.X(A[0]), T.Y(A[1])); ctx.lineTo(T.X(B[0]), T.Y(B[1])); ctx.stroke(); ctx.restore();
+  }
+  const PLANE = "#e49a3c";
+
+  /* ---------- 절 머리: 확대할수록 평평해지는 곡선들 ---------- */
+  (function () {
+    const cv = document.getElementById("hero"), ctx = cv.getContext("2d");
+    let W, H, k = reduce ? 0.6 : 0, start = 0;
+    function size() { const d = window.devicePixelRatio || 1; W = cv.clientWidth; H = cv.clientHeight; cv.width = W * d; cv.height = H * d; ctx.setTransform(d, 0, 0, d, 0, 0); }
+    function draw() {
+      const C = Plot.palette(); ctx.clearRect(0, 0, W, H);
+      const z = Math.pow(1 - k, 2) * 0.9 + 0.02;
+      for (let i = -3; i <= 3; i++) {
+        ctx.save(); ctx.strokeStyle = i ? C.aux : C.curve; ctx.globalAlpha = i ? 0.35 : 0.9; ctx.lineWidth = i ? 1.6 : 2.4; ctx.beginPath();
+        for (let j = 0; j <= 120; j++) {
+          const u = j / 120 * 2 - 1, x = W * (0.5 + 0.47 * u), y = H * (0.55 + 0.11 * i) - H * 1.3 * z * (u * u * 0.6 + 0.25 * u * i * 0.3);
+          j ? ctx.lineTo(x, y) : ctx.moveTo(x, y);
+        }
+        ctx.stroke(); ctx.restore();
+      }
+      Plot.dot(ctx, W * 0.5, H * 0.55, 5, C.curve, C.surface);
+    }
+    function tick(now) { if (!start) start = now; const s = ((now - start) / 6000) % 1; k = s < 0.8 ? s / 0.8 : 1 - (s - 0.8) / 0.2; draw(); requestAnimationFrame(tick); }
+    size(); reduce ? draw() : requestAnimationFrame(tick);
+    if ("ResizeObserver" in window) new ResizeObserver(() => { size(); draw(); }).observe(cv);
+  })();
+
+  /* ---------- 예제 1, 2: 접평면과 확대 ---------- */
+  (function () {
+    const PRE = [
+      { name: "예제 1 · z = 2x² + y², (1, 1)", f: (x, y) => 2 * x * x + y * y, a: 1, b: 1, fx: 4, fy: 2, zs: 0.28, L: "z = 4x + 2y − 3" },
+      { name: "예제 2 · z = xe^{xy}, (1, 0)".replace("e^{xy}", "e<sup>xy</sup>"), f: (x, y) => x * Math.exp(x * y), a: 1, b: 0, fx: 1, fy: 1, zs: 0.6, L: "z = x + y" },
+    ];
+    let cur = PRE[0];
+    const wOf = (t) => 0.8 * Math.pow(0.02 / 0.8, t);
+    const api = Space.mount(document.getElementById("fig-tplane"), {
+      range: 1.7, center: [0, 0, 0], height: 420, axes: false, view: { az: 32, el: 22 },
+      t: { min: 0, max: 1, value: 0, label: "확대", duration: 7 },
+      alt: "곡면과 접평면, 확대하면 평평해지는 모습",
+      controls: segHtml(PRE.map((p) => p.name), "함수 고르기", "tp-p"),
+      draw(S, C, api) {
+        const w = wOf(api.t), c = cur.f(cur.a, cur.b), zs = cur.zs;
+        const surf = { f: (u, v) => [u, v, zs * (cur.f(cur.a + w * u, cur.b + w * v) - c) / w], u: [-1, 1], v: [-1, 1], n: 22, color: "--aux", alpha: .8 };
+        const pl = { f: (u, v) => [u, v, zs * (cur.fx * u + cur.fy * v)], u: [-1, 1], v: [-1, 1], n: 22, color: PLANE, alpha: .6, lineAlpha: .12 };
+        S.mesh([surf, pl]);
+        S.point([0, 0, 0], { color: "--curve", r: 5.5 });
+      },
+      readout: (api) => {
+        const w = wOf(api.t), c = cur.f(cur.a, cur.b);
+        let gap = 0;
+        for (let i = 0; i <= 20; i++) for (let j = 0; j <= 20; j++) {
+          const u = -1 + i / 10, v = -1 + j / 10, d = Math.abs(cur.f(cur.a + w * u, cur.b + w * v) - (c + cur.fx * w * u + cur.fy * w * v));
+          gap = Math.max(gap, d);
+        }
+        return "접평면 " + cur.L + " · 보는 창: x ∈ [" + num(cur.a - w, 3) + ", " + num(cur.a + w, 3) + "], y ∈ [" + num(cur.b - w, 3) + ", " + num(cur.b + w, 3) + "]" +
+          "<br>창 안에서 곡면과 접평면의 최대 높이 차 <b>" + fmt(gap, 5) + "</b> · 창 크기에 대한 비율 <b>" + fmt(gap / w, 4) + "</b> → 0";
+      },
+    });
+    wireSeg(api, "tp-p", (k) => { cur = PRE[k]; api.redraw(); });
+  })();
+
+  /* ---------- 일변수: dy와 Δy ---------- */
+  (function () {
+    const f = (x) => 0.35 * x * x + 0.6, fp = (x) => 0.7 * x, a = 1;
+    const p = {
+      curve: false, x: () => 0, y: () => 0, grid: 0, maxWidth: "560px", height: 320, alt: "dy와 Δy",
+      view: { x: [-0.4, 4], y: [-0.5, 5.5] }, ticks: { x: [{ v: 1, label: "a" }], y: [] },
+      over(ctx, T, dx, C) {
+        path2(ctx, T, (x) => [x, f(x)], -0.4, 3.8, 200, C.aux, 2.4);
+        path2(ctx, T, (x) => [x, f(a) + fp(a) * (x - a)], -0.4, 4, 2, C.curve, 2, .9);
+        const x1 = a + dx, y0 = f(a), yT = y0 + fp(a) * dx, yC = f(x1);
+        seg2(ctx, T, [a, y0], [x1 + 0.35, y0], C.muted, 1.2, [3, 3]);
+        seg2(ctx, T, [a, 0], [a, y0], C.muted, 1, [3, 4], .7); seg2(ctx, T, [x1, 0], [x1, yC], C.muted, 1, [3, 4], .7);
+        seg2(ctx, T, [x1 + 0.12, y0], [x1 + 0.12, yT], C.curve, 3.2);
+        seg2(ctx, T, [x1 + 0.28, y0], [x1 + 0.28, yC], C.aux, 3.2);
+        label(ctx, "dy", T.X(x1 + 0.12) - 6, T.Y((y0 + yT) / 2), { size: 13, italic: true, color: C.curve, align: "right", halo: C.surface });
+        label(ctx, "Δy", T.X(x1 + 0.28) + 6, T.Y((y0 + yC) / 2), { size: 13, italic: true, color: C.aux, halo: C.surface });
+        label(ctx, "dx = Δx", T.X(a + dx / 2), T.Y(y0) + 14, { size: 12, color: C.muted, align: "center", halo: C.surface });
+        Plot.dot(ctx, T.X(a), T.Y(y0), 5, C.curve, C.surface);
+        label(ctx, "y = f(x)", T.X(3.5), T.Y(f(3.5)) - 12, { size: 13, color: C.aux, align: "right", halo: C.surface });
+        label(ctx, "접선", T.X(3.75), T.Y(f(a) + fp(a) * 2.75) + 14, { size: 13, color: C.curve, align: "right", halo: C.surface });
+      },
+    };
+    Plot.mount(document.getElementById("fig-dy"), {
+      t: { min: 0.05, max: 2.6, value: 1.8, label: "Δx" }, duration: 6, panels: [p],
+      readout: (dx) => { const dy = fp(a) * dx, Dy = f(a + dx) - f(a); return "Δx = <b>" + num(dx) + "</b> · dy = f′(a)dx = <b>" + num(dy, 3) + "</b> · Δy = <b>" + num(Dy, 3) + "</b> · 차이 Δy − dy = " + num(Dy - dy, 4); },
+    });
+  })();
+
+  /* ---------- 예제 4: dz와 Δz ---------- */
+  (function () {
+    const f = (x, y) => x * x + 3 * x * y - y * y, a = 2, b = 3, c = f(a, b), fx = 13, fy = 0;
+    const zs = 0.13, Z = (z) => (z - c) * zs, FL = -1.5;
+    const sOf = (t) => t;
+    const api = Space.mount(document.getElementById("fig-dz"), {
+      range: 2.35, center: [2.5, 2.6, 0.5], height: 460, axes: false, view: { az: -55, el: 24 },
+      t: { min: 0, max: 1, value: 0.75, label: "이동량", duration: 6 },
+      alt: "dz와 Δz의 비교",
+      controls: segHtml(["예제 4 값 (Δx = 0.05)"], "예제 값", "dz-e"),
+      draw(S, C, api) {
+        const s = sOf(api.t), dx = s, dy = -0.8 * s, x1 = a + dx, y1 = b + dy;
+        const surf = { f: (u, v) => [u, v, Z(f(u, v))], u: [1.6, 3.3], v: [1.8, 3.5], n: 18, color: "--aux", alpha: .72 };
+        const pl = { f: (u, v) => [u, v, Z(c + fx * (u - a) + fy * (v - b))], u: [1.6, 3.3], v: [1.8, 3.5], n: 18, color: PLANE, alpha: .5, lineAlpha: .1 };
+        // 바닥
+        S.poly([[1.6, 1.8, FL], [3.3, 1.8, FL], [3.3, 3.5, FL], [1.6, 3.5, FL]], { fill: "--axis", alpha: .08, stroke: "--axis", strokeAlpha: .4 });
+        S.line([a, b, FL], [x1, b, FL], { color: "--muted", width: 1.4 }); S.line([x1, b, FL], [x1, y1, FL], { color: "--muted", width: 1.4 });
+        S.text([(a + x1) / 2, b, FL], "Δx", { size: 12, color: "--muted", dx: -8, dy: 14 });
+        S.text([x1, (b + y1) / 2, FL], "Δy", { size: 12, color: "--muted", dx: 8, dy: 10 });
+        const zT = Z(c + fx * dx + fy * dy), zC = Z(f(x1, y1));
+        S.mesh([surf, pl], [
+          { pts: [[a, b, FL], [a, b, 0]], color: "--muted", width: 1, dash: [3, 4], bias: 0 },
+          { pts: [[x1, y1, FL], [x1, y1, Math.max(zT, zC)]], color: "--muted", width: 1, dash: [3, 4], bias: 0 },
+          { pts: [[a, b, 0], [x1, y1, 0]], color: "--muted", width: 1.2, dash: [3, 3], bias: .2 },
+        ]);
+        const off = V.mul(V.unit([1, 1, 0]), 0.06);
+        S.line(V.add([x1, y1, 0], V.mul(off, -1)), V.add([x1, y1, zT], V.mul(off, -1)), { color: "--curve", width: 4 });
+        S.line(V.add([x1, y1, 0], off), V.add([x1, y1, zC], off), { color: "--ok", width: 4 });
+        S.text(V.add([x1, y1, zT / 2], V.mul(off, -1)), "dz", { size: 14, bold: true, color: "--curve", dx: -24, dy: 0, math: true, italic: true });
+        S.text(V.add([x1, y1, zC / 2], off), "Δz", { size: 14, bold: true, color: "--ok", dx: 8, dy: 0, italic: true });
+        S.point([a, b, 0], { color: "--ink", r: 5, label: "(2, 3, 13)", dx: -70, dy: -10, size: 12 });
+        S.point([x1, y1, zC], { color: "--aux", r: 4 });
+        S.point([x1, y1, zT], { color: PLANE, r: 4 });
+      },
+      readout: (api) => {
+        const s = sOf(api.t), dx = s, dy = -0.8 * s, dz = fx * dx + fy * dy, Dz = f(a + dx, b + dy) - c;
+        return "Δx = <b>" + num(dx, 3) + "</b>, Δy = <b>" + num(dy, 3) + "</b> · dz = 13Δx + 0·Δy = <b>" + num(dz, 4) + "</b> · Δz = <b>" + num(Dz, 4) + "</b> · 차이 " + num(Dz - dz, 4) + " (Δx² + 3ΔxΔy − Δy² 과 같음)";
+      },
+    });
+    const btn = api.bar.querySelector(".dz-e button");
+    btn.addEventListener("click", () => api.setT(0.05));
+  })();
+
+  /* ---------- 자가 점검 ---------- */
+  (function () {
+    const R = String.raw;
+    Quiz.mount(document.getElementById("quiz"), [
+      {
+        q: R`곡면 $z=x^2+y^2$ 위의 점 $(1,2,5)$에서의 접평면은?`,
+        choices: [R`$z=2x+4y-5$`, R`$z=2x+4y+5$`, R`$z=x+2y$`, R`$z=2x+4y-10$`],
+        answer: 0,
+        explain: R`<p>$f_x=2x=2$, $f_y=2y=4$. $z-5=2(x-1)+4(y-2)$, 정리하면 $z=2x+4y-5$예요.</p>`,
+      },
+      {
+        q: R`$f(x,y)=\sqrt{x+y}$의 $(2,2)$에서의 선형화는?`,
+        choices: [R`$L=2+\frac14(x-2)+\frac14(y-2)$`, R`$L=2+\frac12(x-2)+\frac12(y-2)$`, R`$L=\frac14x+\frac14y$`, R`$L=2+4(x-2)+4(y-2)$`],
+        answer: 0,
+        explain: R`<p>$f(2,2)=2$, $f_x=f_y=\frac{1}{2\sqrt{x+y}}=\frac14$. 정리하면 $L=1+\frac14x+\frac14y$와 같아요.</p>`,
+      },
+      {
+        q: R`위 문제의 선형화로 $\sqrt{4.2}$를 어림하면? (즉 $f(2.1,2.1)$)`,
+        choices: [R`$2.05$`, R`$2.1$`, R`$2.025$`, R`$2.01$`],
+        answer: 0,
+        explain: R`<p>$L(2.1,2.1)=2+\frac14(0.1)+\frac14(0.1)=2.05$. 실제 $\sqrt{4.2}\approx2.0494$예요.</p>`,
+      },
+      {
+        q: R`정리 8이 말하는 미분가능의 충분조건은?`,
+        choices: [R`$f$가 $(a,b)$에서 연속`, R`$f_x(a,b)$, $f_y(a,b)$가 존재`, R`$f_x$, $f_y$가 $(a,b)$ 부근에서 존재하고 $(a,b)$에서 연속`, R`$f_{xy}=f_{yx}$`],
+        answer: 2,
+        explain: R`<p>편미분계수가 존재하는 것만으로는 부족해요(13.2 예제 2의 함수는 원점에서 $f_x=f_y=0$인데 불연속). 편도함수가 연속이어야 해요.</p>`,
+      },
+      {
+        q: R`$z=x^2y$의 전미분 $dz$는?`,
+        choices: [R`$2xy\,dx+x^2\,dy$`, R`$2x\,dx+dy$`, R`$2xy\,dx$`, R`$x^2\,dx+2xy\,dy$`],
+        answer: 0,
+        explain: R`<p>$dz=z_x\,dx+z_y\,dy$, $z_x=2xy$, $z_y=x^2$이에요.</p>`,
+      },
+      {
+        q: R`$dz$와 $\Delta z$의 기하학적 의미로 옳은 것은?`,
+        choices: [R`$dz$: 곡면의 높이 변화, $\Delta z$: 접평면의 높이 변화`, R`$dz$: 접평면의 높이 변화, $\Delta z$: 곡면의 높이 변화`, R`둘 다 접평면의 높이 변화`, R`둘 다 곡면의 높이 변화`],
+        answer: 1,
+        explain: R`<p>$dz=f_x\,dx+f_y\,dy$는 선형(접평면)으로 계산한 변화, $\Delta z=f(a+\Delta x,b+\Delta y)-f(a,b)$는 실제 곡면의 변화예요.</p>`,
+      },
+      {
+        q: R`원기둥 $V=\pi r^2h$에서 $r=3$, $h=10$, 측정오차가 각각 $0.1$일 때 $dV$로 추정한 최대 오차는?`,
+        choices: [R`$6.9\pi$`, R`$0.9\pi$`, R`$6\pi$`, R`$69\pi$`],
+        answer: 0,
+        explain: R`<p>$dV=2\pi rh\,dr+\pi r^2\,dh=60\pi(0.1)+9\pi(0.1)=6.9\pi\approx21.7$이에요.</p>`,
+      },
+      {
+        q: R`$w=xyz$의 $(1,2,3)$에서의 선형근사로 $f(1.1,2,3)$을 어림하면?`,
+        choices: [R`$6.6$`, R`$6.1$`, R`$6.2$`, R`$7.2$`],
+        answer: 0,
+        explain: R`<p>$f(1,2,3)=6$, $f_x=yz=6$이라 $6+6(0.1)=6.6$. 이 경우 $w$가 $x$에 일차라 실제 값도 $6.6$이에요.</p>`,
+      },
+    ]);
+  })();
+})();
+</script>
+</body>
+</html>

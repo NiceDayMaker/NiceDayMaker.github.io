@@ -1,0 +1,383 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>13.2 다변수함수의 극한과 연속</title>
+<script>try{var t=localStorage.getItem("theme");if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
+<link rel="stylesheet" href="assets/katex/katex.min.css">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body data-section="13.2">
+<div class="shell">
+  <nav class="side" aria-label="이 절의 목차">
+    <a class="home" href="index.html">전체 목차로</a>
+    <ol>
+      <li><a href="#limit">극한의 정의</a></li>
+      <li><a href="#path">경로 판정법</a></li>
+      <li><a href="#ex1">예제 1, 2</a></li>
+      <li><a href="#ex3">예제 3 · 포물선 경로</a></li>
+      <li><a href="#ex5">예제 5 · 대입으로 구하기</a></li>
+      <li><a href="#cont">연속</a></li>
+      <li><a href="#ex7">예제 7, 8</a></li>
+      <li><a href="#ex9">예제 6, 9 · 극좌표</a></li>
+      <li><a href="#three">삼변수 이상의 함수</a></li>
+      <li><a href="#summary">한눈에 정리</a></li>
+      <li><a href="#check">자가 점검</a></li>
+    </ol>
+  </nav>
+
+  <main>
+    <header class="hero">
+      <p class="chapter">13장 편미분</p>
+      <h1><span class="num">13.2</span>다변수함수의 극한과 연속</h1>
+      <canvas id="hero" aria-hidden="true"></canvas>
+    </header>
+
+    <p class="lede">일변수에서 $x\to a$는 왼쪽과 오른쪽, 두 방향뿐이었어요. 평면에서는 $(x,y)$가 $(a,b)$로 다가가는 길이 <b>무수히 많아요.</b> 직선으로, 포물선으로, 빙글빙글 돌면서도 갈 수 있죠. 그래서 극한이 존재하려면 <b>어느 길로 다가가도 같은 값</b>에 가까워져야 해요. 이 한 문장이 이 절의 전부예요.</p>
+
+    <!-- ===================================================== -->
+    <h2 id="limit">극한의 정의</h2>
+    <div class="summary-box">
+      <p style="margin:0 0 .3rem"><b>1 정의</b> $(x,y)$가 $(a,b)$에 한없이 접근할 때 $f(x,y)$의 값이 $L$에 한없이 가까워지면, $(x,y)$가 $(a,b)$에 접근할 때 $f(x,y)$의 <b>극한</b>은 $L$이라 하고 다음과 같이 써요.</p>
+      $$\lim_{(x,y)\to(a,b)}f(x,y)=L$$
+      <p style="margin:0">또는 “$(x,y)\to(a,b)$일 때 $f(x,y)\to L$”이라고도 써요.</p>
+    </div>
+    <p>“한없이 접근”은 정의역 안의 점이 $(a,b)$와의 거리 $\sqrt{(x-a)^2+(y-b)^2}$를 0으로 줄여 가는 것을 말해요($(a,b)$ 자신은 제외). 이때 다가가는 <b>방향이나 모양에 대한 제한이 없다</b>는 게 핵심이에요. 정확한 형태로 쓰면, 모든 $\varepsilon>0$에 대해 어떤 $\delta>0$이 있어서</p>
+    $$(x,y)\in D,\quad0\lt\sqrt{(x-a)^2+(y-b)^2}\lt\delta\quad\Longrightarrow\quad|f(x,y)-L|\lt\varepsilon$$
+    <p>이 성립한다는 뜻이에요. $(a,b)$ 둘레의 작은 원판 안에서는 함숫값이 전부 $L$ 근처에 모여 있어야 해요.</p>
+
+    <!-- ===================================================== -->
+    <h2 id="path">경로 판정법</h2>
+    <p>극한이 $L$이면 <b>모든</b> 경로를 따라 $L$에 가까워져야 해요. 이걸 뒤집으면 극한이 없다는 것을 보이는 도구가 돼요.</p>
+    <div class="summary-box">
+      <p style="margin:0">곡선 $C_1$을 따라 $(x,y)\to(a,b)$일 때 $f(x,y)\to L_1$이고, 곡선 $C_2$를 따라 $(x,y)\to(a,b)$일 때 $f(x,y)\to L_2$인데 $L_1\ne L_2$이면, $\displaystyle\lim_{(x,y)\to(a,b)}f(x,y)$는 <b>존재하지 않아요.</b></p>
+    </div>
+    <div class="exam"><strong>주의.</strong> 이 판정법은 “존재하지 않음”만 보여 줄 수 있어요. 몇 개의 경로에서 같은 값이 나와도 <b>극한이 존재한다는 증명은 아니에요.</b> 경로는 무수히 많으니까요. 예제 3이 바로 그런 경우예요.</div>
+
+    <!-- ===================================================== -->
+    <h2 id="ex1">예제 1, 2</h2>
+    <div class="problem"><span class="tag">예제 1</span>$\displaystyle\lim_{(x,y)\to(0,0)}\frac{x^2-y^2}{x^2+y^2}$이 존재하지 않음을 보여라.</div>
+    <p>$f(x,y)=\dfrac{x^2-y^2}{x^2+y^2}$이라 해요.</p>
+    <ol class="steps">
+      <li>$x$축($y=0$)을 따라 접근하면, $x\ne0$에서 $f(x,0)=\dfrac{x^2}{x^2}=1$이에요. 그래서 $x$축을 따라 $(x,y)\to(0,0)$이면 $f(x,y)\to1$.</li>
+      <li>$y$축($x=0$)을 따라 접근하면, $y\ne0$에서 $f(0,y)=\dfrac{-y^2}{y^2}=-1$이에요. 그래서 $y$축을 따라 $(x,y)\to(0,0)$이면 $f(x,y)\to-1$.</li>
+      <li>두 경로에서 극한이 $1\ne-1$로 달라서, 주어진 극한은 존재하지 않아요.</li>
+    </ol>
+
+    <div class="problem"><span class="tag">예제 2</span>$f(x,y)=\dfrac{xy}{x^2+y^2}$일 때 $\displaystyle\lim_{(x,y)\to(0,0)}f(x,y)$는 존재하는가?</div>
+    <ol class="steps">
+      <li>$x$축을 따라: $f(x,0)=\dfrac{0}{x^2}=0$이라 $f\to0$.</li>
+      <li>$y$축을 따라: $f(0,y)=\dfrac{0}{y^2}=0$이라 $f\to0$.</li>
+      <li>두 축에서 같은 값이 나왔지만 아직 결론을 낼 수 없어요. 직선 $y=mx$를 따라 가면($x\ne0$)
+        $$f(x,mx)=\frac{x\cdot mx}{x^2+m^2x^2}=\frac{m}{1+m^2}$$
+        로 $x$와 무관한 상수예요. 예를 들어 $y=x$($m=1$)를 따라가면 $f\to\frac12$.</li>
+      <li>$x$축에서는 $0$, 직선 $y=x$에서는 $\frac12$라 극한은 존재하지 않아요.</li>
+    </ol>
+    <p>$\dfrac{m}{1+m^2}$은 기울기 $m$마다 다른 값이라, 원점으로 들어오는 <b>방향마다 다른 높이</b>로 다가가요. 그래프를 보면 원점에서 곡면이 찢어진 모양이에요.</p>
+
+    <!-- ===================================================== -->
+    <h2 id="ex3">예제 3 · 포물선 경로</h2>
+    <div class="problem"><span class="tag">예제 3</span>$f(x,y)=\dfrac{xy^2}{x^2+y^4}$일 때 $\displaystyle\lim_{(x,y)\to(0,0)}f(x,y)$는 존재하는가?</div>
+    <ol class="steps">
+      <li>원점을 지나는 직선 $y=mx$를 따라 가면($x\ne0$)
+        $$f(x,mx)=\frac{x(mx)^2}{x^2+(mx)^4}=\frac{m^2x}{1+m^4x^2}\to0\quad(x\to0)$$
+        $x$축($m=0$), $y$축($x=0$이면 $f=0$)을 따라가도 $0$이에요. <b>모든 직선에서 0</b>이에요.</li>
+      <li>그런데 포물선 $x=y^2$을 따라 가면($y\ne0$)
+        $$f(y^2,y)=\frac{y^2\cdot y^2}{(y^2)^2+y^4}=\frac{y^4}{2y^4}=\frac12$$</li>
+      <li>직선에서는 $0$, 포물선에서는 $\frac12$라 극한은 존재하지 않아요.</li>
+    </ol>
+    <p>모든 직선 방향에서 같은 값이 나와도 극한이 없을 수 있다는 예예요. 분모 $x^2+y^4$에서 $x$와 $y^2$이 같은 “차수”로 움직이니, $x=y^2$처럼 둘이 같은 크기로 줄어드는 경로가 다른 값을 줄 거라고 짐작할 수 있어요.</p>
+    <figure class="plot" id="fig-paths">
+      <figcaption>함수의 그래프 위에 경로를 그렸어요. 재생하면 점이 고른 경로를 따라 원점으로 다가가요. 예제 1, 2는 원점에서 곡면이 찢어져 있어서 경로마다 다른 높이로 들어가고, 예제 3은 직선 경로는 높이 0, 포물선 $x=y^2$은 높이 $\frac12$의 능선을 타고 들어가요.</figcaption>
+    </figure>
+
+    <!-- ===================================================== -->
+    <h2 id="ex5">예제 5 · 대입으로 구하기</h2>
+    <div class="problem"><span class="tag">예제 5</span>$\displaystyle\lim_{(x,y)\to(1,2)}\left(x^2y^3-x^2y^2+3x+2y\right)$를 계산하라.</div>
+    <ol class="steps">
+      <li>$f(x,y)=x^2y^3-x^2y^2+3x+2y$는 다항함수라 모든 점에서 연속이에요(아래 연속 참고).</li>
+      <li>연속이면 극한은 함숫값과 같으니 그대로 대입해요.
+        $$\lim_{(x,y)\to(1,2)}\left(x^2y^3-x^2y^2+3x+2y\right)=1^2\cdot2^3-1^2\cdot2^2+3\cdot1+2\cdot2=8-4+3+4=11$$</li>
+    </ol>
+
+    <!-- ===================================================== -->
+    <h2 id="cont">연속</h2>
+    <div class="summary-box">
+      <p style="margin:0 0 .3rem"><b>4 정의</b> 이변수함수 $f$에 대해</p>
+      $$\lim_{(x,y)\to(a,b)}f(x,y)=f(a,b)$$
+      <p style="margin:0">가 성립하면 $f$는 $(a,b)$에서 <b>연속</b>이라고 해요. $D$에 속하는 모든 점 $(a,b)$에서 $f$가 연속이면 $f$는 $D$에서 연속이라고 해요.</p>
+    </div>
+    <p>일변수와 같이 세 가지가 모두 필요해요. ① $f(a,b)$가 정의되고, ② 극한이 존재하고, ③ 둘이 같아야 해요. 직관적으로는 점이 조금 움직일 때 함숫값도 조금만 변한다는 뜻이고, 그래프에 구멍이나 찢어진 곳이 없다는 뜻이에요.</p>
+    <ul>
+      <li>연속함수의 합, 차, 곱, 몫(분모 $\ne0$)은 그 정의역에서 연속이에요.</li>
+      <li><b>다항함수</b>는 $cx^my^n$($c$는 상수, $m$, $n$은 음이 아닌 정수) 꼴의 항들의 합이에요. $f(x,y)=x$, $g(x,y)=y$, $h(x,y)=c$가 연속이고, 모든 다항함수는 이것들을 곱하고 더해서 얻으므로 $\mathbb R^2$ 전체에서 연속이에요.</li>
+      <li><b>유리함수</b>(다항함수의 몫)는 연속함수의 몫이라 정의역에서 연속이에요.</li>
+    </ul>
+    <p>예를 들어 $f(x,y)=x^4+5x^3y^2+6xy^4-7y+6$은 다항함수, $g(x,y)=\dfrac{2xy+1}{x^2+y^2}$은 유리함수예요. 이런 함수의 극한은 <b>정의역 안의 점</b>이라면 예제 5처럼 대입하면 끝이에요. 조심할 곳은 분모가 0이 되는 점뿐이에요.</p>
+
+    <!-- ===================================================== -->
+    <h2 id="ex7">예제 7, 8</h2>
+    <div class="problem"><span class="tag">예제 7</span>함수 $f(x,y)=\dfrac{x^2-y^2}{x^2+y^2}$은 어디에서 연속인가?</div>
+    <ol class="steps">
+      <li>$f$는 $(0,0)$에서 정의되지 않으므로 $(0,0)$에서 불연속이에요.</li>
+      <li>$f$는 유리함수이므로 정의역 $D=\{(x,y)\mid(x,y)\ne(0,0)\}$에서 연속이에요.</li>
+    </ol>
+
+    <div class="problem"><span class="tag">예제 8</span>다음 함수 $g$는 $(0,0)$에서 정의되지만, 여전히 불연속임을 보여라.
+      $$g(x,y)=\begin{cases}\dfrac{x^2-y^2}{x^2+y^2}, & (x,y)\ne(0,0)\\[2mm]0, & (x,y)=(0,0)\end{cases}$$</div>
+    <ol class="steps">
+      <li>$g(0,0)=0$으로 정의돼 있어요.</li>
+      <li>그런데 예제 1에 의해 $\displaystyle\lim_{(x,y)\to(0,0)}g(x,y)$가 존재하지 않아요.</li>
+      <li>극한이 없으니 $(0,0)$에서 불연속이에요. 원점의 값을 어떻게 정해도 이 찢어짐은 메울 수 없어요.</li>
+    </ol>
+
+    <!-- ===================================================== -->
+    <h2 id="ex9">예제 6, 9 · 극좌표로 극한 구하기</h2>
+    <div class="problem"><span class="tag">예제 6</span>$\displaystyle\lim_{(x,y)\to(0,0)}\frac{3x^2y}{x^2+y^2}$가 존재하면 구하라.</div>
+    <div class="problem"><span class="tag">예제 9</span>다음 함수 $f$는 점 $(0,0)$에서 연속인가?
+      $$f(x,y)=\begin{cases}\dfrac{3x^2y}{x^2+y^2}, & (x,y)\ne(0,0)\\[2mm]0, & (x,y)=(0,0)\end{cases}$$</div>
+    <p>두 문제는 같은 극한을 써요. 먼저 경로 몇 개를 시험하면 $x$축, $y$축, $y=mx$ 모두에서 $0$으로 가요. 극한이 0일 거라고 짐작하고, 이번엔 <b>모든 경로를 한꺼번에</b> 다루는 방법으로 확인해요.</p>
+    <h3>(i) 점 $(0,0)$에서 극한값</h3>
+    <ol class="steps">
+      <li>극좌표 $x=r\cos\theta$, $y=r\sin\theta$로 바꾸면 $x^2+y^2=r^2$이고, $(x,y)\to(0,0)$은 <b>$\theta$와 상관없이 $r\to0^+$</b>이 돼요.</li>
+      <li>대입하면
+        $$\frac{3x^2y}{x^2+y^2}=\frac{3r^2\cos^2\theta\cdot r\sin\theta}{r^2}=3r\cos^2\theta\sin\theta$$</li>
+      <li>$|\cos^2\theta\sin\theta|\le1$이므로
+        $$0\le\left|\frac{3x^2y}{x^2+y^2}\right|=3r\,|\cos^2\theta\sin\theta|\le3r$$</li>
+      <li>$r\to0^+$이면 $3r\to0$이라 압축정리에 의해
+        $$\lim_{(x,y)\to(0,0)}\frac{3x^2y}{x^2+y^2}=0$$</li>
+    </ol>
+    <h3>(ii) 점 $(0,0)$에서 함숫값</h3>
+    <p>$f(0,0)=0$으로 정의돼 있어요. 극한값과 함숫값이 같으므로 $f$는 $(0,0)$에서 <b>연속</b>이에요. $(0,0)$이 아닌 점에서는 유리함수라 연속이니, $f$는 $\mathbb R^2$ 전체에서 연속이에요.</p>
+    <div class="exam"><strong>요령.</strong> 극좌표로 바꿨을 때 <b>$r$에만 의존하는 0으로 가는 식으로 위에서 누를 수 있으면</b> 극한이 존재해요. 반대로 $\theta$만 남고 $r$이 사라지면(예제 1: $\cos2\theta$, 예제 2: $\frac12\sin2\theta$) 방향마다 값이 달라서 극한이 없어요.</div>
+    <figure class="plot" id="fig-cont">
+      <figcaption>원점을 중심으로 반지름 $r$인 원(빨강)을 곡면 위에 그렸어요. 그 원 위의 함숫값 범위가 아래에 나와요. $r$을 줄여 보세요. 예제 9는 범위가 0으로 오그라들어 원점의 값 0에 이어지고, 예제 8은 아무리 작은 원에서도 범위가 $[-1,1]$ 그대로라 극한이 없어요.</figcaption>
+    </figure>
+
+    <!-- ===================================================== -->
+    <h2 id="three">삼변수 이상의 함수</h2>
+    <p>지금까지의 내용은 변수가 세 개 이상이어도 그대로 성립해요.</p>
+    <ol class="steps">
+      <li>$(x,y,z)$가 $(a,b,c)$에 접근할 때 $f(x,y,z)\to L$이면, $f(x,y,z)$의 극한은 $L$이라 하고
+        $$\lim_{(x,y,z)\to(a,b,c)}f(x,y,z)=L$$
+        로 써요. 이번엔 공간의 점이 거리 $\sqrt{(x-a)^2+(y-b)^2+(z-c)^2}\to0$으로 다가가요.</li>
+      <li>삼변수함수 $f$가
+        $$\lim_{(x,y,z)\to(a,b,c)}f(x,y,z)=f(a,b,c)$$
+        를 만족하면 $f$는 $(a,b,c)$에서 <b>연속</b>이에요.</li>
+    </ol>
+    <p>예를 들어 $f(x,y,z)=\dfrac{1}{x^2+y^2+z^2-1}$은 유리함수라 정의역 $\{(x,y,z)\mid x^2+y^2+z^2\ne1\}$에서 연속이에요. 반지름 1인 구면 위에서만 불연속이에요.</p>
+
+    <!-- ===================================================== -->
+    <h2 id="summary">한눈에 정리</h2>
+    <div class="summary-box">
+      <ul>
+        <li>$\displaystyle\lim_{(x,y)\to(a,b)}f(x,y)=L$: <b>어떤 경로로</b> 다가가도 $f\to L$.</li>
+        <li>경로 판정법: 두 경로에서 극한이 다르면 존재하지 않음. 같은 값이 나와도 존재 증명은 아님(예제 3: 직선은 0, $x=y^2$은 $\frac12$).</li>
+        <li>자주 쓰는 경로: $x$축, $y$축, $y=mx$, $x=y^2$ 같은 포물선.</li>
+        <li>존재 증명: 극좌표로 바꿔 $|f-L|\le g(r)\to0$ 꼴로 누르기(압축정리).</li>
+        <li>연속: $\lim f=f(a,b)$. 다항함수는 어디서나, 유리함수는 정의역에서 연속이라 대입으로 극한 계산.</li>
+        <li>원점에서 값을 따로 정해도 극한이 없으면 불연속(예제 8), 극한과 같으면 연속(예제 9).</li>
+      </ul>
+    </div>
+
+    <!-- ===================================================== -->
+    <h2 id="check">자가 점검</h2>
+    <p>보기를 고르면 바로 정답과 풀이가 나와요.</p>
+    <div id="quiz"></div>
+
+    <nav class="pager" aria-label="절 이동"></nav>
+  </main>
+</div>
+
+<script src="assets/katex/katex.min.js"></script>
+<script src="assets/katex/auto-render.min.js"></script>
+<script src="assets/plot.js"></script>
+<script src="assets/space.js"></script>
+<script src="assets/quiz.js"></script>
+<script src="assets/site.js"></script>
+<script>
+(function () {
+  "use strict";
+  const { fmt } = Plot;
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const num = (v, d) => fmt(v, d == null ? 2 : d);
+  const TAU = 2 * Math.PI;
+  const samples = (f, a, b, n) => { const out = []; for (let i = 0; i <= n; i++) out.push(f(a + (b - a) * i / n)); return out; };
+  const segHtml = (labels, aria, cls) =>
+    '<span class="seg ' + (cls || "") + '" role="group" aria-label="' + aria + '">' +
+    labels.map((l, k) => '<button type="button" data-k="' + k + '" aria-pressed="false">' + l + "</button>").join("") + "</span>";
+  function pressOne(group, btn) { group.querySelectorAll("button").forEach((b) => b.setAttribute("aria-pressed", b === btn ? "true" : "false")); }
+  function wireSeg(api, cls, fn, first) {
+    const g = api.bar.querySelector("." + cls), bs = [...g.querySelectorAll("button")];
+    bs.forEach((b, k) => b.addEventListener("click", () => { pressOne(g, b); fn(k); }));
+    pressOne(g, bs[first || 0]);
+  }
+
+  /* ---------- 절 머리: 여러 길로 한 점에 다가가기 ---------- */
+  (function () {
+    const cv = document.getElementById("hero"), ctx = cv.getContext("2d");
+    let W, H, k = reduce ? 0.85 : 0, start = 0;
+    function size() { const d = window.devicePixelRatio || 1; W = cv.clientWidth; H = cv.clientHeight; cv.width = W * d; cv.height = H * d; ctx.setTransform(d, 0, 0, d, 0, 0); }
+    function draw() {
+      const C = Plot.palette(); ctx.clearRect(0, 0, W, H);
+      const cx = W * 0.5, cy = H * 0.5, R = Math.min(W * 0.45, H * 1.1);
+      const paths = [
+        (s) => [cx - R * s, cy],
+        (s) => [cx + R * s, cy - H * 0.45 * s * s * 2],
+        (s) => [cx + R * s * Math.cos(6 * s), cy + H * 0.42 * s * Math.sin(6 * s)],
+        (s) => [cx - R * 0.8 * s, cy + H * 0.9 * s * s],
+        (s) => [cx + R * 0.9 * s, cy + H * 0.4 * s],
+      ];
+      const cols = [C.curve, C.aux, C.ok, C.aux, C.curve];
+      paths.forEach((f, i) => {
+        ctx.save(); ctx.strokeStyle = cols[i]; ctx.lineWidth = 1.8; ctx.globalAlpha = .55; ctx.setLineDash([4, 5]); ctx.beginPath();
+        for (let j = 0; j <= 120; j++) { const p = f(1 - j / 120); j ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1]); }
+        ctx.stroke(); ctx.restore();
+        const p = f(1 - k);
+        Plot.dot(ctx, p[0], p[1], 4.5, cols[i], C.surface);
+      });
+      ctx.save(); ctx.strokeStyle = C.ink; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(cx, cy, 6, 0, TAU); ctx.stroke(); ctx.restore();
+    }
+    function tick(now) { if (!start) start = now; k = 0.98 * (((now - start) / 4500) % 1); draw(); requestAnimationFrame(tick); }
+    size(); reduce ? draw() : requestAnimationFrame(tick);
+    if ("ResizeObserver" in window) new ResizeObserver(() => { size(); draw(); }).observe(cv);
+  })();
+
+  /* ---------- 예제 1~3: 경로를 따라 원점으로 ---------- */
+  (function () {
+    const FN = [
+      { name: "예제 1", f: (x, y) => (x * x - y * y) / (x * x + y * y), tex: "(x² − y²)/(x² + y²)",
+        paths: [{ name: "x축", p: (s) => [s, 0], L: "1" }, { name: "y축", p: (s) => [0, s], L: "−1" }, { name: "y = x", p: (s) => [s, s], L: "0" }] },
+      { name: "예제 2", f: (x, y) => (x * y) / (x * x + y * y), tex: "xy/(x² + y²)",
+        paths: [{ name: "x축", p: (s) => [s, 0], L: "0" }, { name: "y축", p: (s) => [0, s], L: "0" }, { name: "y = x", p: (s) => [s, s], L: "1/2" }] },
+      { name: "예제 3", f: (x, y) => (x * y * y) / (x * x + Math.pow(y, 4)), tex: "xy²/(x² + y⁴)",
+        paths: [{ name: "x축", p: (s) => [s, 0], L: "0" }, { name: "y = x", p: (s) => [s, s], L: "0" }, { name: "x = y²", p: (s) => [s * s, s], L: "1/2" }] },
+    ];
+    const PC = ["--curve", "--ok", "--ink"];
+    let fn = FN[0], pi = 0;
+    const sOf = (t) => 1.15 * (1 - t);
+    const api = Space.mount(document.getElementById("fig-paths"), {
+      range: 2.1, center: [0, 0, 0.1], height: 440, axes: [1.7, 1.7, 1.5], view: { az: 28, el: 30 }, negAxes: 1,
+      t: { min: 0, max: 0.995, value: 0.55, label: "접근", duration: 6 },
+      alt: "곡면 위의 여러 경로를 따라 원점으로 다가가기",
+      controls: segHtml(FN.map((f) => f.name), "함수 고르기", "pa-f") + " " + segHtml(["경로 1", "경로 2", "경로 3"], "경로 고르기", "pa-p"),
+      draw(S, C, api) {
+        const surf = { f: (r, th) => { const x = r * Math.cos(th), y = r * Math.sin(th); return [x, y, fn.f(x, y)]; }, u: [0.004, 1.3], v: [0, TAU], n: [26, 72], color: "--aux", alpha: .5, lineAlpha: .18 };
+        const ex = fn.paths.map((pa, i) => {
+          const pts = samples((s) => { const q = pa.p(s); return [q[0], q[1], fn.f(q[0], q[1])]; }, 1.15, 0.004, 160);
+          return { pts: pts, color: PC[i], width: i === pi ? 3.4 : 1.8, alpha: i === pi ? 1 : .55, bias: .08 };
+        });
+        S.mesh([surf], ex);
+        // 바닥의 경로 그림자
+        fn.paths.forEach((pa, i) => S.path(samples((s) => { const q = pa.p(s); return [q[0], q[1], 0]; }, 1.15, 0, 60), { color: PC[i], width: 1.2, alpha: .45, dash: [3, 4] }));
+        S.line([0, 0, -1.05], [0, 0, 1.05], { color: "--muted", width: 1, dash: [2, 4], alpha: .7 });
+        const q = fn.paths[pi].p(sOf(api.t)), z = fn.f(q[0], q[1]);
+        S.line([q[0], q[1], 0], [q[0], q[1], z], { color: PC[pi], width: 1.2, dash: [3, 3] });
+        S.point([q[0], q[1], z], { color: PC[pi], r: 6 });
+        S.point([0, 0, 0], { color: "--ink", r: 3, ring: false });
+      },
+      readout: (api) => {
+        const pa = fn.paths[pi], q = pa.p(sOf(api.t));
+        return "f(x, y) = " + fn.tex + " · 경로 <b>" + pa.name + "</b> · 점 (" + num(q[0], 3) + ", " + num(q[1], 3) + ") · f = <b>" + num(fn.f(q[0], q[1]), 4) + "</b> → 이 경로의 극한 <b>" + pa.L + "</b>";
+      },
+    });
+    const pg = api.bar.querySelector(".pa-p");
+    function labelPaths() { [...pg.querySelectorAll("button")].forEach((b, k) => { b.textContent = fn.paths[k].name; b.style.color = ""; }); }
+    wireSeg(api, "pa-f", (k) => { fn = FN[k]; labelPaths(); api.redraw(); });
+    wireSeg(api, "pa-p", (k) => { pi = k; api.redraw(); });
+    labelPaths(); api.redraw();
+  })();
+
+  /* ---------- 예제 8, 9: 원 위의 함숫값 범위 ---------- */
+  (function () {
+    const FN = [
+      { name: "예제 9 · 연속", f: (x, y) => (3 * x * x * y) / (x * x + y * y), tex: "3x²y/(x² + y²)", f0: 0, zs: 0.5 },
+      { name: "예제 8 · 불연속", f: (x, y) => (x * x - y * y) / (x * x + y * y), tex: "(x² − y²)/(x² + y²)", f0: 0, zs: 1 },
+    ];
+    let fn = FN[0];
+    const range = (r) => { let lo = Infinity, hi = -Infinity; for (let i = 0; i < 720; i++) { const th = TAU * i / 720, v = fn.f(r * Math.cos(th), r * Math.sin(th)); lo = Math.min(lo, v); hi = Math.max(hi, v); } return [lo, hi]; };
+    const rOf = (t) => 1.2 * (1 - t) + 0.02;
+    const api = Space.mount(document.getElementById("fig-cont"), {
+      range: 2, center: [0, 0, 0], height: 420, axes: [1.6, 1.6, 1.3], view: { az: 28, el: 28 }, negAxes: 1,
+      t: { min: 0, max: 1, value: 0.4, label: "r 줄이기", duration: 6 },
+      alt: "원점 둘레의 원 위에서 함숫값의 범위",
+      controls: segHtml(FN.map((f) => f.name), "함수 고르기", "ct-f"),
+      draw(S, C, api) {
+        const zs = fn.zs, r = rOf(api.t);
+        const surf = { f: (rr, th) => { const x = rr * Math.cos(th), y = rr * Math.sin(th); return [x, y, zs * fn.f(x, y)]; }, u: [0.004, 1.3], v: [0, TAU], n: [24, 72], color: "--aux", alpha: .5, lineAlpha: .18 };
+        const ring = samples((th) => [r * Math.cos(th), r * Math.sin(th), zs * fn.f(r * Math.cos(th), r * Math.sin(th))], 0, TAU, 240);
+        S.mesh([surf], [{ pts: ring, color: "--curve", width: 3, bias: .1 }]);
+        S.path(samples((th) => [r * Math.cos(th), r * Math.sin(th), 0], 0, TAU, 120), { color: "--curve", width: 1.2, dash: [3, 4], alpha: .6 });
+        const [lo, hi] = range(r);
+        S.line([0, 0, zs * lo], [0, 0, zs * hi], { color: "--curve", width: 5, alpha: .55 });
+        S.point([0, 0, zs * fn.f0], { color: "--ink", r: 5 });
+      },
+      readout: (api) => {
+        const r = rOf(api.t), [lo, hi] = range(r);
+        return "f = " + fn.tex + " · 반지름 r = <b>" + num(r, 3) + "</b>인 원 위 함숫값 범위 [<b>" + num(lo, 3) + "</b>, <b>" + num(hi, 3) + "</b>]" +
+          (fn.zs !== 1 ? " · (높이는 " + fn.zs + "배로 그림)" : "") + "<br>" +
+          (fn === FN[0] ? "|f| ≤ 3r = " + num(3 * r, 3) + " → r → 0이면 0으로 오그라듦" : "r과 상관없이 cos 2θ의 범위 [−1, 1] → 극한 없음");
+      },
+    });
+    wireSeg(api, "ct-f", (k) => { fn = FN[k]; api.redraw(); });
+  })();
+
+  /* ---------- 자가 점검 ---------- */
+  (function () {
+    const R = String.raw;
+    Quiz.mount(document.getElementById("quiz"), [
+      {
+        q: R`$\displaystyle\lim_{(x,y)\to(2,-1)}(x^2y+3xy^2-1)$의 값은?`,
+        choices: [R`$1$`, R`$5$`, R`$-3$`, R`$9$`],
+        answer: 0,
+        explain: R`<p>다항함수라 연속, 대입하면 $4\cdot(-1)+3\cdot2\cdot1-1=-4+6-1=1$이에요.</p>`,
+      },
+      {
+        q: R`$\displaystyle\lim_{(x,y)\to(0,0)}\frac{x^2}{x^2+y^2}$에 대해 옳은 것은?`,
+        choices: [R`$1$이다`, R`$0$이다`, R`$\frac12$이다`, R`존재하지 않는다`],
+        answer: 3,
+        explain: R`<p>$x$축을 따라 $1$, $y$축을 따라 $0$이라 경로마다 달라요. 극좌표로 보면 $\cos^2\theta$로 $\theta$만 남아요.</p>`,
+      },
+      {
+        q: R`$f(x,y)=\dfrac{xy}{x^2+y^2}$를 직선 $y=2x$를 따라 원점에 접근시킬 때의 극한은?`,
+        choices: [R`$0$`, R`$\frac12$`, R`$\frac25$`, R`$2$`],
+        answer: 2,
+        explain: R`<p>$\frac{m}{1+m^2}$에 $m=2$를 넣으면 $\frac{2}{5}$예요.</p>`,
+      },
+      {
+        q: R`어떤 함수가 원점을 지나는 모든 직선을 따라 원점에 접근할 때 극한이 0이다. 이로부터 알 수 있는 것은?`,
+        choices: [R`극한은 0이다`, R`극한은 존재하지 않는다`, R`극한이 존재한다면 0이다`, R`$f$는 원점에서 연속이다`],
+        answer: 2,
+        explain: R`<p>존재한다면 모든 경로의 값과 같아야 하니 0이에요. 하지만 예제 3처럼 포물선에서 다른 값이 나올 수 있어서 존재 자체는 보장 못 해요.</p>`,
+      },
+      {
+        q: R`$\displaystyle\lim_{(x,y)\to(0,0)}\frac{x^2y^2}{x^2+y^2}$의 값은?`,
+        choices: [R`$0$`, R`$1$`, R`$\frac12$`, R`존재하지 않는다`],
+        answer: 0,
+        explain: R`<p>극좌표로 $\frac{r^4\cos^2\theta\sin^2\theta}{r^2}=r^2\cos^2\theta\sin^2\theta$이고, 절댓값이 $r^2$ 이하라 $r\to0$이면 0이에요.</p>`,
+      },
+      {
+        q: R`$f(x,y)=\dfrac{x+y}{x-y}$가 연속인 곳은?`,
+        choices: [R`$\mathbb R^2$ 전체`, R`$x\ne0$인 곳`, R`직선 $y=x$ 위의 점을 제외한 모든 곳`, R`원점을 제외한 모든 곳`],
+        answer: 2,
+        explain: R`<p>유리함수라 정의역에서 연속이고, 분모 $x-y=0$, 즉 $y=x$에서만 정의되지 않아요.</p>`,
+      },
+      {
+        q: R`예제 8에서 $g(0,0)$의 값을 바꾸면 $g$를 원점에서 연속으로 만들 수 있는가?`,
+        choices: [R`$g(0,0)=1$로 하면 된다`, R`$g(0,0)=-1$로 하면 된다`, R`$g(0,0)=\frac12$로 하면 된다`, R`어떤 값으로도 불가능하다`],
+        answer: 3,
+        explain: R`<p>연속이려면 먼저 극한이 존재해야 하는데, 예제 1에 의해 극한이 없어요. 함숫값을 무엇으로 정해도 소용없어요.</p>`,
+      },
+      {
+        q: R`$f(x,y,z)=\dfrac{xyz}{x^2+y^2+z^2}$의 $(1,1,1)$에서의 극한은?`,
+        choices: [R`$1$`, R`$\frac13$`, R`$3$`, R`존재하지 않는다`],
+        answer: 1,
+        explain: R`<p>$(1,1,1)$은 정의역 안의 점이고 유리함수라 연속, 대입하면 $\frac{1}{3}$이에요.</p>`,
+      },
+    ]);
+  })();
+})();
+</script>
+</body>
+</html>

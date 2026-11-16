@@ -1,0 +1,458 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>13.3 편도함수</title>
+<script>try{var t=localStorage.getItem("theme");if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
+<link rel="stylesheet" href="assets/katex/katex.min.css">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body data-section="13.3">
+<div class="shell">
+  <nav class="side" aria-label="이 절의 목차">
+    <a class="home" href="index.html">전체 목차로</a>
+    <ol>
+      <li><a href="#def">편미분계수와 편도함수</a></li>
+      <li><a href="#rule">구하는 규칙 · 예제 1, 2</a></li>
+      <li><a href="#geo">기하학적 해석 · 예제 3</a></li>
+      <li><a href="#ex5">음함수의 편미분 · 예제 5</a></li>
+      <li><a href="#three">삼변수 이상 · 예제 6</a></li>
+      <li><a href="#high">고계 편도함수 · 예제 7</a></li>
+      <li><a href="#clairaut">클레로의 정리 · 예제 8</a></li>
+      <li><a href="#pde">편미분방정식 · 예제 9, 10</a></li>
+      <li><a href="#cobb">콥-더글라스 생산함수</a></li>
+      <li><a href="#summary">한눈에 정리</a></li>
+      <li><a href="#check">자가 점검</a></li>
+    </ol>
+  </nav>
+
+  <main>
+    <header class="hero">
+      <p class="chapter">13장 편미분</p>
+      <h1><span class="num">13.3</span>편도함수</h1>
+      <canvas id="hero" aria-hidden="true"></canvas>
+    </header>
+
+    <p class="lede">이변수함수에서 “변화율”을 물으려면 먼저 <b>어느 방향으로 움직일지</b>를 정해야 해요. 가장 단순한 선택은 한 변수만 움직이고 나머지는 꽉 붙잡아 두는 거예요. 그러면 함수는 사실상 일변수함수가 되고, 익숙한 미분을 그대로 쓸 수 있어요. 이게 편미분이에요.</p>
+
+    <!-- ===================================================== -->
+    <h2 id="def">편미분계수와 편도함수</h2>
+    <p>$y=b$로 고정하면 $g(x)=f(x,b)$는 $x$만의 함수예요. $g$가 $x=a$에서 미분계수를 가지면 그것을 $(a,b)$에서 <b>$x$에 관한 $f$의 편미분계수</b>라 하고 $f_x(a,b)$로 써요. 즉 $f_x(a,b)=g'(a)$이고, 극한으로 쓰면</p>
+    <div class="summary-box">
+      $$f_x(a,b)=\lim_{h\to0}\frac{f(a+h,b)-f(a,b)}{h} \tag{2}$$
+      <p style="margin:0 0 .3rem">마찬가지로 $(a,b)$에서 <b>$y$에 관한 $f$의 편미분계수</b>는 $x=a$로 고정하고 $y$로 미분한 것이에요.</p>
+      $$f_y(a,b)=\lim_{h\to0}\frac{f(a,b+h)-f(a,b)}{h} \tag{3}$$
+    </div>
+    <p>식 (2)와 (3)에서 점 $(a,b)$가 변하면 $f_x$와 $f_y$도 이변수함수가 돼요.</p>
+    <div class="summary-box">
+      <p style="margin:0 0 .3rem"><b>4</b> $f$가 이변수함수이면 <b>편도함수</b>(partial derivative) $f_x$와 $f_y$는 다음과 같이 정의돼요.</p>
+      $$f_x(x,y)=\lim_{h\to0}\frac{f(x+h,y)-f(x,y)}{h},\qquad f_y(x,y)=\lim_{h\to0}\frac{f(x,y+h)-f(x,y)}{h}$$
+    </div>
+    <p>여러 가지 기호가 쓰여요. $z=f(x,y)$이면</p>
+    $$f_x(x,y)=f_x=\frac{\partial f}{\partial x}=\frac{\partial}{\partial x}f(x,y)=\frac{\partial z}{\partial x}=f_1=D_1f=D_xf$$
+    $$f_y(x,y)=f_y=\frac{\partial f}{\partial y}=\frac{\partial}{\partial y}f(x,y)=\frac{\partial z}{\partial y}=f_2=D_2f=D_yf$$
+    <p>$\partial$는 “라운드” 또는 “편미분”이라 읽고, 일변수의 $d$와 구별하려고 써요. 아래 첨자 1, 2는 첫 번째, 두 번째 변수라는 뜻이에요.</p>
+    <figure class="plot" id="fig-def">
+      <figcaption>$y=1$로 고정한 단면 $z=f(x,1)=3-x^2$ (예제 3의 함수)이에요. 재생하면 $h$가 0으로 줄어들면서 할선(파랑)이 점 $(1,2)$에서의 접선(빨강)에 가까워지고, 할선의 기울기 $\frac{f(1+h,1)-f(1,1)}{h}$가 $f_x(1,1)=-2$에 다가가요.</figcaption>
+    </figure>
+
+    <!-- ===================================================== -->
+    <h2 id="rule">편도함수를 구하는 규칙</h2>
+    <div class="summary-box">
+      <p style="margin:0 0 .3rem">$z=f(x,y)$라고 할 때</p>
+      <ol style="margin:0">
+        <li>$y$를 상수로 보고 $x$에 관해 $f(x,y)$를 미분해서 $f_x$를 구한다.</li>
+        <li>$x$를 상수로 보고 $y$에 관해 $f(x,y)$를 미분해서 $f_y$를 구한다.</li>
+      </ol>
+    </div>
+    <div class="problem"><span class="tag">예제 1</span>$f(x,y)=x^3+x^2y^3-2y^2$일 때, $f_x(2,1)$, $f_y(2,1)$을 구하라.</div>
+    <ol class="steps">
+      <li>$y$를 상수로 보고 $x$로 미분해요. $x^2y^3$에서 $y^3$은 계수, $-2y^2$은 상수라 미분하면 0이에요.
+        $$f_x(x,y)=3x^2+2xy^3,\qquad f_x(2,1)=3\cdot2^2+2\cdot2\cdot1^3=12+4=16$$</li>
+      <li>$x$를 상수로 보고 $y$로 미분해요. 이번엔 $x^3$이 상수예요.
+        $$f_y(x,y)=3x^2y^2-4y,\qquad f_y(2,1)=3\cdot2^2\cdot1^2-4\cdot1=12-4=8$$</li>
+    </ol>
+
+    <div class="problem"><span class="tag">예제 2</span>$f(x,y)=\sin\left(\dfrac{x}{1+y}\right)$일 때 $\dfrac{\partial f}{\partial x}$와 $\dfrac{\partial f}{\partial y}$를 계산하라.</div>
+    <ol class="steps">
+      <li>연쇄법칙으로 바깥 $\sin$을 미분하고 안쪽 $\frac{x}{1+y}$를 미분해서 곱해요. $x$로 미분할 때 $\frac{1}{1+y}$은 계수예요.
+        $$\frac{\partial f}{\partial x}=\cos\left(\frac{x}{1+y}\right)\cdot\frac{\partial}{\partial x}\left(\frac{x}{1+y}\right)=\cos\left(\frac{x}{1+y}\right)\cdot\frac{1}{1+y}$$</li>
+      <li>$y$로 미분할 때는 $\frac{x}{1+y}=x(1+y)^{-1}$로 보고, $x$가 계수예요.
+        $$\frac{\partial f}{\partial y}=\cos\left(\frac{x}{1+y}\right)\cdot\frac{\partial}{\partial y}\left(\frac{x}{1+y}\right)=-\cos\left(\frac{x}{1+y}\right)\cdot\frac{x}{(1+y)^2}$$</li>
+    </ol>
+    <div class="exam"><strong>핵심.</strong> 편미분은 새로운 미분 공식이 필요 없어요. <b>고정한 변수를 숫자처럼</b> 취급하고 지금까지의 공식(곱, 몫, 연쇄법칙)을 그대로 써요. 실수는 대부분 고정한 변수가 들어간 항을 0으로 지워 버리거나(곱해진 경우는 계수!), 반대로 상수항을 남겨서 생겨요.</div>
+
+    <!-- ===================================================== -->
+    <h2 id="geo">편미분계수의 기하학적 해석</h2>
+    <p>곡면 $S$: $z=f(x,y)$에서 $f(a,b)=c$이면 점 $P(a,b,c)$는 $S$ 위에 있어요.</p>
+    <ul>
+      <li>$y=b$로 고정하면, 수직평면 $y=b$가 $S$와 만나는 곡선 $C_1$에 관심을 제한하게 돼요($C_1$은 평면 $y=b$에서 $S$의 자취). $C_1$은 함수 $g(x)=f(x,b)$의 그래프이므로, $P$에서 접선 $T_1$의 기울기는 $g'(a)=f_x(a,b)$예요.</li>
+      <li>마찬가지로 수직평면 $x=a$는 곡선 $C_2$에서 $S$와 만나요. $C_2$는 $G(y)=f(a,y)$의 그래프이고, $P$에서 접선 $T_2$의 기울기는 $G'(b)=f_y(a,b)$예요.</li>
+    </ul>
+    <div class="summary-box">
+      <p style="margin:0">$f_x(a,b)$는 평면 $y=b$에서의 자취 $C_1$의 $P$에서의 접선의 기울기, $f_y(a,b)$는 평면 $x=a$에서의 자취 $C_2$의 $P$에서의 접선의 기울기예요. 또 $z=f(x,y)$이면 $\dfrac{\partial z}{\partial x}$는 $y$를 고정할 때 $x$에 관한 $z$의 변화율, $\dfrac{\partial z}{\partial y}$는 $x$를 고정할 때 $y$에 관한 $z$의 변화율이에요.</p>
+    </div>
+
+    <div class="problem"><span class="tag">예제 3</span>$f(x,y)=4-x^2-2y^2$일 때, $f_x(1,1)$, $f_y(1,1)$을 구하고, 이를 기울기로 해석하라.</div>
+    <ol class="steps">
+      <li>$f_x(x,y)=-2x$, $f_y(x,y)=-4y$이므로
+        $$f_x(1,1)=-2,\qquad f_y(1,1)=-4$$</li>
+      <li>그래프는 포물면 $z=4-x^2-2y^2$이고 $f(1,1)=1$이라 점 $P(1,1,1)$을 지나요.</li>
+      <li>수직평면 $y=1$은 포물면과 포물선 $C_1$: $z=3-x^2$, $y=1$에서 만나요. $P$에서 이 포물선의 접선의 기울기가 $f_x(1,1)=-2$예요.</li>
+      <li>수직평면 $x=1$은 포물면과 포물선 $C_2$: $z=3-2y^2$, $x=1$에서 만나요. $P$에서 이 포물선의 접선의 기울기가 $f_y(1,1)=-4$예요.</li>
+    </ol>
+    <p>$y$ 방향의 기울기가 더 가팔라요. $y^2$ 앞의 계수 2 때문에 $y$ 방향으로 더 빨리 내려가는 곡면이에요.</p>
+    <figure class="plot" id="fig-slice">
+      <figcaption>예제 3의 포물면($z\ge0$인 부분)을 수직평면으로 잘랐어요. 버튼으로 자르는 평면을 고르고, 슬라이더로 단면 위의 점을 움직이면 그 점에서의 접선(빨강)과 기울기가 바뀌어요. 처음 위치가 예제의 점 $P(1,1,1)$이에요.</figcaption>
+    </figure>
+
+    <!-- ===================================================== -->
+    <h2 id="ex5">음함수의 편미분</h2>
+    <div class="problem"><span class="tag">예제 5</span>방정식 $x^3+y^3+z^3+6xyz=1$에 의해 $z$가 $x$와 $y$에 관해 음함수로 정의될 때, $\dfrac{\partial z}{\partial x}$와 $\dfrac{\partial z}{\partial y}$를 구하라.</div>
+    <ol class="steps">
+      <li>$z$를 $x$, $y$의 함수로 보고, $y$를 상수로 두고 양변을 $x$로 미분해요. $z^3$은 연쇄법칙으로 $3z^2\frac{\partial z}{\partial x}$, $6xyz$는 곱의 미분으로 $6yz+6xy\frac{\partial z}{\partial x}$예요.
+        $$3x^2+3z^2\frac{\partial z}{\partial x}+6yz+6xy\frac{\partial z}{\partial x}=0$$</li>
+      <li>$\frac{\partial z}{\partial x}$에 대해 풀면
+        $$\frac{\partial z}{\partial x}=-\frac{x^2+2yz}{z^2+2xy}$$</li>
+      <li>같은 방법으로 $x$를 상수로 두고 $y$로 미분하면
+        $$3y^2+3z^2\frac{\partial z}{\partial y}+6xz+6xy\frac{\partial z}{\partial y}=0\quad\Longrightarrow\quad\frac{\partial z}{\partial y}=-\frac{y^2+2xz}{z^2+2xy}$$</li>
+    </ol>
+    <p>두 결과는 $x$와 $y$를 맞바꾼 모양이에요. 원래 방정식이 $x$와 $y$에 대해 대칭이라 당연한 결과예요.</p>
+
+    <!-- ===================================================== -->
+    <h2 id="three">삼변수 이상의 함수</h2>
+    <p>$f$가 $x$, $y$, $z$의 삼변수함수일 때 $x$에 관한 편도함수는</p>
+    $$f_x(x,y,z)=\lim_{h\to0}\frac{f(x+h,y,z)-f(x,y,z)}{h}$$
+    <p>이에요. $y$와 $z$를 상수로 취급하고 $f(x,y,z)$를 $x$에 관해 미분해서 구해요. $w=f(x,y,z)$라 하면 $f_x=\frac{\partial w}{\partial x}$는 $y$와 $z$를 고정할 때 $x$에 관한 $w$의 변화율이에요. 다만 $f$의 그래프는 4차원 공간에 놓여 있어서 기하학적으로 그려 볼 수는 없어요.</p>
+    <p>일반적으로 $u$가 $n$변수함수 $u=f(x_1,x_2,\dots,x_n)$일 때, $i$번째 변수 $x_i$에 관한 편도함수는</p>
+    $$\frac{\partial u}{\partial x_i}=\lim_{h\to0}\frac{f(x_1,\dots,x_{i-1},x_i+h,x_{i+1},\dots,x_n)-f(x_1,\dots,x_i,\dots,x_n)}{h}$$
+    <p>이고, 다음과 같이 쓰기도 해요.</p>
+    $$\frac{\partial u}{\partial x_i}=\frac{\partial f}{\partial x_i}=f_{x_i}=f_i=D_if$$
+
+    <div class="problem"><span class="tag">예제 6</span>$f(x,y,z)=e^{xy}\ln z$일 때, $f_x$, $f_y$, $f_z$를 구하라.</div>
+    <ol class="steps">
+      <li>$y$, $z$를 고정하면 $\ln z$는 계수, $e^{xy}$를 $x$로 미분하면 $ye^{xy}$:
+        $$f_x=\frac{\partial w}{\partial x}=ye^{xy}\ln z$$</li>
+      <li>$x$, $z$를 고정하면
+        $$f_y=\frac{\partial w}{\partial y}=xe^{xy}\ln z$$</li>
+      <li>$x$, $y$를 고정하면 $e^{xy}$가 계수:
+        $$f_z=\frac{\partial w}{\partial z}=\frac{e^{xy}}{z}$$</li>
+    </ol>
+
+    <!-- ===================================================== -->
+    <h2 id="high">고계 편도함수</h2>
+    <p>$f$가 이변수함수이면 편도함수 $f_x$와 $f_y$도 이변수함수이므로, 그것의 편도함수 $(f_x)_x$, $(f_x)_y$, $(f_y)_x$, $(f_y)_y$도 생각할 수 있어요. 이것을 $f$의 <b>2계 편도함수</b>(second partial derivative)라 해요. $z=f(x,y)$이면 다음 기호를 써요.</p>
+    $$(f_x)_x=f_{xx}=f_{11}=\frac{\partial}{\partial x}\left(\frac{\partial f}{\partial x}\right)=\frac{\partial^2f}{\partial x^2}=\frac{\partial^2z}{\partial x^2}$$
+    $$(f_x)_y=f_{xy}=f_{12}=\frac{\partial}{\partial y}\left(\frac{\partial f}{\partial x}\right)=\frac{\partial^2f}{\partial y\,\partial x}=\frac{\partial^2z}{\partial y\,\partial x}$$
+    $$(f_y)_x=f_{yx}=f_{21}=\frac{\partial}{\partial x}\left(\frac{\partial f}{\partial y}\right)=\frac{\partial^2f}{\partial x\,\partial y}=\frac{\partial^2z}{\partial x\,\partial y}$$
+    $$(f_y)_y=f_{yy}=f_{22}=\frac{\partial}{\partial y}\left(\frac{\partial f}{\partial y}\right)=\frac{\partial^2f}{\partial y^2}=\frac{\partial^2z}{\partial y^2}$$
+    <div class="exam"><strong>순서 읽는 법.</strong> $f_{xy}$(또는 $\frac{\partial^2f}{\partial y\,\partial x}$)는 <b>먼저 $x$에 관해</b> 미분하고 다음으로 $y$에 관해 미분한 것이에요. 아래 첨자는 왼쪽부터, $\partial$ 기호는 오른쪽(분모의 가장 안쪽)부터 읽어요. $f_{yx}$는 반대 순서예요.</div>
+
+    <div class="problem"><span class="tag">예제 7</span>$f(x,y)=x^3+x^2y^3-2y^2$의 2계 편도함수를 구하라.</div>
+    <p>예제 1에서 $f_x(x,y)=3x^2+2xy^3$, $f_y(x,y)=3x^2y^2-4y$를 구했어요. 그러므로</p>
+    $$f_{xx}=\frac{\partial}{\partial x}(3x^2+2xy^3)=6x+2y^3,\qquad f_{xy}=\frac{\partial}{\partial y}(3x^2+2xy^3)=6xy^2$$
+    $$f_{yx}=\frac{\partial}{\partial x}(3x^2y^2-4y)=6xy^2,\qquad f_{yy}=\frac{\partial}{\partial y}(3x^2y^2-4y)=6x^2y-4$$
+
+    <!-- ===================================================== -->
+    <h2 id="clairaut">클레로의 정리</h2>
+    <p>예제 7에서 $f_{xy}=f_{yx}$였어요. 우연이 아니에요. 프랑스의 수학자 클레로가 발견한 다음 정리는 $f_{xy}=f_{yx}$라고 주장할 수 있는 조건을 알려 줘요.</p>
+    <div class="summary-box">
+      <p style="margin:0 0 .3rem"><b>클레로의 정리</b> 점 $(a,b)$를 포함하는 원판 $D$에서 정의되는 함수를 $f$라 하자. 함수 $f_{xy}$와 $f_{yx}$가 $D$에서 모두 연속이면 다음이 성립한다.</p>
+      $$f_{xy}(a,b)=f_{yx}(a,b)$$
+    </div>
+    <p>실제로 다루는 함수(다항식, 지수, 삼각, 로그를 조합한 것)는 정의역 안에서 이 조건을 만족해서, <b>미분하는 순서를 바꿔도 돼요.</b> 계산이 쉬운 순서로 미분하면 돼요.</p>
+    <p>3계 이상의 편도함수도 정의할 수 있어요. 예를 들어</p>
+    $$f_{xyy}=(f_{xy})_y=\frac{\partial}{\partial y}\left(\frac{\partial^2f}{\partial y\,\partial x}\right)=\frac{\partial^3f}{\partial y^2\,\partial x}$$
+    <p>클레로의 정리를 이용해서 이런 함수들이 연속이면 $f_{xyy}=f_{yxy}=f_{yyx}$임을 밝힐 수 있어요. $x$로 한 번, $y$로 두 번 미분하기만 하면 순서는 상관없어요.</p>
+
+    <div class="problem"><span class="tag">예제 8</span>$f(x,y,z)=\sin(3x+yz)$일 때 $f_{xxyz}$를 구하라.</div>
+    <ol class="steps">
+      <li>$f_x=3\cos(3x+yz)$</li>
+      <li>$f_{xx}=-9\sin(3x+yz)$</li>
+      <li>$y$로 미분하면 안쪽 미분이 $z$라
+        $$f_{xxy}=-9z\cos(3x+yz)$$</li>
+      <li>$z$로 미분할 때는 $-9z$와 $\cos(3x+yz)$의 곱이라 곱의 미분을 써요. $\cos(3x+yz)$를 $z$로 미분하면 $-y\sin(3x+yz)$예요.
+        $$f_{xxyz}=-9\cos(3x+yz)+9yz\sin(3x+yz)$$</li>
+    </ol>
+
+    <!-- ===================================================== -->
+    <h2 id="pde">편미분방정식</h2>
+    <p>편미분은 물리 법칙들을 설명하는 <b>편미분방정식</b>에 쓰여요. 예를 들면 다음과 같은 <b>라플라스 방정식</b>(Laplace's equation)이 있어요.</p>
+    $$\frac{\partial^2u}{\partial x^2}+\frac{\partial^2u}{\partial y^2}=0$$
+    <p>이 방정식의 해를 <b>조화함수</b>(harmonic function)라 하며, 열전도, 유체의 흐름, 전기장 등에서 중요한 역할을 해요.</p>
+    <div class="problem"><span class="tag">예제 9</span>$u(x,y)=e^x\sin y$가 라플라스 방정식의 해임을 보여라.</div>
+    <ol class="steps">
+      <li>$u_x=e^x\sin y$, $u_{xx}=e^x\sin y$</li>
+      <li>$u_y=e^x\cos y$, $u_{yy}=-e^x\sin y$</li>
+      <li>더하면 $u_{xx}+u_{yy}=e^x\sin y-e^x\sin y=0$. 그러므로 $u$는 라플라스 방정식을 만족해요.</li>
+    </ol>
+    <p>다음과 같은 <b>파동방정식</b>(wave equation)은 바다의 파고, 소리의 파동, 불빛의 파장, 흔들리는 줄을 따라 움직이는 진동 등을 나타내요. $u(x,t)$는 시각 $t$에 위치 $x$에서의 변위이고 $a$는 파동의 속력이에요.</p>
+    $$\frac{\partial^2u}{\partial t^2}=a^2\frac{\partial^2u}{\partial x^2}$$
+    <div class="problem"><span class="tag">예제 10</span>$u(x,t)=\sin(x-at)$가 파동방정식을 만족함을 보여라.</div>
+    <ol class="steps">
+      <li>먼저 2계 편도함수를 계산해요. $x$로 미분할 때 안쪽 미분은 1, $t$로 미분할 때 안쪽 미분은 $-a$예요.
+        $$u_x=\cos(x-at),\qquad u_{xx}=-\sin(x-at)$$
+        $$u_t=-a\cos(x-at),\qquad u_{tt}=-a^2\sin(x-at)$$</li>
+      <li>$u_{tt}=-a^2\sin(x-at)=a^2\,u_{xx}$이므로 $u(x,t)$는 파동방정식을 만족해요.</li>
+    </ol>
+    <figure class="plot" id="fig-wave">
+      <figcaption>$u(x,t)=\sin(x-at)$의 모양이에요. 재생하면 시간 $t$가 흘러요. 모양은 그대로인 채 오른쪽으로 속력 $a$만큼 밀려가요. 빨간 점은 마루 하나를 따라가고, 회색 점선은 $t=0$일 때의 모양이에요.</figcaption>
+    </figure>
+
+    <!-- ===================================================== -->
+    <h2 id="cobb">콥-더글라스 생산함수</h2>
+    <p>경제 시스템의 총생산 $P$를 노동량 $L$과 투자 자본금 $K$의 함수 $P=P(L,K)$로 나타내요. $\frac{\partial P}{\partial L}$은 노동량에 대한 생산량의 변화율로, 경제학자들은 이것을 <b>노동의 한계 생산력</b>이라 불러요. 마찬가지로 $\frac{\partial P}{\partial K}$는 <b>자본의 한계 생산력</b>이에요. 이 용어로 콥과 더글라스의 가정은 다음과 같아요.</p>
+    <ol>
+      <li>노동력과 자본 중에서 어느 하나가 고갈되면 생산량도 고갈된다.</li>
+      <li>노동의 한계 생산력은 노동 단위당 총생산량에 비례한다.</li>
+      <li>자본의 한계 생산력은 자본 단위당 총생산량에 비례한다.</li>
+    </ol>
+    <p>편도함수로 이 가정에서 생산함수의 모양을 끌어낼 수 있어요.</p>
+    <ol class="steps">
+      <li>노동 단위당 생산량이 $\frac PL$이므로 가정 (ii)는 어떤 상수 $\alpha$에 대해
+        $$\frac{\partial P}{\partial L}=\alpha\frac PL$$</li>
+      <li>$K$를 상수($K=K_0$)라 하면 이 편미분방정식은 상미분방정식 $\dfrac{dP}{dL}=\alpha\dfrac PL$이 돼요. 변수분리형이라 $\frac{dP}{P}=\alpha\frac{dL}{L}$을 적분하면 $\ln P=\alpha\ln L+C$이고
+        $$P(L,K_0)=C_1(K_0)\,L^\alpha \tag{a}$$
+        상수 $C_1$은 $K_0$의 값에 의존할 수 있어서 $K_0$의 함수로 써요.</li>
+      <li>같은 방법으로 가정 (iii)은 $\dfrac{\partial P}{\partial K}=\beta\dfrac PK$를 뜻하고, 이로부터
+        $$P(L_0,K)=C_2(L_0)\,K^\beta \tag{b}$$</li>
+      <li>(a)와 (b)를 비교하면, $L$과 $K$에 모두 관계없는 상수 $b$에 대해
+        $$P(L,K)=bL^\alpha K^\beta$$</li>
+      <li>가정 (i)은 $\alpha>0$, $\beta>0$임을 보여요($L\to0$ 또는 $K\to0$일 때 $P\to0$).</li>
+    </ol>
+    <p>노동과 자본이 모두 $m$배로 증가하면</p>
+    $$P(mL,mK)=b(mL)^\alpha(mK)^\beta=m^{\alpha+\beta}\,bL^\alpha K^\beta=m^{\alpha+\beta}P(L,K)$$
+    <p>만일 $\alpha+\beta=1$이면 $P(mL,mK)=mP(L,K)$, 즉 생산량도 $m$배만큼 증가해요. 콥과 더글라스는 $\alpha+\beta=1$이라고 가정했고, 그 결과가 13.1절에서 언급한 콥-더글라스 생산함수예요.</p>
+    $$P(L,K)=bL^\alpha K^{1-\alpha}$$
+
+    <!-- ===================================================== -->
+    <h2 id="summary">한눈에 정리</h2>
+    <div class="summary-box">
+      <ul>
+        <li>$f_x(a,b)=\displaystyle\lim_{h\to0}\frac{f(a+h,b)-f(a,b)}{h}$: $y=b$로 고정한 일변수함수의 미분계수. $f_y$도 같은 방식.</li>
+        <li>계산: 나머지 변수를 상수로 보고 평소처럼 미분(곱하는 상수는 계수로 남고, 더하는 상수는 0).</li>
+        <li>기하: $f_x(a,b)$는 평면 $y=b$로 자른 곡선의 접선 기울기, $f_y(a,b)$는 평면 $x=a$로 자른 곡선의 접선 기울기.</li>
+        <li>음함수: $z$를 $x$, $y$의 함수로 보고 미분한 뒤 $\frac{\partial z}{\partial x}$에 대해 풀기.</li>
+        <li>$f_{xy}=(f_x)_y=\dfrac{\partial^2f}{\partial y\,\partial x}$: 먼저 $x$, 다음 $y$. 클레로: $f_{xy}$, $f_{yx}$가 연속이면 같다.</li>
+        <li>라플라스 방정식 $u_{xx}+u_{yy}=0$, 파동방정식 $u_{tt}=a^2u_{xx}$.</li>
+      </ul>
+    </div>
+
+    <!-- ===================================================== -->
+    <h2 id="check">자가 점검</h2>
+    <p>보기를 고르면 바로 정답과 풀이가 나와요.</p>
+    <div id="quiz"></div>
+
+    <nav class="pager" aria-label="절 이동"></nav>
+  </main>
+</div>
+
+<script src="assets/katex/katex.min.js"></script>
+<script src="assets/katex/auto-render.min.js"></script>
+<script src="assets/plot.js"></script>
+<script src="assets/space.js"></script>
+<script src="assets/quiz.js"></script>
+<script src="assets/site.js"></script>
+<script>
+(function () {
+  "use strict";
+  const { fmt, label, arrowHead } = Plot;
+  const V = Space.V;
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const num = (v, d) => fmt(v, d == null ? 2 : d);
+  const TAU = 2 * Math.PI;
+  const samples = (f, a, b, n) => { const out = []; for (let i = 0; i <= n; i++) out.push(f(a + (b - a) * i / n)); return out; };
+  const segHtml = (labels, aria, cls) =>
+    '<span class="seg ' + (cls || "") + '" role="group" aria-label="' + aria + '">' +
+    labels.map((l, k) => '<button type="button" data-k="' + k + '" aria-pressed="false">' + l + "</button>").join("") + "</span>";
+  function pressOne(group, btn) { group.querySelectorAll("button").forEach((b) => b.setAttribute("aria-pressed", b === btn ? "true" : "false")); }
+  function wireSeg(api, cls, fn, first) {
+    const g = api.bar.querySelector("." + cls), bs = [...g.querySelectorAll("button")];
+    bs.forEach((b, k) => b.addEventListener("click", () => { pressOne(g, b); fn(k); }));
+    pressOne(g, bs[first || 0]);
+  }
+  function path2(ctx, T, f, a, b, n, color, w, alpha, dash) {
+    ctx.save(); ctx.strokeStyle = color; ctx.lineWidth = w || 2.2; ctx.globalAlpha = alpha == null ? 1 : alpha; if (dash) ctx.setLineDash(dash); ctx.beginPath();
+    for (let i = 0; i <= n; i++) { const p = f(a + (b - a) * i / n); i ? ctx.lineTo(T.X(p[0]), T.Y(p[1])) : ctx.moveTo(T.X(p[0]), T.Y(p[1])); }
+    ctx.stroke(); ctx.restore();
+  }
+  function seg2(ctx, T, A, B, color, w, dash, alpha) {
+    ctx.save(); ctx.strokeStyle = color; ctx.lineWidth = w || 2; ctx.globalAlpha = alpha == null ? 1 : alpha; if (dash) ctx.setLineDash(dash);
+    ctx.beginPath(); ctx.moveTo(T.X(A[0]), T.Y(A[1])); ctx.lineTo(T.X(B[0]), T.Y(B[1])); ctx.stroke(); ctx.restore();
+  }
+
+  /* ---------- 절 머리: 단면 곡선 위를 미끄러지는 접선 ---------- */
+  (function () {
+    const cv = document.getElementById("hero"), ctx = cv.getContext("2d");
+    let W, H, ph = 0.3, start = 0;
+    function size() { const d = window.devicePixelRatio || 1; W = cv.clientWidth; H = cv.clientHeight; cv.width = W * d; cv.height = H * d; ctx.setTransform(d, 0, 0, d, 0, 0); }
+    function draw() {
+      const C = Plot.palette(); ctx.clearRect(0, 0, W, H);
+      const curves = [[0.86, 0.9, C.aux], [0.62, 0.7, C.aux], [0.4, 0.5, C.aux]];
+      curves.forEach(([h, s, c], i) => {
+        const f = (u) => [W * (0.04 + 0.92 * u), H * (1.02 - h * (1 - Math.pow(2 * u - 1, 2) * s))];
+        ctx.save(); ctx.strokeStyle = c; ctx.globalAlpha = 0.25 + 0.2 * i; ctx.lineWidth = 2; ctx.beginPath();
+        for (let j = 0; j <= 120; j++) { const p = f(j / 120); j ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1]); }
+        ctx.stroke(); ctx.restore();
+        if (i === 0) {
+          const u = 0.5 + 0.42 * Math.sin(ph), p = f(u), q = f(u + 1e-3), ang = Math.atan2(q[1] - p[1], q[0] - p[0]), L = W * 0.12;
+          ctx.save(); ctx.strokeStyle = C.curve; ctx.lineWidth = 2.4; ctx.beginPath();
+          ctx.moveTo(p[0] - Math.cos(ang) * L, p[1] - Math.sin(ang) * L); ctx.lineTo(p[0] + Math.cos(ang) * L, p[1] + Math.sin(ang) * L); ctx.stroke(); ctx.restore();
+          Plot.dot(ctx, p[0], p[1], 5, C.curve, C.surface);
+        }
+      });
+    }
+    function tick(now) { if (!start) start = now; ph = 0.3 + (now - start) / 1600; draw(); requestAnimationFrame(tick); }
+    size(); reduce ? draw() : requestAnimationFrame(tick);
+    if ("ResizeObserver" in window) new ResizeObserver(() => { size(); draw(); }).observe(cv);
+  })();
+
+  /* ---------- 정의: 할선 → 접선 ---------- */
+  (function () {
+    const g = (x) => 3 - x * x, a = 1;
+    const hOf = (t) => 1.5 * (1 - t) + 0.01 * t;
+    const p = {
+      curve: false, x: () => 0, y: () => 0, grid: 1, maxWidth: "560px", height: 330, axisLabels: ["x", "z"], alt: "할선이 접선에 가까워지는 모습",
+      view: { x: [-0.6, 3], y: [-3.2, 3.6] }, ticks: { x: [1, 2], y: [-2, -1, 1, 2, 3] },
+      over(ctx, T, t, C) {
+        path2(ctx, T, (x) => [x, g(x)], -0.6, 2.7, 200, C.ink, 2.2);
+        const h = hOf(t), m = (g(a + h) - g(a)) / h;
+        seg2(ctx, T, [-0.6, g(a) + m * (-0.6 - a)], [3, g(a) + m * (3 - a)], C.aux, 2);
+        seg2(ctx, T, [-0.6, g(a) - 2 * (-0.6 - a)], [3, g(a) - 2 * (3 - a)], C.curve, 2, [6, 4], .9);
+        seg2(ctx, T, [a, g(a)], [a + h, g(a)], C.muted, 1.2, [3, 3]);
+        seg2(ctx, T, [a + h, g(a)], [a + h, g(a + h)], C.muted, 1.2, [3, 3]);
+        label(ctx, "h", T.X(a + h / 2), T.Y(g(a)) - 10, { size: 13, italic: true, math: true, color: C.muted, align: "center", halo: C.surface });
+        Plot.dot(ctx, T.X(a + h), T.Y(g(a + h)), 4.5, C.aux, C.surface);
+        Plot.dot(ctx, T.X(a), T.Y(g(a)), 5, C.curve, C.surface);
+        label(ctx, "z = f(x, 1) = 3 − x²", T.X(1.75), T.Y(2.9), { size: 13, color: C.ink, halo: C.surface });
+      },
+    };
+    Plot.mount(document.getElementById("fig-def"), {
+      t: { min: 0, max: 1, value: 0.2, label: "h → 0" }, duration: 6, panels: [p],
+      readout: (t) => { const h = hOf(t); return "h = <b>" + num(h, 3) + "</b> · [f(1 + h, 1) − f(1, 1)] / h = −2 − h = <b>" + num((g(a + h) - g(a)) / h, 3) + "</b> → f<sub>x</sub>(1, 1) = −2"; },
+    });
+  })();
+
+  /* ---------- 예제 3: 단면과 접선 ---------- */
+  (function () {
+    const f = (x, y) => 4 - x * x - 2 * y * y;
+    let mode = 0;
+    const surf = { f: (r, th) => { const x = 2 * r * Math.cos(th), y = Math.SQRT2 * r * Math.sin(th); return [x, y, f(x, y)]; }, u: [0, 1], v: [0, TAU], n: [14, 56], color: "--aux", alpha: .6 };
+    const R2 = Math.SQRT2, R15 = Math.sqrt(1.5), tx = (t) => R2 * (2 * t - 1), ty = (t) => R15 * (2 * t - 1);
+    const api = Space.mount(document.getElementById("fig-slice"), {
+      range: 3.1, center: [0, 0, 1.5], height: 440, axes: [2.8, 2.2, 4.8], view: { az: 68, el: 20 }, negAxes: .9,
+      t: { min: 0, max: 1, value: (1 / R2 + 1) / 2, label: "점", duration: 7 },
+      alt: "수직평면으로 자른 단면과 접선",
+      controls: segHtml(["평면 y = 1 (C₁, f<sub>x</sub>)", "평면 x = 1 (C₂, f<sub>y</sub>)"], "자르는 평면", "sl-m"),
+      draw(S, C, api) {
+        let plane, curve, P, dir, slope;
+        if (mode === 0) {
+          const x = tx(api.t); P = [x, 1, f(x, 1)]; slope = -2 * x; dir = V.unit([1, 0, slope]);
+          plane = { f: (u, w) => [u, 1, w], u: [-2.2, 2.2], v: [0, 4.2], n: [2, 2], color: "--axis", alpha: .2, lines: false };
+          curve = samples((u) => [u, 1, f(u, 1)], -R2, R2, 80);
+        } else {
+          const y = ty(api.t); P = [1, y, f(1, y)]; slope = -4 * y; dir = V.unit([0, 1, slope]);
+          plane = { f: (u, w) => [1, u, w], u: [-1.6, 1.6], v: [0, 4.2], n: [2, 2], color: "--axis", alpha: .2, lines: false };
+          curve = samples((u) => [1, u, f(1, u)], -R15, R15, 80);
+        }
+        const L = 1.1, tan = [V.add(P, V.mul(dir, -L)), V.add(P, V.mul(dir, L))];
+        S.mesh([surf, plane], [{ pts: curve, color: "--ink", width: 3, bias: .06 }, { pts: tan, color: "--curve", width: 3, bias: .1 }]);
+        S.line([P[0], P[1], 0], P, { color: "--muted", width: 1, dash: [3, 4] });
+        S.point([P[0], P[1], 0], { color: "--muted", r: 3, ring: false, label: "(" + num(P[0]) + ", " + num(P[1]) + ")", dx: 8, dy: 12, size: 11.5 });
+        S.point(P, { color: "--curve", r: 5.5 });
+        S.text(curve[Math.floor(curve.length * 0.15)], mode === 0 ? "C₁" : "C₂", { size: 15, bold: true, color: "--ink", dx: -10, dy: -12 });
+        S.text(tan[1], mode === 0 ? "T₁" : "T₂", { size: 15, bold: true, color: "--curve", dx: 6, dy: -4 });
+      },
+      readout: (api) => {
+        if (mode === 0) { const x = tx(api.t); return "y = 1 고정 · C₁: z = 3 − x² · 점 (" + num(x) + ", 1, " + num(f(x, 1)) + ") · 접선 기울기 f<sub>x</sub>(" + num(x) + ", 1) = −2x = <b>" + num(-2 * x) + "</b>"; }
+        const y = ty(api.t); return "x = 1 고정 · C₂: z = 3 − 2y² · 점 (1, " + num(y) + ", " + num(f(1, y)) + ") · 접선 기울기 f<sub>y</sub>(1, " + num(y) + ") = −4y = <b>" + num(-4 * y) + "</b>";
+      },
+    });
+    wireSeg(api, "sl-m", (k) => { mode = k; api.state.az = k === 0 ? 68 : 18; api.state.el = 20; api.setT(k === 0 ? (1 / R2 + 1) / 2 : (1 / R15 + 1) / 2); });
+  })();
+
+  /* ---------- 예제 10: 진행하는 파동 ---------- */
+  (function () {
+    const AS = [0.5, 1, 2];
+    let a = 1;
+    const p = {
+      curve: false, x: () => 0, y: () => 0, grid: 0, height: 230, axisLabels: ["x", "u"], alt: "오른쪽으로 진행하는 파동",
+      view: { x: [-0.3, 13], y: [-1.6, 1.6] }, ticks: { x: [{ v: Math.PI, label: "π" }, { v: 2 * Math.PI, label: "2π" }, { v: 3 * Math.PI, label: "3π" }, { v: 4 * Math.PI, label: "4π" }], y: [-1, 1] },
+      over(ctx, T, t, C) {
+        path2(ctx, T, (x) => [x, Math.sin(x)], 0, 13, 300, C.axis, 1.4, .8, [4, 4]);
+        path2(ctx, T, (x) => [x, Math.sin(x - a * t)], 0, 13, 300, C.aux, 2.6);
+        const xc = Math.PI / 2 + a * t;
+        if (xc <= 13) {
+          seg2(ctx, T, [Math.PI / 2, 1.3], [xc, 1.3], C.curve, 1.6);
+          if (xc - Math.PI / 2 > 0.3) arrowHead(ctx, T.X(xc), T.Y(1.3), 0, 7, C.curve);
+          Plot.dot(ctx, T.X(xc), T.Y(1), 5.5, C.curve, C.surface);
+        }
+      },
+    };
+    const api = Plot.mount(document.getElementById("fig-wave"), {
+      t: { min: 0, max: 8, value: 1.5, label: "t" }, duration: 8, panels: [p],
+      controls: segHtml(AS.map((v) => "a = " + v), "파동의 속력", "wv-a"),
+      readout: (t) => "t = <b>" + num(t) + "</b> · 마루가 움직인 거리 at = <b>" + num(a * t) + "</b> · u<sub>tt</sub> = −a² sin(x − at), u<sub>xx</sub> = −sin(x − at) → u<sub>tt</sub> = " + (a * a) + "·u<sub>xx</sub>",
+    });
+    wireSeg(api, "wv-a", (k) => { a = AS[k]; api.redraw(); }, 1);
+  })();
+
+  /* ---------- 자가 점검 ---------- */
+  (function () {
+    const R = String.raw;
+    Quiz.mount(document.getElementById("quiz"), [
+      {
+        q: R`$f(x,y)=x^2y^3+5x-y$일 때 $f_x$는?`,
+        choices: [R`$2xy^3+5$`, R`$2xy^3+5-y$`, R`$3x^2y^2-1$`, R`$2xy^3$`],
+        answer: 0,
+        explain: R`<p>$y$를 상수로 보면 $x^2y^3\to2xy^3$, $5x\to5$, $-y\to0$이에요.</p>`,
+      },
+      {
+        q: R`$f(x,y)=ye^{xy}$일 때 $f_y(0,1)$은?`,
+        choices: [R`$0$`, R`$1$`, R`$2$`, R`$e$`],
+        answer: 1,
+        explain: R`<p>곱의 미분: $f_y=e^{xy}+xye^{xy}$. $(0,1)$에서 $1+0=1$이에요.</p>`,
+      },
+      {
+        q: R`$f_x(a,b)$의 기하학적 의미는?`,
+        choices: [R`곡면을 평면 $x=a$로 자른 곡선의 접선 기울기`, R`곡면을 평면 $y=b$로 자른 곡선의 접선 기울기`, R`곡면의 높이 $f(a,b)$`, R`등위곡선의 기울기`],
+        answer: 1,
+        explain: R`<p>$f_x$는 $y$를 고정하고 $x$를 움직이니, 평면 $y=b$ 안의 곡선 $C_1$을 따라가는 기울기예요.</p>`,
+      },
+      {
+        q: R`$\dfrac{\partial^2f}{\partial x\,\partial y}$와 같은 기호는?`,
+        choices: [R`$f_{xy}$`, R`$f_{yx}$`, R`$f_{xx}$`, R`$f_{yy}$`],
+        answer: 1,
+        explain: R`<p>$\frac{\partial}{\partial x}\left(\frac{\partial f}{\partial y}\right)$, 즉 먼저 $y$, 다음 $x$로 미분한 것이라 $(f_y)_x=f_{yx}$예요.</p>`,
+      },
+      {
+        q: R`$f(x,y)=x^3y^2-4xy$일 때 $f_{xy}$는?`,
+        choices: [R`$6x^2y-4$`, R`$6xy^2$`, R`$2x^3$`, R`$3x^2y^2-4y$`],
+        answer: 0,
+        explain: R`<p>$f_x=3x^2y^2-4y$, 이것을 $y$로 미분하면 $6x^2y-4$예요. 반대 순서로 해도 $f_y=2x^3y-4x$, $f_{yx}=6x^2y-4$로 같아요(클레로).</p>`,
+      },
+      {
+        q: R`$x^2+y^2+z^2=9$로 $z$가 정의될 때 $\dfrac{\partial z}{\partial x}$는?`,
+        choices: [R`$-\dfrac{x}{z}$`, R`$\dfrac{x}{z}$`, R`$-\dfrac{z}{x}$`, R`$-2x$`],
+        answer: 0,
+        explain: R`<p>$y$를 고정하고 $x$로 미분: $2x+2z\frac{\partial z}{\partial x}=0$이라 $\frac{\partial z}{\partial x}=-\frac xz$예요.</p>`,
+      },
+      {
+        q: R`다음 중 라플라스 방정식 $u_{xx}+u_{yy}=0$의 해는?`,
+        choices: [R`$x^2+y^2$`, R`$x^2-y^2$`, R`$xy^2$`, R`$e^{x+y}$`],
+        answer: 1,
+        explain: R`<p>$u=x^2-y^2$이면 $u_{xx}=2$, $u_{yy}=-2$라 합이 0이에요. $x^2+y^2$은 합이 4, $e^{x+y}$는 $2e^{x+y}$예요.</p>`,
+      },
+      {
+        q: R`$f(x,y,z)=xy^2z^3$일 때 $f_z$는?`,
+        choices: [R`$3xy^2z^2$`, R`$y^2z^3$`, R`$2xyz^3$`, R`$xy^2z^3$`],
+        answer: 0,
+        explain: R`<p>$x$, $y$를 상수로 보면 $xy^2$이 계수예요. $z^3\to3z^2$.</p>`,
+      },
+    ]);
+  })();
+})();
+</script>
+</body>
+</html>

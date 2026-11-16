@@ -7,7 +7,7 @@
  *   view: { az: 30, el: 22 }, // 처음 시점(도). az: z축 둘레 회전, el: 올려다보는 각
  *   axes: 4 | [lx, ly, lz] | false,
  *   grid: 0 | 간격,           // xy평면 모눈
- *   draw(S, C, api),          // S: 그리기 도구, C: 색
+ *   draw(S, C, api),          // S: 그리기 도구, C: 색 (S.mesh로 곡면을 깊이 순서대로)
  *   controls: html, readout: api => html, alt
  * }) → api { redraw, bar, canvas, setView, state }
  *
@@ -28,6 +28,17 @@
     unit: (a) => { const l = Math.hypot(a[0], a[1], a[2]) || 1; return [a[0] / l, a[1] / l, a[2] / l]; },
     lerp: (a, b, t) => [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t, a[2] + (b[2] - a[2]) * t],
   };
+
+  // '#rrggbb', '#rgb', 'rgb(a)' → [r, g, b]
+  function rgbOf(s) {
+    s = (s || "").trim();
+    if (s[0] === "#") {
+      if (s.length === 4) return [1, 2, 3].map((i) => parseInt(s[i] + s[i], 16));
+      return [1, 3, 5].map((i) => parseInt(s.slice(i, i + 2), 16));
+    }
+    const m = s.match(/[\d.]+/g);
+    return m ? m.slice(0, 3).map(Number) : [120, 120, 120];
+  }
 
   function camera(az, el) {
     const ca = Math.cos(az * deg), sa = Math.sin(az * deg), ce = Math.cos(el * deg), se = Math.sin(el * deg);
@@ -190,6 +201,70 @@
           const E = [[0, 1], [1, 2], [0, 3], [1, 4], [2, 5], [3, 4], [4, 5], [3, 6], [5, 6]];
           E.forEach(([i, j]) => S.line(pts[i], pts[j], st));
         },
+        // 곡면(사각형 조각)과 선을 깊이 순서대로 함께 그린다.
+        // surfs: [{ f(u,v) → [x,y,z] | null, u:[a,b], v:[c,d], n: 24 | [nu,nv],
+        //           color: '--aux', color2: '--curve'(높이에 따라 섞기), zr:[z0,z1], alpha: .88, lines: true }]
+        // extras: [{ pts:[...], color, width, dash, alpha }]  (곡면 위의 곡선 등)
+        mesh(surfs, extras) {
+          const items = [];
+          const Ld = V.unit(V.add(V.add(V.mul(cam.d, 0.75), V.mul(cam.u, 0.55)), V.mul(cam.r, -0.35)));
+          (surfs || []).forEach((sf) => {
+            const nu = Array.isArray(sf.n) ? sf.n[0] : sf.n || 24, nv = Array.isArray(sf.n) ? sf.n[1] : sf.n || 24;
+            const c1 = rgbOf(col(sf.color || "--aux")), c2 = sf.color2 ? rgbOf(col(sf.color2)) : null;
+            const G = [];
+            for (let i = 0; i <= nu; i++) {
+              const row = [];
+              for (let j = 0; j <= nv; j++) {
+                const p = sf.f(sf.u[0] + (sf.u[1] - sf.u[0]) * i / nu, sf.v[0] + (sf.v[1] - sf.v[0]) * j / nv);
+                row.push(p && isFinite(p[0]) && isFinite(p[1]) && isFinite(p[2]) ? p : null);
+              }
+              G.push(row);
+            }
+            for (let i = 0; i < nu; i++) for (let j = 0; j < nv; j++) {
+              const a = G[i][j], b = G[i + 1][j], c = G[i + 1][j + 1], d = G[i][j + 1];
+              if (!a || !b || !c || !d) continue;
+              const cen = V.mul(V.add(V.add(a, b), V.add(c, d)), 0.25);
+              let nrm = V.cross(V.sub(c, a), V.sub(d, b));
+              const shade = V.len(nrm) < 1e-12 ? 0.8 : 0.42 + 0.58 * Math.abs(V.dot(V.unit(nrm), Ld));
+              let base = c1;
+              if (c2) {
+                const zr = sf.zr || [-1, 1], k = Math.max(0, Math.min(1, (cen[2] - zr[0]) / (zr[1] - zr[0] || 1)));
+                base = [c1[0] + (c2[0] - c1[0]) * k, c1[1] + (c2[1] - c1[1]) * k, c1[2] + (c2[2] - c1[2]) * k];
+              }
+              items.push({ q: [a, b, c, d], z: depth(cen), rgb: base.map((v) => Math.round(v * shade)), sf: sf });
+            }
+          });
+          (extras || []).forEach((ex) => {
+            const pts = ex.pts;
+            for (let i = 0; i + 1 < pts.length; i++) {
+              if (!pts[i] || !pts[i + 1]) continue;
+              items.push({ seg: [pts[i], pts[i + 1]], z: depth(V.lerp(pts[i], pts[i + 1], 0.5)) + (ex.bias == null ? 0.04 : ex.bias) * (o.range || 4), ex: ex });
+            }
+          });
+          items.sort((p, q) => p.z - q.z);
+          ctx.save(); ctx.lineJoin = "round"; ctx.lineCap = "round";
+          items.forEach((it) => {
+            if (it.q) {
+              const sf = it.sf, A = it.q.map(P);
+              ctx.beginPath(); ctx.moveTo(A[0][0], A[0][1]); ctx.lineTo(A[1][0], A[1][1]); ctx.lineTo(A[2][0], A[2][1]); ctx.lineTo(A[3][0], A[3][1]); ctx.closePath();
+              ctx.globalAlpha = sf.alpha == null ? 0.88 : sf.alpha;
+              ctx.fillStyle = "rgb(" + it.rgb.join(",") + ")"; ctx.fill();
+              ctx.strokeStyle = ctx.fillStyle; ctx.lineWidth = 0.6; ctx.stroke();
+              if (sf.lines !== false) {
+                ctx.globalAlpha = sf.lineAlpha == null ? 0.28 : sf.lineAlpha;
+                ctx.strokeStyle = C.surface; ctx.lineWidth = 0.8; ctx.stroke();
+              }
+            } else {
+              const ex = it.ex, A = P(it.seg[0]), B = P(it.seg[1]);
+              ctx.globalAlpha = ex.alpha == null ? 1 : ex.alpha;
+              ctx.strokeStyle = col(ex.color); ctx.lineWidth = ex.width || 2.4;
+              ctx.setLineDash(ex.dash ? (ex.dash === true ? [5, 4] : ex.dash) : []);
+              ctx.beginPath(); ctx.moveTo(A[0], A[1]); ctx.lineTo(B[0], B[1]); ctx.stroke();
+              ctx.setLineDash([]);
+            }
+          });
+          ctx.restore();
+        },
       };
       return S;
     }
@@ -292,5 +367,5 @@
     return api;
   }
 
-  window.Space = { mount: mount, V: V, camera: camera };
+  window.Space = { mount: mount, V: V, camera: camera, rgbOf: rgbOf };
 })();
