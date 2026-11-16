@@ -42,7 +42,6 @@
       $$\mathbf a\times\mathbf b=\langle a_2b_3-a_3b_2,\ a_3b_1-a_1b_3,\ a_1b_2-a_2b_1\rangle$$
     </div>
     <p>결과가 벡터라서 벡터곱(vector product), 기호 때문에 크로스곱(cross product)이라고도 해요. 내적과 달리 <b>3차원 벡터끼리만</b> 정의돼요.</p>
-    <p class="note">슬라이드 제목의 “벡터곱(scalar product)”, “외적(inner product)”은 잘못 붙은 영어예요. scalar product, inner product는 내적이고, 외적은 vector product 또는 cross product예요.</p>
 
     <h3>행렬식으로 외우기</h3>
     <p>위 공식을 그대로 외우기는 어려워서 <b>행렬식</b> 모양으로 기억해요. 2차 행렬식은</p>
@@ -54,7 +53,7 @@
     <div class="problem"><span class="tag">예제 1</span>$\mathbf a=\langle1,3,4\rangle$와 $\mathbf b=\langle2,7,-5\rangle$의 외적을 구하라.</div>
     $$\mathbf a\times\mathbf b=\begin{vmatrix}\mathbf i&\mathbf j&\mathbf k\\1&3&4\\2&7&-5\end{vmatrix}=\begin{vmatrix}3&4\\7&-5\end{vmatrix}\mathbf i-\begin{vmatrix}1&4\\2&-5\end{vmatrix}\mathbf j+\begin{vmatrix}1&3\\2&7\end{vmatrix}\mathbf k$$
     $$=(-15-28)\mathbf i-(-5-8)\mathbf j+(7-6)\mathbf k=-43\mathbf i+13\mathbf j+\mathbf k$$
-    <p>검산: $\langle-43,13,1\rangle\cdot\langle1,3,4\rangle=-43+39+4=0$, $\langle-43,13,1\rangle\cdot\langle2,7,-5\rangle=-86+91-5=0$. 두 벡터에 모두 수직이니 제대로 계산된 거예요. 이 검산은 시험에서도 10초면 끝나니 꼭 해 보세요.</p>
+    <p>검산: $\langle-43,13,1\rangle\cdot\langle1,3,4\rangle=-43+39+4=0$, $\langle-43,13,1\rangle\cdot\langle2,7,-5\rangle=-86+91-5=0$. 두 벡터에 모두 수직이니 제대로 계산된 거예요. 이 검산은 금방 끝나니 외적을 구한 뒤에는 꼭 해 보세요.</p>
 
     <!-- ===================================================== -->
     <h2 id="basis">$\mathbf i$, $\mathbf j$, $\mathbf k$의 외적</h2>
@@ -145,7 +144,7 @@
       </ol>
     </div>
     <p>성질 1은 행렬식의 두 행을 바꾸면 부호가 바뀌는 것과 같아요. 실험실에서 $\mathbf b\times\mathbf a$로 바꿨을 때 본 그대로예요. 분배법칙(3, 4)은 성립하지만, 곱하는 순서는 지켜야 해요.</p>
-    <div class="exam"><strong>시험 포인트.</strong> 외적은 <b>교환법칙도 결합법칙도 성립하지 않아요.</b> 예를 들어
+    <div class="exam"><strong>핵심.</strong> 외적은 <b>교환법칙도 결합법칙도 성립하지 않아요.</b> 예를 들어
       $$(\mathbf i\times\mathbf i)\times\mathbf j=\mathbf 0\times\mathbf j=\mathbf 0,\qquad\mathbf i\times(\mathbf i\times\mathbf j)=\mathbf i\times\mathbf k=-\mathbf j$$
       괄호 위치에 따라 결과가 달라요. 성질 6이 괄호를 푸는 올바른 공식이에요(성분으로 펼쳐서 확인할 수 있어요).</div>
     <h3>성질 5의 증명</h3>

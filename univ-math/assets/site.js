@@ -2,7 +2,7 @@
 (function () {
   "use strict";
 
-  // 시험 범위 전체. 새 절 페이지를 만들면 href만 채우면 된다.
+  // 절 목록. 새 절 페이지를 만들면 href만 채우면 된다.
   const CHAPTERS = [
     { no: 9, title: "매개변수방정식과 극좌표", sections: [
       { id: "9.1", title: "매개변수방정식으로 정의된 곡선", href: "9-1.html" },
@@ -25,7 +25,7 @@
     { no: 12, title: "벡터함수", sections: [
       { id: "12.1", title: "벡터함수와 공간곡선", href: "12-1.html" },
       { id: "12.2", title: "벡터함수의 도함수와 적분", href: "12-2.html" },
-      { id: "12.3", title: "호의 길이와 곡률", note: "예제 7까지", href: "12-3.html" },
+      { id: "12.3", title: "호의 길이와 곡률", href: "12-3.html" },
     ] },
   ];
   const ALL = CHAPTERS.flatMap((c) => c.sections);

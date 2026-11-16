@@ -48,7 +48,7 @@
     $$\langle2,4\rangle\cdot\langle3,-1\rangle=2(3)+4(-1)=2$$
     $$\langle-1,7,4\rangle\cdot\left\langle6,2,-\tfrac12\right\rangle=(-1)(6)+7(2)+4\left(-\tfrac12\right)=-6+14-2=6$$
     $$(\mathbf i+2\mathbf j-3\mathbf k)\cdot(2\mathbf j-\mathbf k)=1(0)+2(2)+(-3)(-1)=7$$
-    <p>마지막 식은 $\mathbf i$, $\mathbf j$, $\mathbf k$로 쓴 벡터를 $\langle1,2,-3\rangle$, $\langle0,2,-1\rangle$로 바꿔 계산한 거예요. 없는 성분은 0이에요. (슬라이드에는 $1(0)=2(2)+\cdots$로 적혀 있는데, 가운데 등호는 $+$가 맞아요.)</p>
+    <p>마지막 식은 $\mathbf i$, $\mathbf j$, $\mathbf k$로 쓴 벡터를 $\langle1,2,-3\rangle$, $\langle0,2,-1\rangle$로 바꿔 계산한 거예요. 없는 성분은 0이에요.</p>
 
     <!-- ===================================================== -->
     <h2 id="prop">내적의 성질</h2>
@@ -65,8 +65,7 @@
     <p>모두 성분으로 쓰면 바로 증명돼요. 1과 3을 보면</p>
     $$\mathbf a\cdot\mathbf a=a_1^2+a_2^2+a_3^2=|\mathbf a|^2$$
     $$\begin{aligned}\mathbf a\cdot(\mathbf b+\mathbf c)&=\langle a_1,a_2,a_3\rangle\cdot\langle b_1+c_1,\,b_2+c_2,\,b_3+c_3\rangle\\&=a_1(b_1+c_1)+a_2(b_2+c_2)+a_3(b_3+c_3)\\&=(a_1b_1+a_2b_2+a_3b_3)+(a_1c_1+a_2c_2+a_3c_3)=\mathbf a\cdot\mathbf b+\mathbf a\cdot\mathbf c\end{aligned}$$
-    <p>(슬라이드 증명 첫 줄의 $\langle a_1,a_2,a_2\rangle$는 $\langle a_1,a_2,a_3\rangle$의 오타예요.)</p>
-    <div class="exam"><strong>시험 포인트.</strong> 성질 1은 <b>길이를 내적으로 바꾸는 열쇠</b>예요. $|\mathbf a-\mathbf b|^2=(\mathbf a-\mathbf b)\cdot(\mathbf a-\mathbf b)=|\mathbf a|^2-2\,\mathbf a\cdot\mathbf b+|\mathbf b|^2$처럼 다항식 전개하듯 풀 수 있어요. 바로 아래 정리 3의 증명이 이 계산이에요.</div>
+    <div class="exam"><strong>핵심.</strong> 성질 1은 <b>길이를 내적으로 바꾸는 열쇠</b>예요. $|\mathbf a-\mathbf b|^2=(\mathbf a-\mathbf b)\cdot(\mathbf a-\mathbf b)=|\mathbf a|^2-2\,\mathbf a\cdot\mathbf b+|\mathbf b|^2$처럼 다항식 전개하듯 풀 수 있어요. 바로 아래 정리 3의 증명이 이 계산이에요.</div>
 
     <!-- ===================================================== -->
     <h2 id="angle">내적과 사이각</h2>
@@ -103,7 +102,6 @@
         <tr><td>$\theta=\pi$</td><td>$-1$</td><td>$-|\mathbf a|\,|\mathbf b|$ (최소)</td><td>정확히 반대 방향</td></tr>
       </tbody>
     </table>
-    <p class="note">슬라이드에는 “$0\le\theta\le\frac\pi2$이면 $\cos\theta>0$”로 적혀 있는데, $\theta=\frac\pi2$에서는 $\cos\theta=0$이라 끝점은 빼야 해요.</p>
     <p>아래 그림에서 $\mathbf b$를 돌려 보세요. $\mathbf b$의 끝에서 $\mathbf a$를 품은 직선에 수선을 내리면 그 발까지의 <b>그림자</b>가 생겨요. 그림자 길이가 $|\mathbf b|\cos\theta$이고, 여기에 $|\mathbf a|$를 곱한 것이 내적이에요. 그림자가 $\mathbf a$와 같은 쪽이면 양수(초록), 반대쪽이면 음수(빨강)예요.</p>
     <figure class="plot" id="fig-sign">
       <figcaption>$|\mathbf a|=3$, $|\mathbf b|=2.4$로 고정했어요. $\theta=90^\circ$에서 그림자 길이가 0이 되어 내적이 0이에요. 이 그림자는 뒤에 나올 <b>사영</b>과 같은 거예요.</figcaption>
@@ -115,7 +113,7 @@
       <p style="margin:0 0 .3rem"><b>6 따름정리</b> $\mathbf a$, $\mathbf b$가 영벡터가 아니고 사이각이 $\theta$이면</p>
       $$\cos\theta=\frac{\mathbf a\cdot\mathbf b}{|\mathbf a|\,|\mathbf b|}$$
     </div>
-    <p>정리 3의 양변을 $|\mathbf a|\,|\mathbf b|$로 나눈 거예요. 나누려면 $|\mathbf a|\,|\mathbf b|\ne0$이어야 하니 조건은 “두 벡터가 영벡터가 아님”이에요. (슬라이드의 “$\theta$가 0이 아닌”은 이 조건을 잘못 옮긴 거예요. $\theta=0$이어도 공식은 성립해요.)</p>
+    <p>정리 3의 양변을 $|\mathbf a|\,|\mathbf b|$로 나눈 거예요. 나누려면 $|\mathbf a|\,|\mathbf b|\ne0$이어야 하니 조건은 “두 벡터가 영벡터가 아님”이에요.</p>
 
     <div class="problem"><span class="tag">예제 3</span>벡터 $\mathbf a=\langle2,2,-1\rangle$, $\mathbf b=\langle5,-3,2\rangle$ 사이의 각을 구하라.</div>
     <ol class="steps">
@@ -153,7 +151,6 @@
     <p>두 번째 식은 세 식을 제곱해서 더하면 $\frac{a_1^2+a_2^2+a_3^2}{|\mathbf a|^2}=1$이라 나와요. 같은 이야기를 벡터로 쓰면</p>
     $$\frac{\mathbf a}{|\mathbf a|}=\langle\cos\alpha,\,\cos\beta,\,\cos\gamma\rangle$$
     <p>즉 <b>방향코사인은 $\mathbf a$ 방향 단위벡터의 성분</b>이에요. 길이가 1이니 제곱의 합이 1인 거죠.</p>
-    <p class="note">슬라이드의 식 8 $\cos\alpha=\frac{a_1}{|a_1|}$은 $\frac{a_1}{|\mathbf a|}$의 오타예요. $\frac{a_1}{|a_1|}$이면 항상 $\pm1$이 돼 버려요. 또 슬라이드 제목에 “2차원”이라고 되어 있지만 내용은 3차원($\gamma$까지)이에요.</p>
 
     <div class="problem"><span class="tag">예제 5</span>벡터 $\mathbf a=\langle1,2,3\rangle$의 방향각을 구하라.</div>
     <ol class="steps">
@@ -215,7 +212,7 @@
     <p>이번엔 성분을 아니까 정의 1로 계산해요. 변위벡터는 끝점에서 시점을 빼서</p>
     $$\mathbf D=\overrightarrow{PQ}=\langle4-2,\,6-1,\,2-0\rangle=\langle2,5,2\rangle$$
     $$W=\mathbf F\cdot\mathbf D=\langle3,4,5\rangle\cdot\langle2,5,2\rangle=6+20+10=36\ \text{J}$$
-    <div class="exam"><strong>시험 포인트.</strong> 일 문제는 주어진 정보로 공식을 고르면 돼요. 크기와 각이 주어지면 $|\mathbf F|\,|\mathbf D|\cos\theta$, 성분이나 좌표가 주어지면 $\mathbf F\cdot\mathbf D$를 성분으로. 변위는 두 점이 주어지면 <b>끝점 − 시점</b>이에요.</div>
+    <div class="exam"><strong>핵심.</strong> 일 문제는 주어진 정보로 공식을 고르면 돼요. 크기와 각이 주어지면 $|\mathbf F|\,|\mathbf D|\cos\theta$, 성분이나 좌표가 주어지면 $\mathbf F\cdot\mathbf D$를 성분으로. 변위는 두 점이 주어지면 <b>끝점 − 시점</b>이에요.</div>
 
     <!-- ===================================================== -->
     <h2 id="summary">한눈에 정리</h2>
@@ -566,7 +563,7 @@
         q: R`$\mathbf a=\langle2,-1,2\rangle$의 방향코사인 $\cos\beta$는?`,
         choices: [R`$-1$`, R`$-\frac13$`, R`$\frac23$`, R`$-\frac1{\sqrt5}$`],
         answer: 1,
-        explain: R`<p>$|\mathbf a|=\sqrt{4+1+4}=3$이고 $\cos\beta=\frac{a_2}{|\mathbf a|}=-\frac13$이에요. A는 슬라이드 오타처럼 $\frac{a_2}{|a_2|}$로 계산한 값이에요.</p>`,
+        explain: R`<p>$|\mathbf a|=\sqrt{4+1+4}=3$이고 $\cos\beta=\frac{a_2}{|\mathbf a|}=-\frac13$이에요. A는 $\frac{a_2}{|a_2|}$로 잘못 계산한 값이에요.</p>`,
       },
       {
         q: R`어떤 벡터의 방향각이 $\alpha=\frac\pi3$, $\beta=\frac\pi4$일 때, $\gamma$가 예각이라면 $\gamma$는?`,

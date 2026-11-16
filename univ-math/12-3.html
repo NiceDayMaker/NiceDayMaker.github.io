@@ -33,7 +33,7 @@
       <canvas id="hero" aria-hidden="true"></canvas>
     </header>
 
-    <p class="lede">곡선의 길이는 9.2에서 평면곡선으로 이미 구했어요. 이번엔 공간곡선으로 넓히고, 그 길이를 기준으로 <b>곡선이 얼마나 휘었는지(곡률)</b>를 재요. 시험 범위는 예제 7(단위법선벡터, 종법선벡터)까지라, 그 뒤의 법평면, 접촉평면, 비틀림율은 다루지 않아요.</p>
+    <p class="lede">곡선의 길이는 9.2에서 평면곡선으로 이미 구했어요. 이번엔 공간곡선으로 넓히고, 그 길이를 기준으로 <b>곡선이 얼마나 휘었는지(곡률)</b>를 재요.</p>
 
     <!-- ===================================================== -->
     <h2 id="len">호의 길이</h2>
@@ -91,7 +91,7 @@
       <li>$\mathbf r(t)$에 넣으면
         $$\mathbf r(t(s))=\cos\left(\frac{s}{\sqrt2}\right)\mathbf i+\sin\left(\frac{s}{\sqrt2}\right)\mathbf j+\frac{s}{\sqrt2}\,\mathbf k$$</li>
     </ol>
-    <p>검산: $s$로 미분하면 $\frac{1}{\sqrt2}\left\langle-\sin\frac{s}{\sqrt2},\cos\frac{s}{\sqrt2},1\right\rangle$이고 길이가 1이에요. 호의 길이로 매개변수화하면 <b>속력이 항상 1</b>이 돼요. 슬라이드에 풀이가 비어 있어서 채웠어요.</p>
+    <p>검산: $s$로 미분하면 $\frac{1}{\sqrt2}\left\langle-\sin\frac{s}{\sqrt2},\cos\frac{s}{\sqrt2},1\right\rangle$이고 길이가 1이에요. 호의 길이로 매개변수화하면 <b>속력이 항상 1</b>이 돼요.</p>
 
     <!-- ===================================================== -->
     <h2 id="curv">곡률의 정의</h2>
@@ -168,7 +168,7 @@
     </ol>
     <p>꼭짓점(원점)에서 가장 많이 휘고, 멀어질수록 거의 직선처럼 펴져요. $x\to\pm\infty$이면 $\kappa(x)\to0$이에요.</p>
     <figure class="plot" id="fig-ex5">
-      <figcaption>파란 곡선이 $y=x^2$, 빨간 곡선이 곡률 $y=\kappa(x)$예요. 점을 움직이면 그 점에서 포물선에 가장 잘 맞는 원(초록, 반지름 $\frac1\kappa$)이 따라 그려져요. 이 원은 시험 범위 밖의 “접촉원”인데, 곡률을 눈으로 보기 좋아서 참고로 넣었어요.</figcaption>
+      <figcaption>파란 곡선이 $y=x^2$, 빨간 곡선이 곡률 $y=\kappa(x)$예요. 점을 움직이면 그 점에서 포물선에 가장 잘 맞는 원(초록, 반지름 $\frac1\kappa$)이 따라 그려져요. 이 원을 “접촉원”이라 하고, 그 반지름 $\frac1\kappa$를 곡률 반지름이라 해요.</figcaption>
     </figure>
 
     <!-- ===================================================== -->
@@ -210,7 +210,7 @@
       <li>곡률: $|\mathbf r'(1)|=2$이므로
         $$\kappa(1)=\frac{|\mathbf T'(1)|}{|\mathbf r'(1)|}=\frac{1/\sqrt2}{2}=\frac{1}{2\sqrt2}=\frac{\sqrt2}{4}\approx0.354$$</li>
     </ol>
-    <p>검산: 정리 10으로도 $\mathbf r'(1)=\langle1,\sqrt2,-1\rangle$, $\mathbf r''(1)=\langle0,-\sqrt2,2\rangle$, $\mathbf r'\times\mathbf r''=\langle\sqrt2,-2,-\sqrt2\rangle$, 크기 $2\sqrt2$, $|\mathbf r'|^3=8$이라 $\kappa=\frac{2\sqrt2}{8}=\frac{\sqrt2}{4}$로 같아요. $\mathbf T\cdot\mathbf N=\frac12\cdot\frac{1}{\sqrt2}(1+0-1)=0$, $\mathbf T\cdot\mathbf B=\frac12\left(\frac12-1+\frac12\right)=0$도 확인돼요. (슬라이드에 풀이가 없어서 채웠어요.)</p>
+    <p>검산: 정리 10으로도 $\mathbf r'(1)=\langle1,\sqrt2,-1\rangle$, $\mathbf r''(1)=\langle0,-\sqrt2,2\rangle$, $\mathbf r'\times\mathbf r''=\langle\sqrt2,-2,-\sqrt2\rangle$, 크기 $2\sqrt2$, $|\mathbf r'|^3=8$이라 $\kappa=\frac{2\sqrt2}{8}=\frac{\sqrt2}{4}$로 같아요. $\mathbf T\cdot\mathbf N=\frac12\cdot\frac{1}{\sqrt2}(1+0-1)=0$, $\mathbf T\cdot\mathbf B=\frac12\left(\frac12-1+\frac12\right)=0$도 확인돼요.</p>
     <figure class="plot" id="fig-tnb">
       <figcaption>곡선을 따라 움직이는 $\mathbf T$(빨강), $\mathbf N$(초록), $\mathbf B$(파랑)예요. 셋은 항상 서로 직각인 단위벡터이고, $\mathbf N$은 곡선이 휘어 들어가는 쪽을 가리켜요. 나선에서는 $\mathbf N$이 늘 $z$축을 향해요. 꼬인 3차곡선은 원점($t=0$)에서 곡률이 2로 가장 크고(예제 4), 예제 7의 곡선은 $t=1$이 예제의 점이에요.</figcaption>
     </figure>
