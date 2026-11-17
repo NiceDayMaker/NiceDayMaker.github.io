@@ -40,6 +40,217 @@
     return m ? m.slice(0, 3).map(Number) : [120, 120, 120];
   }
 
+  /* ---------- 픽셀 단위 깊이 버퍼(여러 겹 반투명 합성) ---------- */
+  const KL = 4;                              // 픽셀마다 보관하는 가까운 조각 수
+  const RB = { n: 0 };                       // 모든 그림이 함께 쓰는 버퍼
+  function rbuf(N) {
+    if (RB.n < N) {
+      RB.n = N;
+      RB.cnt = new Uint8Array(N); RB.dep = new Float32Array(N * KL); RB.alp = new Float32Array(N * KL);
+      RB.col = new Uint8ClampedArray(N * KL * 3); RB.own = new Int16Array(N * KL); RB.stamp = new Int32Array(N);
+    }
+    return RB;
+  }
+  let offCanvas = null;
+
+  function meshRaster(S, C, col, cam, surfs, extras) {
+    const ctx = S.ctx, W = S.W, H = S.H, P = S.P, depth = S.depth;
+    const dpr = window.devicePixelRatio || 1;
+    let ss = Math.max(1.5, dpr);                             // 1배 화면은 1.5배로 그려서 줄이며 계단 완화
+    if (W * H * ss * ss > 1.6e6) ss = Math.sqrt(1.6e6 / (W * H));
+    const RW = Math.max(1, Math.round(W * ss)), RH = Math.max(1, Math.round(H * ss)), N = RW * RH;
+    const B = rbuf(N), cnt = B.cnt, dep = B.dep, alp = B.alp, cl = B.col, own = B.own, stamp = B.stamp;
+    cnt.fill(0, 0, N); stamp.fill(0, 0, N);
+    const R = 2.15 * Math.min(W, H) / 2 / S.scale;          // 화면에 보이는 대략의 길이
+    let x0b = RW, y0b = RH, x1b = -1, y1b = -1;
+    const proj = (p) => { const q = P(p); return [q[0] * ss, q[1] * ss, depth(p)]; };
+
+    // 조각 하나 넣기: 가까운 것부터 KL개만 남김. 같은 주인(owner)의 거의 같은 깊이는 합침.
+    function put(idx, z, r, g, b, a, o, eps) {
+      const base = idx * KL; let c = cnt[idx];
+      for (let i = 0; i < c; i++) {
+        const k = base + i;
+        if (own[k] === o && Math.abs(dep[k] - z) < eps) {
+          if (a > alp[k] || z > dep[k]) { if (a >= alp[k]) { cl[k * 3] = r; cl[k * 3 + 1] = g; cl[k * 3 + 2] = b; alp[k] = a; } dep[k] = Math.max(dep[k], z); }
+          return;
+        }
+      }
+      let pos = 0;
+      while (pos < c && dep[base + pos] >= z) { if (alp[base + pos] >= 0.995) return; pos++; }
+      if (pos >= KL) return;
+      const last = Math.min(c, KL - 1);
+      for (let i = last; i > pos; i--) {
+        const k = base + i, k1 = k - 1;
+        dep[k] = dep[k1]; alp[k] = alp[k1]; own[k] = own[k1];
+        cl[k * 3] = cl[k1 * 3]; cl[k * 3 + 1] = cl[k1 * 3 + 1]; cl[k * 3 + 2] = cl[k1 * 3 + 2];
+      }
+      const k = base + pos;
+      dep[k] = z; alp[k] = a; own[k] = o; cl[k * 3] = r; cl[k * 3 + 1] = g; cl[k * 3 + 2] = b;
+      c = Math.min(c + 1, KL);
+      if (a >= 0.995) c = pos + 1;                       // 불투명하면 그 뒤는 버림
+      cnt[idx] = c;
+    }
+
+    function tri(A, Bp, Cp, ca, cb, cc, a, o, eps) {
+      const area = (Bp[0] - A[0]) * (Cp[1] - A[1]) - (Cp[0] - A[0]) * (Bp[1] - A[1]);
+      if (Math.abs(area) < 1e-9) return;
+      let xa = Math.floor(Math.min(A[0], Bp[0], Cp[0])), xb = Math.ceil(Math.max(A[0], Bp[0], Cp[0]));
+      let ya = Math.floor(Math.min(A[1], Bp[1], Cp[1])), yb = Math.ceil(Math.max(A[1], Bp[1], Cp[1]));
+      xa = Math.max(0, xa); ya = Math.max(0, ya); xb = Math.min(RW - 1, xb); yb = Math.min(RH - 1, yb);
+      if (xa > xb || ya > yb) return;
+      x0b = Math.min(x0b, xa); y0b = Math.min(y0b, ya); x1b = Math.max(x1b, xb); y1b = Math.max(y1b, yb);
+      const ia = 1 / area, E = -1e-7;
+      // w0: 꼭짓점 A의 무게 (변 B→C), w1: B (변 C→A)
+      const d0x = -(Cp[1] - Bp[1]) * ia, d1x = -(A[1] - Cp[1]) * ia;
+      for (let y = ya; y <= yb; y++) {
+        const py = y + 0.5, px0 = xa + 0.5;
+        let w0 = ((Bp[0] - px0) * (Cp[1] - py) - (Cp[0] - px0) * (Bp[1] - py)) * ia;
+        let w1 = ((Cp[0] - px0) * (A[1] - py) - (A[0] - px0) * (Cp[1] - py)) * ia;
+        let row = y * RW + xa;
+        for (let x = xa; x <= xb; x++, w0 += d0x, w1 += d1x, row++) {
+          const w2 = 1 - w0 - w1;
+          if (w0 < E || w1 < E || w2 < E) continue;
+          const z = w0 * A[2] + w1 * Bp[2] + w2 * Cp[2];
+          put(row, z, w0 * ca[0] + w1 * cb[0] + w2 * cc[0], w0 * ca[1] + w1 * cb[1] + w2 * cc[1], w0 * ca[2] + w1 * cb[2] + w2 * cc[2], a, o, eps);
+        }
+      }
+    }
+
+    // 굵은 선분. mode 0: 조각으로 넣기, mode 1: 주인 곡면 위에 색 섞기
+    function seg(A, Bp, wpx, rgb, a, o, mode, dash, s0, sid, eps) {
+      const dx = Bp[0] - A[0], dy = Bp[1] - A[1], L2 = dx * dx + dy * dy, L = Math.sqrt(L2), hw = wpx / 2;
+      const m = hw + 1;
+      const xa = Math.max(0, Math.floor(Math.min(A[0], Bp[0]) - m)), xb = Math.min(RW - 1, Math.ceil(Math.max(A[0], Bp[0]) + m));
+      const ya = Math.max(0, Math.floor(Math.min(A[1], Bp[1]) - m)), yb = Math.min(RH - 1, Math.ceil(Math.max(A[1], Bp[1]) + m));
+      if (xa > xb || ya > yb) return;
+      if (mode === 0) { x0b = Math.min(x0b, xa); y0b = Math.min(y0b, ya); x1b = Math.max(x1b, xb); y1b = Math.max(y1b, yb); }
+      for (let y = ya; y <= yb; y++) for (let x = xa; x <= xb; x++) {
+        const px = x + 0.5 - A[0], py = y + 0.5 - A[1];
+        let t = L2 > 1e-9 ? (px * dx + py * dy) / L2 : 0; t = t < 0 ? 0 : t > 1 ? 1 : t;
+        const ex = px - t * dx, ey = py - t * dy, d = Math.sqrt(ex * ex + ey * ey);
+        let cov = hw + 0.5 - d; if (cov <= 0) continue; if (cov > 1) cov = 1;
+        if (dash) { const sp = (s0 + t * L) % (dash[0] + dash[1]); if (sp > dash[0]) continue; }
+        const z = A[2] + t * (Bp[2] - A[2]), idx = y * RW + x;
+        if (mode === 0) { put(idx, z, rgb[0], rgb[1], rgb[2], a * cov, o, eps); continue; }
+        if (stamp[idx] === sid) continue;
+        const base = idx * KL, c = cnt[idx];
+        for (let i = 0; i < c; i++) {
+          const k = base + i;
+          if (own[k] === o && Math.abs(dep[k] - z) < eps) {
+            const f = a * cov;
+            cl[k * 3] += (rgb[0] - cl[k * 3]) * f; cl[k * 3 + 1] += (rgb[1] - cl[k * 3 + 1]) * f; cl[k * 3 + 2] += (rgb[2] - cl[k * 3 + 2]) * f;
+            stamp[idx] = sid; break;
+          }
+        }
+      }
+    }
+    function poly(pts, wpx, rgb, a, o, mode, dash, bias, sid, eps) {
+      const Q = pts.map((p) => (p ? proj(p) : null));
+      let s0 = 0;
+      for (let i = 0; i + 1 < Q.length; i++) {
+        const A = Q[i], Bq = Q[i + 1];
+        if (!A || !Bq) continue;
+        seg([A[0], A[1], A[2] + bias], [Bq[0], Bq[1], Bq[2] + bias], wpx, rgb, a, o, mode, dash, s0, sid, eps);
+        s0 += Math.hypot(Bq[0] - A[0], Bq[1] - A[1]);
+      }
+    }
+
+    const Ld = V.unit(V.add(V.add(V.mul(cam.d, 0.75), V.mul(cam.u, 0.55)), V.mul(cam.r, -0.35)));
+    const epsSurf = 0.002 * R, epsLine = 0.03 * R;
+    let sid = 1;
+    surfs.forEach((sf, si) => {
+      const o = si + 1;
+      const nu = Array.isArray(sf.n) ? sf.n[0] : sf.n || 24, nv = Array.isArray(sf.n) ? sf.n[1] : sf.n || 24;
+      const c1 = rgbOf(col(sf.color || "--aux")), c2 = sf.color2 ? rgbOf(col(sf.color2)) : null;
+      const a = sf.alpha == null ? 0.88 : sf.alpha;
+      const G = [];
+      for (let i = 0; i <= nu; i++) {
+        const row = [];
+        for (let j = 0; j <= nv; j++) {
+          const p = sf.f(sf.u[0] + (sf.u[1] - sf.u[0]) * i / nu, sf.v[0] + (sf.v[1] - sf.v[0]) * j / nv);
+          row.push(p && isFinite(p[0]) && isFinite(p[1]) && isFinite(p[2]) ? p : null);
+        }
+        G.push(row);
+      }
+      // 꼭짓점 색(법선으로 음영, 고로 셰이딩)
+      const Q = [], CL = [];
+      const g = (i, j) => (i >= 0 && i <= nu && j >= 0 && j <= nv ? G[i][j] : null);
+      for (let i = 0; i <= nu; i++) {
+        const qr = [], cr = [];
+        for (let j = 0; j <= nv; j++) {
+          const p = G[i][j];
+          if (!p) { qr.push(null); cr.push(null); continue; }
+          const pu = V.sub(g(i + 1, j) || p, g(i - 1, j) || p), pv = V.sub(g(i, j + 1) || p, g(i, j - 1) || p);
+          const nr = V.cross(pu, pv), ln = V.len(nr);
+          const shade = ln < 1e-12 ? 0.8 : 0.42 + 0.58 * Math.abs(V.dot(nr, Ld) / ln);
+          let base = c1;
+          if (c2) {
+            const zr = sf.zr || [-1, 1], k = Math.max(0, Math.min(1, (p[2] - zr[0]) / (zr[1] - zr[0] || 1)));
+            base = [c1[0] + (c2[0] - c1[0]) * k, c1[1] + (c2[1] - c1[1]) * k, c1[2] + (c2[2] - c1[2]) * k];
+          }
+          qr.push(proj(p)); cr.push([base[0] * shade, base[1] * shade, base[2] * shade]);
+        }
+        Q.push(qr); CL.push(cr);
+      }
+      for (let i = 0; i < nu; i++) for (let j = 0; j < nv; j++) {
+        const A = Q[i][j], Bq = Q[i + 1][j], Cq = Q[i + 1][j + 1], D = Q[i][j + 1];
+        if (!A || !Bq || !Cq || !D) continue;
+        tri(A, Bq, Cq, CL[i][j], CL[i + 1][j], CL[i + 1][j + 1], a, o, epsSurf);
+        tri(A, Cq, D, CL[i][j], CL[i + 1][j + 1], CL[i][j + 1], a, o, epsSurf);
+      }
+      // 곡면에 붙는 격자선
+      const lc = rgbOf(col(sf.lineColor || C.surface)), la = sf.lineAlpha == null ? 0.28 : sf.lineAlpha, lw = (sf.lineWidth || 0.9) * ss;
+      if (sf.lines !== false && la > 0) {
+        const su = sf.lineStep || Math.max(1, Math.round(nu / 24)), sv = sf.lineStep || Math.max(1, Math.round(nv / 24));
+        for (let i = 0; i <= nu; i += su) poly(G[i], lw, lc, la, o, 1, null, 0, sid++, epsLine);
+        for (let j = 0; j <= nv; j += sv) poly(G.map((r) => r[j]), lw, lc, la, o, 1, null, 0, sid++, epsLine);
+      }
+      (sf.gridLines || []).forEach((gl) => poly(gl.pts, (gl.width || sf.lineWidth || 1) * ss, gl.color ? rgbOf(col(gl.color)) : lc, gl.alpha == null ? la : gl.alpha, o, 1, null, 0, sid++, epsLine));
+    });
+    // 따로 그리는 선(곡선, 접선 등)
+    extras.forEach((ex, ei) => {
+      const o = -(ei + 1);
+      const dash = ex.dash ? (ex.dash === true ? [5, 4] : ex.dash).map((v) => v * ss) : null;
+      poly(ex.pts, (ex.width || 2.4) * ss, rgbOf(col(ex.color)), ex.alpha == null ? 1 : ex.alpha, o, 0, dash, (ex.bias == null ? 0.04 : ex.bias) * R, 0, epsLine * 2);
+    });
+    if (x1b < x0b || y1b < y0b) return;
+
+    // 뒤에서 앞으로 합성
+    const bw = x1b - x0b + 1, bh = y1b - y0b + 1;
+    if (!offCanvas) offCanvas = document.createElement("canvas");
+    if (offCanvas.width < bw) offCanvas.width = bw;
+    if (offCanvas.height < bh) offCanvas.height = bh;
+    const octx = offCanvas.getContext("2d");
+    const img = octx.createImageData(bw, bh), d = img.data;
+    for (let y = 0; y < bh; y++) for (let x = 0; x < bw; x++) {
+      const idx = (y + y0b) * RW + (x + x0b), c = cnt[idx];
+      if (!c) continue;
+      let r = 0, gg = 0, b = 0, A = 0;
+      for (let i = c - 1; i >= 0; i--) {
+        const k = idx * KL + i, af = alp[k], na = 1 - af;
+        r = cl[k * 3] * af + r * na; gg = cl[k * 3 + 1] * af + gg * na; b = cl[k * 3 + 2] * af + b * na; A = af + A * na;
+      }
+      const o4 = (y * bw + x) * 4;
+      if (A > 0) { d[o4] = r / A; d[o4 + 1] = gg / A; d[o4 + 2] = b / A; d[o4 + 3] = A * 255; }
+    }
+    octx.clearRect(0, 0, offCanvas.width, offCanvas.height);
+    octx.putImageData(img, 0, 0);
+    ctx.save();
+    ctx.imageSmoothingEnabled = true; ctx.imageSmoothingQuality = "high";
+    ctx.drawImage(offCanvas, 0, 0, bw, bh, x0b / ss, y0b / ss, bw / ss, bh / ss);
+    // xray: 가려진 부분도 옅게 보여 줄 선은 위에 한 번 더
+    extras.forEach((ex) => {
+      if (!ex.xray) return;
+      ctx.globalAlpha = ex.xray * (ex.alpha == null ? 1 : ex.alpha);
+      ctx.strokeStyle = col(ex.color); ctx.lineWidth = (ex.width || 2.4) * 0.8; ctx.lineJoin = "round"; ctx.lineCap = "round";
+      ctx.setLineDash(ex.dash ? (ex.dash === true ? [5, 4] : ex.dash) : []);
+      ctx.beginPath(); let pen = false;
+      ex.pts.forEach((p) => { if (!p) { pen = false; return; } const q = P(p); pen ? ctx.lineTo(q[0], q[1]) : ctx.moveTo(q[0], q[1]); pen = true; });
+      ctx.stroke(); ctx.setLineDash([]);
+    });
+    ctx.restore();
+  }
+
   function camera(az, el) {
     const ca = Math.cos(az * deg), sa = Math.sin(az * deg), ce = Math.cos(el * deg), se = Math.sin(el * deg);
     return {
@@ -201,69 +412,13 @@
           const E = [[0, 1], [1, 2], [0, 3], [1, 4], [2, 5], [3, 4], [4, 5], [3, 6], [5, 6]];
           E.forEach(([i, j]) => S.line(pts[i], pts[j], st));
         },
-        // 곡면(사각형 조각)과 선을 깊이 순서대로 함께 그린다.
+        // 곡면과 선을 픽셀 단위 깊이 버퍼로 그린다(서로 뚫고 지나가는 곡면도 정확히 가려짐).
         // surfs: [{ f(u,v) → [x,y,z] | null, u:[a,b], v:[c,d], n: 24 | [nu,nv],
-        //           color: '--aux', color2: '--curve'(높이에 따라 섞기), zr:[z0,z1], alpha: .88, lines: true }]
-        // extras: [{ pts:[...], color, width, dash, alpha }]  (곡면 위의 곡선 등)
+        //           color: '--aux', color2: '--curve'(높이에 따라 섞기), zr:[z0,z1], alpha: .88,
+        //           lines: true(매개변수 격자), lineAlpha, lineColor, gridLines: [{ pts, alpha }](곡면에 붙는 선) }]
+        // extras: [{ pts:[...], color, width, dash, alpha, bias, xray }]  (곡면 위의 곡선 등, xray: 가려진 부분을 옅게 보일 비율)
         mesh(surfs, extras) {
-          const items = [];
-          const Ld = V.unit(V.add(V.add(V.mul(cam.d, 0.75), V.mul(cam.u, 0.55)), V.mul(cam.r, -0.35)));
-          (surfs || []).forEach((sf) => {
-            const nu = Array.isArray(sf.n) ? sf.n[0] : sf.n || 24, nv = Array.isArray(sf.n) ? sf.n[1] : sf.n || 24;
-            const c1 = rgbOf(col(sf.color || "--aux")), c2 = sf.color2 ? rgbOf(col(sf.color2)) : null;
-            const G = [];
-            for (let i = 0; i <= nu; i++) {
-              const row = [];
-              for (let j = 0; j <= nv; j++) {
-                const p = sf.f(sf.u[0] + (sf.u[1] - sf.u[0]) * i / nu, sf.v[0] + (sf.v[1] - sf.v[0]) * j / nv);
-                row.push(p && isFinite(p[0]) && isFinite(p[1]) && isFinite(p[2]) ? p : null);
-              }
-              G.push(row);
-            }
-            for (let i = 0; i < nu; i++) for (let j = 0; j < nv; j++) {
-              const a = G[i][j], b = G[i + 1][j], c = G[i + 1][j + 1], d = G[i][j + 1];
-              if (!a || !b || !c || !d) continue;
-              const cen = V.mul(V.add(V.add(a, b), V.add(c, d)), 0.25);
-              let nrm = V.cross(V.sub(c, a), V.sub(d, b));
-              const shade = V.len(nrm) < 1e-12 ? 0.8 : 0.42 + 0.58 * Math.abs(V.dot(V.unit(nrm), Ld));
-              let base = c1;
-              if (c2) {
-                const zr = sf.zr || [-1, 1], k = Math.max(0, Math.min(1, (cen[2] - zr[0]) / (zr[1] - zr[0] || 1)));
-                base = [c1[0] + (c2[0] - c1[0]) * k, c1[1] + (c2[1] - c1[1]) * k, c1[2] + (c2[2] - c1[2]) * k];
-              }
-              items.push({ q: [a, b, c, d], z: depth(cen), rgb: base.map((v) => Math.round(v * shade)), sf: sf });
-            }
-          });
-          (extras || []).forEach((ex) => {
-            const pts = ex.pts;
-            for (let i = 0; i + 1 < pts.length; i++) {
-              if (!pts[i] || !pts[i + 1]) continue;
-              items.push({ seg: [pts[i], pts[i + 1]], z: depth(V.lerp(pts[i], pts[i + 1], 0.5)) + (ex.bias == null ? 0.04 : ex.bias) * (o.range || 4), ex: ex });
-            }
-          });
-          items.sort((p, q) => p.z - q.z);
-          ctx.save(); ctx.lineJoin = "round"; ctx.lineCap = "round";
-          items.forEach((it) => {
-            if (it.q) {
-              const sf = it.sf, A = it.q.map(P);
-              ctx.beginPath(); ctx.moveTo(A[0][0], A[0][1]); ctx.lineTo(A[1][0], A[1][1]); ctx.lineTo(A[2][0], A[2][1]); ctx.lineTo(A[3][0], A[3][1]); ctx.closePath();
-              ctx.globalAlpha = sf.alpha == null ? 0.88 : sf.alpha;
-              ctx.fillStyle = "rgb(" + it.rgb.join(",") + ")"; ctx.fill();
-              ctx.strokeStyle = ctx.fillStyle; ctx.lineWidth = 0.6; ctx.stroke();
-              if (sf.lines !== false) {
-                ctx.globalAlpha = sf.lineAlpha == null ? 0.28 : sf.lineAlpha;
-                ctx.strokeStyle = C.surface; ctx.lineWidth = 0.8; ctx.stroke();
-              }
-            } else {
-              const ex = it.ex, A = P(it.seg[0]), B = P(it.seg[1]);
-              ctx.globalAlpha = ex.alpha == null ? 1 : ex.alpha;
-              ctx.strokeStyle = col(ex.color); ctx.lineWidth = ex.width || 2.4;
-              ctx.setLineDash(ex.dash ? (ex.dash === true ? [5, 4] : ex.dash) : []);
-              ctx.beginPath(); ctx.moveTo(A[0], A[1]); ctx.lineTo(B[0], B[1]); ctx.stroke();
-              ctx.setLineDash([]);
-            }
-          });
-          ctx.restore();
+          meshRaster(S, C, col, cam, surfs || [], extras || []);
         },
       };
       return S;

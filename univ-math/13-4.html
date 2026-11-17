@@ -73,7 +73,7 @@
         $$z-3=4(x-1)+2(y-1)\quad\text{즉}\quad z=4x+2y-3$$</li>
     </ol>
     <figure class="plot" id="fig-tplane">
-      <figcaption>곡면(파랑)과 접점에서의 접평면(주황)이에요. 슬라이더로 접점 둘레를 확대하면, 곡면이 점점 접평면과 구별되지 않을 만큼 평평해져요. 확대할 때 창의 크기가 줄어든 비율만큼 그림도 키웠기 때문에 “같은 크기로 본” 모습이에요(높이는 보기 좋게 줄였어요).</figcaption>
+      <figcaption>곡면(파랑)과 접점에서의 접평면(주황)이에요. 슬라이더로 접점 둘레를 확대하면, 곡면이 점점 접평면과 구별되지 않을 만큼 평평해져요. 모눈은 실제 좌표에 붙어 있어서 확대하면 간격이 벌어지고, 그 사이로 더 촘촘한 모눈이 나타나요. 가장자리 숫자로 지금 보는 범위를 확인할 수 있어요(높이는 보기 좋게 줄였어요).</figcaption>
     </figure>
 
     <!-- ===================================================== -->
@@ -259,21 +259,40 @@
   /* ---------- 예제 1, 2: 접평면과 확대 ---------- */
   (function () {
     const PRE = [
-      { name: "예제 1 · z = 2x² + y², (1, 1)", f: (x, y) => 2 * x * x + y * y, a: 1, b: 1, fx: 4, fy: 2, zs: 0.28, L: "z = 4x + 2y − 3" },
-      { name: "예제 2 · z = xe^{xy}, (1, 0)".replace("e^{xy}", "e<sup>xy</sup>"), f: (x, y) => x * Math.exp(x * y), a: 1, b: 0, fx: 1, fy: 1, zs: 0.6, L: "z = x + y" },
+      { name: "예제 1 · z = 2x² + y², (1, 1)", f: (x, y) => 2 * x * x + y * y, a: 1, b: 1, fx: 4, fy: 2, zs: 0.17, L: "z = 4x + 2y − 3" },
+      { name: "예제 2 · z = xe^{xy}, (1, 0)".replace("e^{xy}", "e<sup>xy</sup>"), f: (x, y) => x * Math.exp(x * y), a: 1, b: 0, fx: 1, fy: 1, zs: 0.4, L: "z = x + y" },
     ];
     let cur = PRE[0];
     const wOf = (t) => 0.8 * Math.pow(0.02 / 0.8, t);
     const api = Space.mount(document.getElementById("fig-tplane"), {
-      range: 1.7, center: [0, 0, 0], height: 420, axes: false, view: { az: 32, el: 22 },
+      range: 1.75, center: [0, 0, 0], height: 420, axes: false, view: { az: 215, el: 30 },
       t: { min: 0, max: 1, value: 0, label: "확대", duration: 7 },
       alt: "곡면과 접평면, 확대하면 평평해지는 모습",
       controls: segHtml(PRE.map((p) => p.name), "함수 고르기", "tp-p"),
       draw(S, C, api) {
         const w = wOf(api.t), c = cur.f(cur.a, cur.b), zs = cur.zs;
-        const surf = { f: (u, v) => [u, v, zs * (cur.f(cur.a + w * u, cur.b + w * v) - c) / w], u: [-1, 1], v: [-1, 1], n: 22, color: "--aux", alpha: .8 };
-        const pl = { f: (u, v) => [u, v, zs * (cur.fx * u + cur.fy * v)], u: [-1, 1], v: [-1, 1], n: 22, color: PLANE, alpha: .6, lineAlpha: .12 };
+        const zSurf = (u, v) => zs * (cur.f(cur.a + w * u, cur.b + w * v) - c) / w, zPl = (u, v) => zs * (cur.fx * u + cur.fy * v);
+        // 실제 좌표에 고정된 모눈: 확대하면 간격이 벌어지고, 더 촘촘한 모눈이 서서히 나타남
+        const g = Math.log10(2 * w / 4), base = Math.pow(10, Math.floor(g)), frac = g - Math.floor(g);
+        const lines = (z0, x0, step) => { const out = []; for (let k = Math.ceil((x0 - w) / step - 1e-9); k * step <= x0 + w + 1e-9; k++) out.push(k * step); return out; };
+        const grid = (zf) => {
+          const gl = [];
+          [[base, 0.55 * (1 - frac)], [10 * base, 0.85]].forEach(([st, al], lv) => {
+            if (al < 0.02) return;
+            lines(0, cur.a, st).forEach((x) => { if (lv === 0 && Math.abs(x / (10 * base) - Math.round(x / (10 * base))) < 1e-6) return; const u = (x - cur.a) / w; gl.push({ pts: samples((v) => [u, v, zf(u, v)], -1, 1, 40), alpha: al }); });
+            lines(0, cur.b, st).forEach((y) => { if (lv === 0 && Math.abs(y / (10 * base) - Math.round(y / (10 * base))) < 1e-6) return; const v = (y - cur.b) / w; gl.push({ pts: samples((u) => [u, v, zf(u, v)], -1, 1, 40), alpha: al }); });
+          });
+          return gl;
+        };
+        const surf = { f: (u, v) => [u, v, zSurf(u, v)], u: [-1, 1], v: [-1, 1], n: 26, color: "--aux", alpha: .9, lines: false, lineColor: "--surface", gridLines: grid(zSurf) };
+        const pl = { f: (u, v) => [u, v, zPl(u, v)], u: [-1, 1], v: [-1, 1], n: 4, color: PLANE, alpha: .5, lines: false, lineColor: "--surface", gridLines: grid(zPl) };
         S.mesh([surf, pl]);
+        // 눈금 숫자: 보이는 모눈 가운데 6개 이하가 되도록 간격을 골라 앞쪽 가장자리에
+        const lab = [1, 2, 5, 10].map((m) => m * base).find((st) => lines(0, cur.a, st).length <= 6) || 10 * base;
+        const dec = Math.max(0, -Math.floor(Math.log10(lab) + 1e-9));
+        const vE = S.depth([0, 1, 0]) > S.depth([0, -1, 0]) ? 1 : -1, uE = S.depth([1, 0, 0]) > S.depth([-1, 0, 0]) ? 1 : -1;
+        lines(0, cur.a, lab).forEach((x) => { const u = (x - cur.a) / w; if (Math.abs(u) <= 1) S.text([u, vE * 1.12, zPl(u, vE)], "x=" + x.toFixed(dec), { size: 11, color: "--muted", align: "center" }); });
+        lines(0, cur.b, lab).forEach((y) => { const v = (y - cur.b) / w; if (Math.abs(v) <= 1) S.text([uE * 1.14, v, zPl(uE, v)], "y=" + y.toFixed(dec), { size: 11, color: "--muted", align: "center" }); });
         S.point([0, 0, 0], { color: "--curve", r: 5.5 });
       },
       readout: (api) => {
@@ -283,7 +302,8 @@
           const u = -1 + i / 10, v = -1 + j / 10, d = Math.abs(cur.f(cur.a + w * u, cur.b + w * v) - (c + cur.fx * w * u + cur.fy * w * v));
           gap = Math.max(gap, d);
         }
-        return "접평면 " + cur.L + " · 보는 창: x ∈ [" + num(cur.a - w, 3) + ", " + num(cur.a + w, 3) + "], y ∈ [" + num(cur.b - w, 3) + ", " + num(cur.b + w, 3) + "]" +
+        const g = Math.log10(2 * w / 4), step = Math.pow(10, Math.floor(g) + 1);
+        return "접평면 " + cur.L + " · 확대 배율 <b>×" + fmt(0.8 / w, 1) + "</b> · 진한 모눈 간격 " + step + " · 보는 창: x ∈ [" + num(cur.a - w, 3) + ", " + num(cur.a + w, 3) + "], y ∈ [" + num(cur.b - w, 3) + ", " + num(cur.b + w, 3) + "]" +
           "<br>창 안에서 곡면과 접평면의 최대 높이 차 <b>" + fmt(gap, 5) + "</b> · 창 크기에 대한 비율 <b>" + fmt(gap / w, 4) + "</b> → 0";
       },
     });

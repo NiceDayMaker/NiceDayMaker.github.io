@@ -357,7 +357,7 @@
           curve = samples((u) => [1, u, f(1, u)], -R15, R15, 80);
         }
         const L = 1.1, tan = [V.add(P, V.mul(dir, -L)), V.add(P, V.mul(dir, L))];
-        S.mesh([surf, plane], [{ pts: curve, color: "--ink", width: 3, bias: .06 }, { pts: tan, color: "--curve", width: 3, bias: .1 }]);
+        S.mesh([surf, plane], [{ pts: curve, color: "--ink", width: 3, bias: .06, xray: .35 }, { pts: tan, color: "--curve", width: 3, bias: .1, xray: .45 }]);
         S.line([P[0], P[1], 0], P, { color: "--muted", width: 1, dash: [3, 4] });
         S.point([P[0], P[1], 0], { color: "--muted", r: 3, ring: false, label: "(" + num(P[0]) + ", " + num(P[1]) + ")", dx: 8, dy: 12, size: 11.5 });
         S.point(P, { color: "--curve", r: 5.5 });

@@ -266,7 +266,7 @@
         const surf = { f: (r, th) => { const x = r * Math.cos(th), y = r * Math.sin(th); return [x, y, fn.f(x, y)]; }, u: [0.004, 1.3], v: [0, TAU], n: [26, 72], color: "--aux", alpha: .5, lineAlpha: .18 };
         const ex = fn.paths.map((pa, i) => {
           const pts = samples((s) => { const q = pa.p(s); return [q[0], q[1], fn.f(q[0], q[1])]; }, 1.15, 0.004, 160);
-          return { pts: pts, color: PC[i], width: i === pi ? 3.4 : 1.8, alpha: i === pi ? 1 : .55, bias: .08 };
+          return { pts: pts, color: PC[i], width: i === pi ? 3.4 : 1.8, alpha: i === pi ? 1 : .8, bias: .08, xray: .45 };
         });
         S.mesh([surf], ex);
         // 바닥의 경로 그림자
@@ -307,7 +307,7 @@
         const zs = fn.zs, r = rOf(api.t);
         const surf = { f: (rr, th) => { const x = rr * Math.cos(th), y = rr * Math.sin(th); return [x, y, zs * fn.f(x, y)]; }, u: [0.004, 1.3], v: [0, TAU], n: [24, 72], color: "--aux", alpha: .5, lineAlpha: .18 };
         const ring = samples((th) => [r * Math.cos(th), r * Math.sin(th), zs * fn.f(r * Math.cos(th), r * Math.sin(th))], 0, TAU, 240);
-        S.mesh([surf], [{ pts: ring, color: "--curve", width: 3, bias: .1 }]);
+        S.mesh([surf], [{ pts: ring, color: "--curve", width: 3, bias: .1, xray: .4 }]);
         S.path(samples((th) => [r * Math.cos(th), r * Math.sin(th), 0], 0, TAU, 120), { color: "--curve", width: 1.2, dash: [3, 4], alpha: .6 });
         const [lo, hi] = range(r);
         S.line([0, 0, zs * lo], [0, 0, zs * hi], { color: "--curve", width: 5, alpha: .55 });

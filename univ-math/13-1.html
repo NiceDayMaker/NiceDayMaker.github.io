@@ -391,7 +391,7 @@
         if (segs.length) { const s = segs[Math.floor(segs.length / 3)][0]; S.line([s[0], s[1], zk], [s[0], s[1], fl], { color: "--curve", width: 1.2, dash: [3, 4], alpha: .7 }); }
         // 곡면 + 수평평면 + 단면
         const pl = { f: (u, v) => [u, v, zk], u: xr, v: yr, n: [2, 2], color: "--axis", alpha: .22, lines: false };
-        const cut = segs.map((s) => ({ pts: [[s[0][0], s[0][1], zk], [s[1][0], s[1][1], zk]], color: "--curve", width: 3, bias: .06 }));
+        const cut = segs.map((s) => ({ pts: [[s[0][0], s[0][1], zk], [s[1][0], s[1][1], zk]], color: "--curve", width: 3, bias: .06, xray: .35 }));
         S.mesh([Object.assign({ color: "--aux", alpha: .62 }, cur.surf), pl], cut);
         S.text([xr[1], yr[0], zk], "z = k", { size: 12.5, color: "--muted", dx: 6 });
       },
