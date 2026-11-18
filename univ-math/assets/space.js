@@ -40,7 +40,7 @@
     return m ? m.slice(0, 3).map(Number) : [120, 120, 120];
   }
 
-  /* ---------- 픽셀 단위 깊이 버퍼(여러 겹 반투명 합성) ---------- */
+  /* ---------- CPU 렌더러(WebGL2를 못 쓸 때): 픽셀 단위 깊이 버퍼, 여러 겹 반투명 합성 ---------- */
   const KL = 4;                              // 픽셀마다 보관하는 가까운 조각 수
   const RB = { n: 0 };                       // 모든 그림이 함께 쓰는 버퍼
   function rbuf(N) {
@@ -52,6 +52,324 @@
     return RB;
   }
   let offCanvas = null;
+
+  /* ---------- WebGL2 렌더러: 깊이 벗겨내기(depth peeling)로 반투명 곡면 여러 겹 합성 ---------- */
+  const PEELS = 6;                           // 픽셀마다 앞에서부터 벗겨 낼 겹 수
+  const GLR = { state: 0 };                  // 0: 아직, 1: 사용 가능, -1: 사용 불가
+  function glInit() {
+    if (GLR.state) return GLR.state > 0;
+    GLR.state = -1;
+    try {
+      const cv = typeof OffscreenCanvas !== "undefined" ? new OffscreenCanvas(1, 1) : document.createElement("canvas");
+      // failIfMajorPerformanceCaveat: 그래픽카드 없이 소프트웨어로 흉내 내는 WebGL이면 거절(그땐 CPU 렌더러가 더 빠름)
+      const gl = cv.getContext("webgl2", { alpha: true, premultipliedAlpha: true, antialias: false, depth: false, stencil: false, preserveDrawingBuffer: false, failIfMajorPerformanceCaveat: true });
+      if (!gl) return false;
+      // 소프트웨어 렌더러(SwiftShader, llvmpipe 등)면 CPU 렌더러를 씀
+      const dbg = gl.getExtension("WEBGL_debug_renderer_info");
+      const rname = dbg ? String(gl.getParameter(dbg.UNMASKED_RENDERER_WEBGL) || "") : "";
+      if (/swiftshader|llvmpipe|softpipe|software|basic render/i.test(rname)) return false;
+      cv.addEventListener("webglcontextlost", (e) => { e.preventDefault(); GLR.state = -1; });
+      const sh = (type, src) => {
+        const o = gl.createShader(type); gl.shaderSource(o, src); gl.compileShader(o);
+        if (!gl.getShaderParameter(o, gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(o));
+        return o;
+      };
+      const prog = (vs, fs) => {
+        const p = gl.createProgram();
+        gl.attachShader(p, sh(gl.VERTEX_SHADER, vs)); gl.attachShader(p, sh(gl.FRAGMENT_SHADER, fs)); gl.linkProgram(p);
+        if (!gl.getProgramParameter(p, gl.LINK_STATUS)) throw new Error(gl.getProgramInfoLog(p));
+        return p;
+      };
+      const H = "#version 300 es\nprecision highp float;\nprecision highp int;\n";
+      // 곡면 삼각형: 화면 좌표(px, 아래로 +y)와 깊이(카메라 쪽 +)를 받는다
+      const triP = prog(H + `
+        in vec3 a_p; in vec4 a_c;
+        uniform vec2 u_size; uniform float u_dr;
+        out vec4 v_c;
+        void main() {
+          v_c = a_c;
+          gl_Position = vec4(a_p.x / u_size.x * 2.0 - 1.0, 1.0 - a_p.y / u_size.y * 2.0, clamp(-a_p.z / u_dr, -1.0, 1.0), 1.0);
+        }`, H + `
+        in vec4 v_c;
+        uniform highp sampler2D u_prev; uniform int u_peel; uniform float u_eps; uniform float u_off;
+        out vec4 o;
+        void main() {
+          // 기울기에 비례해 살짝 뒤로 미룸(곡면 위 선이 자기 곡면에 묻히지 않게). 깊이를 직접 써서 벗겨내기 비교와 일치시킴
+          float d = min(1.0, gl_FragCoord.z + u_off * fwidth(gl_FragCoord.z) + 2e-6);
+          gl_FragDepth = d;
+          if (u_peel == 1 && d <= texelFetch(u_prev, ivec2(gl_FragCoord.xy), 0).r + u_eps) discard;
+          o = vec4(v_c.rgb * v_c.a, v_c.a);
+        }`);
+      // 굵은 선분: 사각형으로 늘려 그리고, 조각 셰이더에서 거리로 가장자리 부드럽게, 점선, 깊이 계산
+      const lineP = prog(H + `
+        in vec3 a_a; in vec3 a_b; in vec2 a_k; in vec4 a_c; in vec4 a_w;
+        uniform vec2 u_size; uniform float u_dr;
+        out vec2 v_p; flat out vec3 v_a; flat out vec3 v_b; flat out vec4 v_c; flat out vec4 v_w;
+        void main() {
+          vec2 dv = a_b.xy - a_a.xy; float L = length(dv);
+          vec2 dir = L > 1e-6 ? dv / L : vec2(1.0, 0.0), nr = vec2(-dir.y, dir.x);
+          float ext = a_w.x + 1.5;
+          vec2 p = (a_k.x < 0.0 ? a_a.xy - dir * ext : a_b.xy + dir * ext) + nr * a_k.y * ext;
+          v_p = p; v_a = a_a; v_b = a_b; v_c = a_c; v_w = a_w;
+          float z = a_k.x < 0.0 ? a_a.z : a_b.z;
+          gl_Position = vec4(p.x / u_size.x * 2.0 - 1.0, 1.0 - p.y / u_size.y * 2.0, clamp(-z / u_dr, -1.0, 1.0), 1.0);
+        }`, H + `
+        in vec2 v_p; flat in vec3 v_a; flat in vec3 v_b; flat in vec4 v_c; flat in vec4 v_w;
+        uniform highp sampler2D u_prev; uniform int u_peel; uniform float u_dr; uniform float u_epsL;
+        out vec4 o;
+        void main() {
+          vec2 dv = v_b.xy - v_a.xy; float L2 = dot(dv, dv);
+          float t = L2 > 1e-9 ? clamp(dot(v_p - v_a.xy, dv) / L2, 0.0, 1.0) : 0.0;
+          float d = length(v_p - (v_a.xy + t * dv));
+          float cov = clamp(v_w.x + 0.5 - d, 0.0, 1.0);
+          if (cov <= 0.0) discard;
+          if (v_w.y > 0.0) { float sp = mod(v_w.w + t * sqrt(L2), v_w.y + v_w.z); if (sp > v_w.y) discard; }
+          float z = mix(v_a.z, v_b.z, t);
+          float fd = clamp(-z / u_dr, -1.0, 1.0) * 0.5 + 0.5;
+          gl_FragDepth = fd;
+          if (u_peel == 1 && fd <= texelFetch(u_prev, ivec2(gl_FragCoord.xy), 0).r + u_epsL) discard;
+          float a = v_c.a * cov;
+          o = vec4(v_c.rgb * a, a);
+        }`);
+      // 화면 전체에 텍스처 한 장 그리기(합성용)
+      const quadP = prog(H + `
+        void main() { vec2 p = vec2(float((gl_VertexID << 1) & 2), float(gl_VertexID & 2)); gl_Position = vec4(p * 2.0 - 1.0, 0.0, 1.0); }`, H + `
+        uniform highp sampler2D u_tex; out vec4 o;
+        void main() { o = texelFetch(u_tex, ivec2(gl_FragCoord.xy), 0); }`);
+
+      // 내려받기 전 줄이기: 출력 화소 하나 = 렌더 화소 n×n의 평균(가장자리 매끄럽게)
+      const downP = prog(H + `
+        void main() { vec2 p = vec2(float((gl_VertexID << 1) & 2), float(gl_VertexID & 2)); gl_Position = vec4(p * 2.0 - 1.0, 0.0, 1.0); }`, H + `
+        uniform highp sampler2D u_tex; uniform vec2 u_org; uniform float u_f; uniform int u_n; uniform float u_rh;
+        out vec4 o;
+        void main() {
+          // 출력 0행 = 맨 위 행(readPixels가 0행부터 주므로 그대로 ImageData 순서가 됨)
+          vec2 dp = gl_FragCoord.xy - 0.5 + u_org;
+          vec4 acc = vec4(0.0);
+          for (int j = 0; j < 4; j++) { if (j >= u_n) break;
+            for (int i = 0; i < 4; i++) { if (i >= u_n) break;
+              vec2 r = (dp + (vec2(float(i), float(j)) + 0.5) / float(u_n)) * u_f;   // 렌더 좌표(아래로 +y)
+              acc += texelFetch(u_tex, ivec2(int(r.x), int(u_rh - r.y)), 0);
+            } }
+          acc /= float(u_n * u_n);
+          o = acc.a > 0.0 ? vec4(acc.rgb / acc.a, acc.a) : vec4(0.0);   // ImageData용: 미리 곱한 알파를 풂
+        }`);
+      const loc = (p, names) => { const r = {}; names.forEach((n) => { r[n] = n[0] === "a" && n[1] === "_" ? gl.getAttribLocation(p, n) : gl.getUniformLocation(p, n); }); return r; };
+      GLR.tri = { p: triP, l: loc(triP, ["a_p", "a_c", "u_size", "u_dr", "u_prev", "u_peel", "u_eps", "u_off"]), buf: gl.createBuffer(), vao: gl.createVertexArray() };
+      GLR.line = { p: lineP, l: loc(lineP, ["a_a", "a_b", "a_k", "a_c", "a_w", "u_size", "u_dr", "u_prev", "u_peel", "u_epsL"]), buf: gl.createBuffer(), vao: gl.createVertexArray() };
+      GLR.quad = { p: quadP, l: loc(quadP, ["u_tex"]), vao: gl.createVertexArray() };
+      GLR.down = { p: downP, l: loc(downP, ["u_tex", "u_org", "u_f", "u_n", "u_rh"]) };
+      // 꼭짓점 배치
+      gl.bindVertexArray(GLR.tri.vao); gl.bindBuffer(gl.ARRAY_BUFFER, GLR.tri.buf);
+      [["a_p", 3, 0], ["a_c", 4, 3]].forEach(([n, k, off]) => { const L = GLR.tri.l[n]; gl.enableVertexAttribArray(L); gl.vertexAttribPointer(L, k, gl.FLOAT, false, 28, off * 4); });
+      gl.bindVertexArray(GLR.line.vao); gl.bindBuffer(gl.ARRAY_BUFFER, GLR.line.buf);
+      [["a_a", 3, 0], ["a_b", 3, 3], ["a_k", 2, 6], ["a_c", 4, 8], ["a_w", 4, 12]].forEach(([n, k, off]) => { const L = GLR.line.l[n]; gl.enableVertexAttribArray(L); gl.vertexAttribPointer(L, k, gl.FLOAT, false, 64, off * 4); });
+      gl.bindVertexArray(null);
+      GLR.gl = gl; GLR.cv = cv; GLR.w = 0; GLR.h = 0;
+      GLR.maxTex = Math.min(gl.getParameter(gl.MAX_TEXTURE_SIZE), gl.getParameter(gl.MAX_RENDERBUFFER_SIZE));
+      GLR.state = 1;
+      return true;
+    } catch (e) {
+      if (window.console) console.warn("WebGL 렌더러를 쓸 수 없어 CPU로 그려요:", e && e.message);
+      GLR.state = -1;
+      return false;
+    }
+  }
+  function glTargets(w, h) {
+    const gl = GLR.gl;
+    if (GLR.w >= w && GLR.h >= h) return;
+    const W = Math.max(w, GLR.w), H = Math.max(h, GLR.h);
+    [GLR.colTex, GLR.accTex, GLR.outTex, GLR.dTex0, GLR.dTex1].forEach((t) => t && gl.deleteTexture(t));
+    [GLR.fb0, GLR.fb1, GLR.fbA, GLR.fbO].forEach((f) => f && gl.deleteFramebuffer(f));
+    const tex = (ifmt, fmt, type) => {
+      const t = gl.createTexture(); gl.bindTexture(gl.TEXTURE_2D, t);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+      gl.texImage2D(gl.TEXTURE_2D, 0, ifmt, W, H, 0, fmt, type, null);
+      return t;
+    };
+    GLR.colTex = tex(gl.RGBA8, gl.RGBA, gl.UNSIGNED_BYTE);
+    GLR.accTex = tex(gl.RGBA8, gl.RGBA, gl.UNSIGNED_BYTE);
+    GLR.outTex = tex(gl.RGBA8, gl.RGBA, gl.UNSIGNED_BYTE);
+    GLR.dTex0 = tex(gl.DEPTH_COMPONENT24, gl.DEPTH_COMPONENT, gl.UNSIGNED_INT);
+    GLR.dTex1 = tex(gl.DEPTH_COMPONENT24, gl.DEPTH_COMPONENT, gl.UNSIGNED_INT);
+    const fbo = (c, d) => {
+      const f = gl.createFramebuffer(); gl.bindFramebuffer(gl.FRAMEBUFFER, f);
+      gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, c, 0);
+      if (d) gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.TEXTURE_2D, d, 0);
+      if (gl.checkFramebufferStatus(gl.FRAMEBUFFER) !== gl.FRAMEBUFFER_COMPLETE) throw new Error("framebuffer");
+      return f;
+    };
+    GLR.fb0 = fbo(GLR.colTex, GLR.dTex0); GLR.fb1 = fbo(GLR.colTex, GLR.dTex1); GLR.fbA = fbo(GLR.accTex, null); GLR.fbO = fbo(GLR.outTex, null);
+    gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+    GLR.w = W; GLR.h = H;
+  }
+
+  // 반환값: true면 그렸음, false면 CPU 렌더러로 넘김
+  function meshGL(S, C, col, cam, surfs, extras) {
+    if (!glInit()) return false;
+    const gl = GLR.gl;
+    if (gl.isContextLost()) { GLR.state = -1; return false; }
+    const ctx = S.ctx, W = S.W, H = S.H, P = S.P, depth = S.depth;
+    const dpr = window.devicePixelRatio || 1;
+    let ss = Math.min(4, Math.max(2, 2 * dpr));                // 화면보다 크게 그려서 줄이며 가장자리 매끄럽게
+    if (W * H * ss * ss > 9e6) ss = Math.sqrt(9e6 / (W * H));
+    ss = Math.min(ss, (GLR.maxTex - 2) / W, (GLR.maxTex - 2) / H);
+    const RW = Math.max(1, Math.round(W * ss)), RH = Math.max(1, Math.round(H * ss));
+    const R = 2.15 * Math.min(W, H) / 2 / S.scale, DR = 3 * R;
+    const proj = (p) => { const q = P(p); return [q[0] * ss, q[1] * ss, depth(p)]; };
+    const Ld = V.unit(V.add(V.add(V.mul(cam.d, 0.75), V.mul(cam.u, 0.55)), V.mul(cam.r, -0.35)));
+
+    // 꼭짓점 모으기
+    const T = [], Lv = [];
+    const pushT = (q, c, a) => T.push(q[0], q[1], q[2], c[0] / 255, c[1] / 255, c[2] / 255, a);
+    const K = [[-1, -1], [1, -1], [1, 1], [-1, -1], [1, 1], [-1, 1]];
+    function poly(pts, wpx, rgb, a, dash, bias) {
+      let s0 = 0, prev = null;
+      for (let i = 0; i < pts.length; i++) {
+        const q = pts[i] ? proj(pts[i]) : null;
+        if (q && prev) {
+          const A = [prev[0], prev[1], prev[2] + bias], B = [q[0], q[1], q[2] + bias];
+          for (let k = 0; k < 6; k++) Lv.push(A[0], A[1], A[2], B[0], B[1], B[2], K[k][0], K[k][1], rgb[0] / 255, rgb[1] / 255, rgb[2] / 255, a, wpx / 2, dash ? dash[0] : 0, dash ? dash[1] : 0, s0);
+          s0 += Math.hypot(q[0] - prev[0], q[1] - prev[1]);
+        }
+        prev = q;
+      }
+    }
+    surfs.forEach((sf) => {
+      const { nu, nv, a, G, Q, CL } = buildSurf(sf, Ld, col, proj);
+      for (let i = 0; i < nu; i++) for (let j = 0; j < nv; j++) {
+        const A = Q[i][j], B = Q[i + 1][j], Cq = Q[i + 1][j + 1], D = Q[i][j + 1];
+        if (!A || !B || !Cq || !D) continue;
+        pushT(A, CL[i][j], a); pushT(B, CL[i + 1][j], a); pushT(Cq, CL[i + 1][j + 1], a);
+        pushT(A, CL[i][j], a); pushT(Cq, CL[i + 1][j + 1], a); pushT(D, CL[i][j + 1], a);
+      }
+      // 곡면에 붙는 격자선: 아주 조금만 앞으로 띄우고, 곡면 쪽을 화면 기울기만큼 뒤로 밀어서 자기 곡면 위에만 보이게
+      const lc = rgbOf(col(sf.lineColor || C.surface)), la = sf.lineAlpha == null ? 0.28 : sf.lineAlpha, lw = (sf.lineWidth || 0.9) * ss, gb = 0.002 * R;
+      if (sf.lines !== false && la > 0) {
+        const su = sf.lineStep || Math.max(1, Math.round(nu / 24)), sv = sf.lineStep || Math.max(1, Math.round(nv / 24));
+        for (let i = 0; i <= nu; i += su) poly(G[i], lw, lc, la, null, gb);
+        for (let j = 0; j <= nv; j += sv) poly(G.map((r) => r[j]), lw, lc, la, null, gb);
+      }
+      (sf.gridLines || []).forEach((g) => poly(g.pts, (g.width || sf.lineWidth || 1) * ss, g.color ? rgbOf(col(g.color)) : lc, g.alpha == null ? la : g.alpha, null, gb));
+    });
+    extras.forEach((ex) => {
+      const dash = ex.dash ? (ex.dash === true ? [5, 4] : ex.dash).map((v) => v * ss) : null;
+      poly(ex.pts, (ex.width || 2.4) * ss, rgbOf(col(ex.color)), ex.alpha == null ? 1 : ex.alpha, dash, (ex.bias == null ? 0.04 : ex.bias) * R);
+    });
+    if (!T.length && !Lv.length) { drawXray(ctx, P, col, extras); return true; }
+    // 실제로 그린 범위(화면 px)만 옮겨 붙임
+    let bx0 = Infinity, by0 = Infinity, bx1 = -Infinity, by1 = -Infinity;
+    for (let i = 0; i < T.length; i += 7) { const x = T[i], y = T[i + 1]; if (x < bx0) bx0 = x; if (x > bx1) bx1 = x; if (y < by0) by0 = y; if (y > by1) by1 = y; }
+    for (let i = 0; i < Lv.length; i += 16) {
+      const m = Lv[i + 12] + 2;
+      for (const o of [0, 3]) { const x = Lv[i + o], y = Lv[i + o + 1]; if (x - m < bx0) bx0 = x - m; if (x + m > bx1) bx1 = x + m; if (y - m < by0) by0 = y - m; if (y + m > by1) by1 = y + m; }
+    }
+    bx0 = Math.max(0, Math.floor(bx0) - 2); by0 = Math.max(0, Math.floor(by0) - 2);
+    bx1 = Math.min(RW, Math.ceil(bx1) + 2); by1 = Math.min(RH, Math.ceil(by1) + 2);
+    if (bx1 <= bx0 || by1 <= by0) { drawXray(ctx, P, col, extras); return true; }
+
+    try {
+      glTargets(RW, RH);
+      const nT = T.length / 7, nL = Lv.length / 16;
+      gl.bindBuffer(gl.ARRAY_BUFFER, GLR.tri.buf); gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(T), gl.DYNAMIC_DRAW);
+      gl.bindBuffer(gl.ARRAY_BUFFER, GLR.line.buf); gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(Lv), gl.DYNAMIC_DRAW);
+      gl.viewport(0, 0, RW, RH);
+      gl.disable(gl.CULL_FACE);
+      // 누적 버퍼 비우기
+      gl.bindFramebuffer(gl.FRAMEBUFFER, GLR.fbA); gl.clearColor(0, 0, 0, 0); gl.clear(gl.COLOR_BUFFER_BIT);
+      const epsD = 1e-5, epsL = (0.006 * R) / DR * 0.5;
+      for (let k = 0; k < PEELS; k++) {
+        const fb = k % 2 ? GLR.fb1 : GLR.fb0, prev = k % 2 ? GLR.dTex0 : GLR.dTex1;
+        gl.bindFramebuffer(gl.FRAMEBUFFER, fb);
+        gl.clearColor(0, 0, 0, 0); gl.clearDepth(1); gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+        gl.enable(gl.DEPTH_TEST); gl.depthFunc(gl.LESS); gl.depthMask(true); gl.disable(gl.BLEND);
+        gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D, prev);
+        if (nT) {
+          const t = GLR.tri; gl.useProgram(t.p); gl.bindVertexArray(t.vao);
+          gl.uniform2f(t.l.u_size, RW, RH); gl.uniform1f(t.l.u_dr, DR); gl.uniform1i(t.l.u_prev, 0); gl.uniform1i(t.l.u_peel, k ? 1 : 0); gl.uniform1f(t.l.u_eps, epsD);
+          gl.uniform1f(t.l.u_off, ss + 1.5);
+          gl.drawArrays(gl.TRIANGLES, 0, nT);
+        }
+        if (nL) {
+          const l = GLR.line; gl.useProgram(l.p); gl.bindVertexArray(l.vao);
+          gl.uniform2f(l.l.u_size, RW, RH); gl.uniform1f(l.l.u_dr, DR); gl.uniform1i(l.l.u_prev, 0); gl.uniform1i(l.l.u_peel, k ? 1 : 0); gl.uniform1f(l.l.u_epsL, epsL);
+          gl.drawArrays(gl.TRIANGLES, 0, nL);
+        }
+        // 이번 겹을 누적 버퍼 뒤쪽에 깔기(앞→뒤 합성)
+        gl.bindFramebuffer(gl.FRAMEBUFFER, GLR.fbA);
+        gl.disable(gl.DEPTH_TEST); gl.enable(gl.BLEND); gl.blendFunc(gl.ONE_MINUS_DST_ALPHA, gl.ONE);
+        gl.bindTexture(gl.TEXTURE_2D, GLR.colTex);
+        gl.useProgram(GLR.quad.p); gl.bindVertexArray(GLR.quad.vao); gl.uniform1i(GLR.quad.l.u_tex, 0);
+        gl.drawArrays(gl.TRIANGLES, 0, 3);
+      }
+      // 화면 해상도로 줄여서(그린 범위만) 읽어 옴
+      const f = ss / dpr, n = Math.min(4, Math.ceil(f - 1e-6));
+      const ox0 = Math.floor(bx0 / f), oy0 = Math.floor(by0 / f), OW = Math.min(Math.ceil(bx1 / f), Math.floor(RW / f)) - ox0, OH = Math.min(Math.ceil(by1 / f), Math.floor(RH / f)) - oy0;
+      if (OW <= 0 || OH <= 0) { drawXray(ctx, P, col, extras); return true; }
+      gl.bindFramebuffer(gl.FRAMEBUFFER, GLR.fbO); gl.viewport(0, 0, OW, OH); gl.disable(gl.BLEND);
+      gl.bindTexture(gl.TEXTURE_2D, GLR.accTex);
+      const dn = GLR.down; gl.useProgram(dn.p); gl.bindVertexArray(GLR.quad.vao);
+      gl.uniform1i(dn.l.u_tex, 0); gl.uniform2f(dn.l.u_org, ox0, oy0); gl.uniform1f(dn.l.u_f, f); gl.uniform1i(dn.l.u_n, n); gl.uniform1f(dn.l.u_rh, RH - 1e-4);
+      gl.drawArrays(gl.TRIANGLES, 0, 3);
+      const px = new Uint8Array(OW * OH * 4);
+      gl.readPixels(0, 0, OW, OH, gl.RGBA, gl.UNSIGNED_BYTE, px);
+      gl.bindVertexArray(null); gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+      if (!offCanvas) offCanvas = document.createElement("canvas");
+      if (offCanvas.width < OW) offCanvas.width = OW;
+      if (offCanvas.height < OH) offCanvas.height = OH;
+      const octx = offCanvas.getContext("2d", { willReadFrequently: true });
+      const img = new ImageData(new Uint8ClampedArray(px.buffer), OW, OH);
+      octx.clearRect(0, 0, offCanvas.width, offCanvas.height);
+      octx.putImageData(img, 0, 0);
+      ctx.save();
+      ctx.drawImage(offCanvas, 0, 0, OW, OH, ox0 / dpr, oy0 / dpr, OW / dpr, OH / dpr);
+      ctx.restore();
+    } catch (e) {
+      if (window.console) console.warn("WebGL 렌더러 오류, CPU로 바꿔요:", e && e.message);
+      GLR.state = -1;
+      return false;
+    }
+    drawXray(ctx, P, col, extras);
+    return true;
+  }
+
+  // 곡면 격자: 꼭짓점 위치(G), 화면 좌표(Q), 음영 넣은 꼭짓점 색(CL, 0~255)
+  function buildSurf(sf, Ld, col, proj) {
+    const nu = Array.isArray(sf.n) ? sf.n[0] : sf.n || 24, nv = Array.isArray(sf.n) ? sf.n[1] : sf.n || 24;
+    const c1 = rgbOf(col(sf.color || "--aux")), c2 = sf.color2 ? rgbOf(col(sf.color2)) : null;
+    const a = sf.alpha == null ? 0.88 : sf.alpha;
+    const G = [];
+    for (let i = 0; i <= nu; i++) {
+      const row = [];
+      for (let j = 0; j <= nv; j++) {
+        const p = sf.f(sf.u[0] + (sf.u[1] - sf.u[0]) * i / nu, sf.v[0] + (sf.v[1] - sf.v[0]) * j / nv);
+        row.push(p && isFinite(p[0]) && isFinite(p[1]) && isFinite(p[2]) ? p : null);
+      }
+      G.push(row);
+    }
+    // 꼭짓점 색(법선으로 음영, 고로 셰이딩)
+    const Q = [], CL = [];
+    const g = (i, j) => (i >= 0 && i <= nu && j >= 0 && j <= nv ? G[i][j] : null);
+    for (let i = 0; i <= nu; i++) {
+      const qr = [], cr = [];
+      for (let j = 0; j <= nv; j++) {
+        const p = G[i][j];
+        if (!p) { qr.push(null); cr.push(null); continue; }
+        const pu = V.sub(g(i + 1, j) || p, g(i - 1, j) || p), pv = V.sub(g(i, j + 1) || p, g(i, j - 1) || p);
+        const nr = V.cross(pu, pv), ln = V.len(nr);
+        const shade = ln < 1e-12 ? 0.8 : 0.42 + 0.58 * Math.abs(V.dot(nr, Ld) / ln);
+        let base = c1;
+        if (c2) {
+          const zr = sf.zr || [-1, 1], k = Math.max(0, Math.min(1, (p[2] - zr[0]) / (zr[1] - zr[0] || 1)));
+          base = [c1[0] + (c2[0] - c1[0]) * k, c1[1] + (c2[1] - c1[1]) * k, c1[2] + (c2[2] - c1[2]) * k];
+        }
+        qr.push(proj(p)); cr.push([base[0] * shade, base[1] * shade, base[2] * shade]);
+      }
+      Q.push(qr); CL.push(cr);
+    }
+    return { nu, nv, a, G, Q, CL };
+  }
 
   function meshRaster(S, C, col, cam, surfs, extras) {
     const ctx = S.ctx, W = S.W, H = S.H, P = S.P, depth = S.depth;
@@ -160,38 +478,7 @@
     let sid = 1;
     surfs.forEach((sf, si) => {
       const o = si + 1;
-      const nu = Array.isArray(sf.n) ? sf.n[0] : sf.n || 24, nv = Array.isArray(sf.n) ? sf.n[1] : sf.n || 24;
-      const c1 = rgbOf(col(sf.color || "--aux")), c2 = sf.color2 ? rgbOf(col(sf.color2)) : null;
-      const a = sf.alpha == null ? 0.88 : sf.alpha;
-      const G = [];
-      for (let i = 0; i <= nu; i++) {
-        const row = [];
-        for (let j = 0; j <= nv; j++) {
-          const p = sf.f(sf.u[0] + (sf.u[1] - sf.u[0]) * i / nu, sf.v[0] + (sf.v[1] - sf.v[0]) * j / nv);
-          row.push(p && isFinite(p[0]) && isFinite(p[1]) && isFinite(p[2]) ? p : null);
-        }
-        G.push(row);
-      }
-      // 꼭짓점 색(법선으로 음영, 고로 셰이딩)
-      const Q = [], CL = [];
-      const g = (i, j) => (i >= 0 && i <= nu && j >= 0 && j <= nv ? G[i][j] : null);
-      for (let i = 0; i <= nu; i++) {
-        const qr = [], cr = [];
-        for (let j = 0; j <= nv; j++) {
-          const p = G[i][j];
-          if (!p) { qr.push(null); cr.push(null); continue; }
-          const pu = V.sub(g(i + 1, j) || p, g(i - 1, j) || p), pv = V.sub(g(i, j + 1) || p, g(i, j - 1) || p);
-          const nr = V.cross(pu, pv), ln = V.len(nr);
-          const shade = ln < 1e-12 ? 0.8 : 0.42 + 0.58 * Math.abs(V.dot(nr, Ld) / ln);
-          let base = c1;
-          if (c2) {
-            const zr = sf.zr || [-1, 1], k = Math.max(0, Math.min(1, (p[2] - zr[0]) / (zr[1] - zr[0] || 1)));
-            base = [c1[0] + (c2[0] - c1[0]) * k, c1[1] + (c2[1] - c1[1]) * k, c1[2] + (c2[2] - c1[2]) * k];
-          }
-          qr.push(proj(p)); cr.push([base[0] * shade, base[1] * shade, base[2] * shade]);
-        }
-        Q.push(qr); CL.push(cr);
-      }
+      const { nu, nv, a, G, Q, CL } = buildSurf(sf, Ld, col, proj);
       for (let i = 0; i < nu; i++) for (let j = 0; j < nv; j++) {
         const A = Q[i][j], Bq = Q[i + 1][j], Cq = Q[i + 1][j + 1], D = Q[i][j + 1];
         if (!A || !Bq || !Cq || !D) continue;
@@ -220,7 +507,7 @@
     if (!offCanvas) offCanvas = document.createElement("canvas");
     if (offCanvas.width < bw) offCanvas.width = bw;
     if (offCanvas.height < bh) offCanvas.height = bh;
-    const octx = offCanvas.getContext("2d");
+    const octx = offCanvas.getContext("2d", { willReadFrequently: true });
     const img = octx.createImageData(bw, bh), d = img.data;
     for (let y = 0; y < bh; y++) for (let x = 0; x < bw; x++) {
       const idx = (y + y0b) * RW + (x + x0b), c = cnt[idx];
@@ -238,7 +525,13 @@
     ctx.save();
     ctx.imageSmoothingEnabled = true; ctx.imageSmoothingQuality = "high";
     ctx.drawImage(offCanvas, 0, 0, bw, bh, x0b / ss, y0b / ss, bw / ss, bh / ss);
-    // xray: 가려진 부분도 옅게 보여 줄 선은 위에 한 번 더
+    ctx.restore();
+    drawXray(ctx, P, col, extras);
+  }
+
+  // xray: 가려진 부분도 옅게 보여 줄 선은 위에 한 번 더
+  function drawXray(ctx, P, col, extras) {
+    ctx.save();
     extras.forEach((ex) => {
       if (!ex.xray) return;
       ctx.globalAlpha = ex.xray * (ex.alpha == null ? 1 : ex.alpha);
@@ -412,13 +705,13 @@
           const E = [[0, 1], [1, 2], [0, 3], [1, 4], [2, 5], [3, 4], [4, 5], [3, 6], [5, 6]];
           E.forEach(([i, j]) => S.line(pts[i], pts[j], st));
         },
-        // 곡면과 선을 픽셀 단위 깊이 버퍼로 그린다(서로 뚫고 지나가는 곡면도 정확히 가려짐).
+        // 곡면과 선을 픽셀 단위 깊이로 그린다(WebGL2, 안 되면 CPU). 서로 뚫고 지나가는 곡면도 정확히 가려짐.
         // surfs: [{ f(u,v) → [x,y,z] | null, u:[a,b], v:[c,d], n: 24 | [nu,nv],
         //           color: '--aux', color2: '--curve'(높이에 따라 섞기), zr:[z0,z1], alpha: .88,
         //           lines: true(매개변수 격자), lineAlpha, lineColor, gridLines: [{ pts, alpha }](곡면에 붙는 선) }]
         // extras: [{ pts:[...], color, width, dash, alpha, bias, xray }]  (곡면 위의 곡선 등, xray: 가려진 부분을 옅게 보일 비율)
         mesh(surfs, extras) {
-          meshRaster(S, C, col, cam, surfs || [], extras || []);
+          if (!meshGL(S, C, col, cam, surfs || [], extras || [])) meshRaster(S, C, col, cam, surfs || [], extras || []);
         },
       };
       return S;
